@@ -1,0 +1,60 @@
+{
+    "ulysans": {
+        "password": "8008208820",
+        "email": "omnipotentxys@gmail.com",
+        "characters": []
+    },
+    "shan": {
+        "password": "001001",
+        "email": "jgu23ryu@uea.ac.uk",
+        "characters": [
+            {
+                "name": "shanshan",
+                "bmi_category": "1",
+                "hair_length": "long",
+                "hair_color": "Pink"
+            },
+            {
+                "name": "james",
+                "bmi_category": "3",
+                "hair_length": "long",
+                "hair_color": "Dark Brown"
+            },
+            {
+                "name": "wood",
+                "bmi_category": "2",
+                "hair_length": "long",
+                "hair_color": "Pink"
+            },
+            {
+                "name": "mint",
+                "bmi_category": "1",
+                "hair_length": "short",
+                "hair_color": "Dark Brown"
+            },
+            {
+                "name": "jj",
+                "bmi_category": "2",
+                "hair_length": "long",
+                "hair_color": "Pink"
+            }
+        ],
+        "game_state": {
+            "current_room": "North",
+            "confidence": 100,
+            "inventory": []
+        }
+    },
+    "Mint": {
+        "password": "Mint123",
+        "email": "Mint@Mint.com",
+        "characters": [
+            {
+                "name": "Mint",
+                "bmi_category": "1",
+                "hair_length": "long",
+                "hair_color": "Pink"
+            }
+        ]
+    }
+}
