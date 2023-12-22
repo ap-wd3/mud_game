@@ -25,21 +25,25 @@ class GameSystem:
     def reset_password(self, username, email, new_password):
         return self.user_manager.reset_password(username, email, new_password)
 
-    def create_character(self, username, name, bmi_category, hair_length, hair_color):
+    def create_character(self, username, name, hair_length, hair_color, eye_color):
         if not self.logged_in_user:
             return "Error: You must be logged in to create a character."
         if username != self.logged_in_user:
             return "Error: You can only create characters for your logged-in account."
 
         user_data = self.user_manager.users.get(username)
+        name_exists = False
+        for char in user_data['characters']:
+            if char['name'] == name:
+                name_exists = True
+                break
+        if name_exists:
+            print("Error: Character name already exists.")
 
-        if any(char['name'] == name for char in user_data['characters']):
-            return "Error: Character name already exists."
-
-        new_character = Character(name, bmi_category, hair_length, hair_color)
+        new_character = Character(name, hair_length, hair_color, eye_color)
         user_data['characters'].append(new_character.to_dict())
         self.user_manager.save_users()
-        return f"Character '{name}' created successfully."
+        return f"Character '{name}' created successfully. This character has {hair_length} {hair_color} hair and {eye_color} eyes."
 
     def logout(self):
         self.logged_in_user = None

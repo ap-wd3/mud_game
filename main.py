@@ -1,6 +1,14 @@
 import os
+import platform
+import json
+import colorama
+
 from account import Account
 from game_system import GameSystem
+from colorama import Fore, Back, Style
+if 'TERM' not in os.environ:
+    os.environ['TERM'] = 'xterm'
+colorama.init()
 
 run = True
 menu1 = True
@@ -44,7 +52,10 @@ inventory = []
 message = ""
 
 def clear():
-    os.system("cls")
+    if platform == 'Windows':
+        os.system("cls")
+    else:
+        os.system("clear")
 
 
 def draw():
@@ -65,6 +76,7 @@ def save():
     f.close()
 
 
+
 while run:
     if menu1:
         clear()
@@ -80,11 +92,19 @@ while run:
 
         if choice == "1":
             clear()
-            username = input("Enter your username: ")
-            password = input("Enter your password: ")
-            result = game_system.login(username, password)
-            print(result)
-            menu2 = True
+            menu2 = False
+            while not menu2:
+                username = input("Enter your username: ")
+                password = input("Enter your password: ")
+                result = game_system.login(username, password)
+
+                if result == 'Logged in successfully.':
+                    print(result)
+                    menu2 = True
+                else:
+                    print(result)
+                    print("Incorrect username or password, please try again")
+
         elif choice == "2":
             clear()
             username = input("Choose a username: ")
@@ -92,6 +112,7 @@ while run:
             email = input("Enter your email address: ")
             print(game_system.create_user(username, password, email))
             menu2 = True
+
         elif choice == "3":
             username = input("Enter your username: ")
             email = input("Enter your email address for password reset: ")
@@ -122,32 +143,49 @@ while run:
             clear()
 
             logged_in_username = username
-            name = input("Enter your character's name: ")
 
-            # Select BMI category
-            print("Choose BMI category:")
-            print("1: <18.5 (Underweight)")
-            print("2: 18.5-24.9 (Normal weight)")
-            print("3: 25-29.9 (Overweight)")
-            bmi_category = input("Select option (1, 2, or 3): ").strip()
+            while True:
+                name = input("Enter your character's name: ").strip()
+                user_data = game_system.user_manager.users.get(username, {'characters': []})
+                if any(char['name'] == name for char in user_data['characters']):
+                    print("Error: Character name already exists. Please choose a different name.")
+                else:
+                    break
 
-            # Select hair length
-            hair_length = input("Choose hair length (long/short): ").strip().lower()
+            while True:
 
-            # Select hair color
-            print("Choose hair color:")
-            print("1: Pink")
-            print("2: Blue")
-            print("3: Dark Brown")
-            color_options = {'1': 'Pink', '2': 'Blue', '3': 'Dark Brown'}
-            hair_color_choice = input("Select option (1, 2, or 3): ").strip()
-            hair_color = color_options.get(hair_color_choice, "Unknown")
+                hair_length = input("Choose hair length (long/short): ").strip().lower()
+                if hair_length not in ["short", "long"]:
+                    print("Invalid hair length, please choose again.")
+                else:
+                    break
 
-            # Create character with the selected details
-            character_creation_result = game_system.create_character(
-                username, name, bmi_category, hair_length, hair_color)
-            print(character_creation_result)
+            hair_color = 'Unknown'
+            while hair_color == 'Unknown':
+                print("Choose hair color:")
+                print("1: Pink")
+                print("2: Blue")
+                print("3: White")
+                color_options = {'1': 'Pink', '2': 'Blue', '3': 'White'}
+                hair_color_choice = input("Select option (1, 2, or 3): ").strip()
+                hair_color = color_options.get(hair_color_choice, "Unknown")
+                if hair_color == 'Unknown':
+                    print("Invalid option, please choose again.")
 
+            eye_color = 'Unknown'
+            while eye_color == 'Unknown':
+                print("Choose eye color:")
+                print("1:Yellow")
+                print("2: Green")
+                print("3: Red")
+                color_options = {'1': 'Yellow', '2': 'Green', '3': 'Red'}
+                eye_color_choice = input("Select option (1, 2, or 3): ").strip()
+                eye_color = color_options.get(eye_color_choice, "Unknown")
+                if eye_color == 'Unknown':
+                    print("Invalid option, please choose again.")
+
+            result = game_system.create_character(username, name, hair_length, hair_color, eye_color)
+            print(result)
             menu2 = False
             play = True
         elif choice == "2":

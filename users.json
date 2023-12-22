@@ -37,6 +37,30 @@
                 "bmi_category": "2",
                 "hair_length": "long",
                 "hair_color": "Pink"
+            },
+            {
+                "name": "shan",
+                "hair_length": "long",
+                "hair_color": "Blue",
+                "eye_color": "Red"
+            },
+            {
+                "name": "shan",
+                "hair_length": "long",
+                "hair_color": "Pink",
+                "eye_color": "Green"
+            },
+            {
+                "name": "shannoshan",
+                "hair_length": "long",
+                "hair_color": "Pink",
+                "eye_color": "Red"
+            },
+            {
+                "name": "olivia",
+                "hair_length": "long",
+                "hair_color": "Blue",
+                "eye_color": "Green"
             }
         ],
         "game_state": {
