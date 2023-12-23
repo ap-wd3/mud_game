@@ -50,13 +50,15 @@ class Map:
                 print("Out of bound, cannot go south")
 
         elif direction == "e":
-              new_x += 1
+
+            new_x += 1
             # Check for a horizontal path to the right
-              if new_x < self.width and ((self.x, self.y), (new_x, self.y)) in self.paths:
-                    self.x = new_x
-                    print(f"Current position of [u]: X={self.x}, Y={self.y}")
-              else:
-                    print("Out of bound, cannot go east")
+            if new_x < self.width and ((self.x, self.y), (new_x, self.y)) in self.paths:
+                self.x = new_x
+                print(f"Current position of [u]: X={self.x}, Y={self.y}")
+            else:
+                  print("Out of bound, cannot go east")
+
 
         elif direction == "w":
             new_x -= 1
@@ -105,7 +107,10 @@ class Map:
 paths = [
     # Horizontal paths
     ((0, 0), (1, 0)), ((1, 0), (2, 0)), ((2, 0), (3, 0)),  # First row
-    ((0, 1), (1, 1)), ((1, 1), (2, 1)), ((2, 1), (3, 1)), ((3, 1), (4, 1)), ((4, 1), (5, 1)),  # Second row
+
+    ((0, 1), (1, 1)), ((1, 1), (2, 1)), ((2, 1), (3, 1)
+                                         ), ((3, 1), (4, 1)), ((4, 1), (5, 1)),  # Second row
+
     ((0, 2), (1, 2)), ((1, 2), (2, 2)), ((2, 2), (3, 2)),  # Third row
 
     # Vertical paths
