@@ -1,6 +1,7 @@
 from character import Character
 from user_management import UserManager
-from map import Map, paths, rooms
+import platform
+from map import Map, paths
 import os
 # from room import Room
 # from monster import Monster
@@ -9,7 +10,10 @@ import json
 
 
 def clear():
-    os.system("cls")
+    if platform == 'windows':
+        os.system("cls")
+    else:
+        os.system("clear")
 
 
 def draw():
@@ -56,7 +60,7 @@ class GameSystem:
         self.logged_in_user = None
         return "Logged out successfully."
 
-    def save_game(self, username, name, current_room, inventory):
+    def save_game(self, username, name, current_room, inventory, confidence, rooms):
         # Check if the user exists
         if username not in self.user_manager.users:
             print("Error: User not found.")
@@ -78,7 +82,9 @@ class GameSystem:
         # Replace old game state with the new game state
         new_game_state = {
             'current_room': current_room,
-            'inventory': inventory
+            'inventory': inventory,
+            'confidence': confidence,
+            'rooms': rooms
         }
 
         character['game_state'] = [new_game_state]  # Replaces old game states
@@ -123,9 +129,108 @@ class GameSystem:
             # Ensure that the game state includes 'current_room' and 'inventory'
             current_room = game_state.get('current_room', "Default Room Name")
             inventory = game_state.get('inventory', [])
-            return (character, current_room, inventory)
+            rooms = game_state.get('rooms', {})
+            return (character, current_room, inventory,rooms)
         else:
             print(f"No saved game state for character {character['name']}.")
             return None
 
+    def save_score(self, name, username, bonus):
+        data = []
+        try:
+            with open("leaderboard.json", 'r') as file:
+                data = json.load(file)
+        except FileNotFoundError:
+            print("File not found. A new file will be created.")
+        except json.JSONDecodeError:
+            print("Error reading the JSON file. Starting a new leaderboard.")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
 
+        entry_found = False
+        for entry in data:
+            if entry.get("Player") == username and entry.get("Charactor name") == name:
+                entry["score"] = bonus
+                entry_found = True
+                break
+
+        if not entry_found:
+            data.append({"Player": username, "Charactor name": name, "score": bonus})
+        try:
+            with open("leaderboard.json", 'w') as file:
+                json.dump(data, file, indent=4)
+            print(f"Score for {name} saved successfully.")
+        except Exception as e:
+            print(f"An error occurred while writing to the file: {e}")
+
+    def load_score(self, name, username):
+        try:
+            with open("leaderboard.json", 'r') as file:
+                data = json.load(file)
+            for entry in data:
+                if entry.get("Player") == username and entry.get("Character name") == name:
+                    return entry.get("score", 0)
+        except FileNotFoundError:
+            print("Leaderboard file not found.")
+        except json.JSONDecodeError:
+            print("Error reading the JSON file.")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+        return None
+
+    def load_leaderboard(self):
+        try:
+            with open('leaderboard.json', 'r') as file:
+                data = json.load(file)
+        except FileNotFoundError:
+            print("Error: File not found or inaccessible.")
+            return
+        except json.JSONDecodeError:
+            print("Error: JSON file is not properly formatted.")
+            return
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+            return
+        data.sort(key=lambda x: x.get("score", 0), reverse=True)
+        print("LEADERBOARD\n"
+              "NAME                SCORE")
+        for entry in data:
+            name = entry.get("Charactor name", "Unknown")
+            username = entry.get("Player", "Unknown")
+            score = entry.get("score", 0)
+            print(f"{name} ({username})".ljust(20)+ f"{score}")
+
+    def delete_account(self, username):
+        if self.logged_in_user != username:
+            return "Error: You can only delete your own account."
+        else:
+            print(f"{username} has been deleted successfully.")
+            return self.user_manager.delete_account(username)
+
+    def delete_character(self, username):
+        user_data = self.user_manager.users.get(username, None)
+        if user_data is None:
+            return "Error: User not found."
+
+        if not user_data['characters']:
+            return "No characters available for this user."
+
+        clear()
+        draw()
+        print("Select a character to delete:")
+        for i, character in enumerate(user_data['characters'], start=1):
+            print(f"{i}, {character['name']}")
+        draw()
+
+        try:
+            choice = int(input("# "))
+            assert 1 <= choice <= len(user_data['characters'])
+        except (ValueError, AssertionError):
+            return "Invalid selection."
+
+        # Delete the selected character
+        del user_data['characters'][choice - 1]
+
+        # Save the updated user data
+        self.user_manager.save_users()
+        print(f"Character deleted successfully.")

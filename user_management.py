@@ -28,3 +28,12 @@ class UserManager:
         self.users[username]['password'] = new_password
         utils.save_data(self.users, self.storage_file)
         return "Password reset successfully."
+
+    def delete_account(self, username):
+        if username not in self.users:
+            return "Error: User does not exist."
+
+        del self.users[username]
+
+        self.save_users()
+        return "Account deleted successfully."
