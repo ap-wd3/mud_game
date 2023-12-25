@@ -1,14 +1,16 @@
 import os
 import platform
 import json
-import colorama
+from map import Map, paths, rooms
+from game_system import GameSystem
+from monster import Monster, monsters
+
 
 from account import Account
 from game_system import GameSystem
-from colorama import Fore, Back, Style
 if 'TERM' not in os.environ:
     os.environ['TERM'] = 'xterm'
-colorama.init()
+
 
 run = True
 menu1 = True
@@ -16,34 +18,10 @@ menu2 = True
 play = False
 rules = False
 
-confidence = 100
-ATK = 10
-
-# Map
-rooms = {
-    'Maple Sanctuary': {'East': 'Moonlit Timberland', 'Item': 'Mirror'},
-    'Moonlit Timberland': {'West': 'Maple Sanctuary', 'North': 'Maple Sanctuary', 'South': 'Dewdrop Dell',
-                           'East': 'Emerald Canopy', 'Monster': 'Overthinking monster'},
-    'Whispering Pines': {'South': 'Moonlit Timberland', 'East': 'Pine Haven', 'Monster': 'Idol monster'},
-    'Dewdrop Dell': {'North': 'Moonlit Timberland', 'East': 'Redwood Haven', 'Monster': 'Sad monster'},
-    'Pine Haven': {'South': 'Emerald Canopy', 'East': 'Walnut Retreat', 'West': 'Whispering Pines',
-                   'Item': ['Heel', 'Soccer']},
-    'Emerald Canopy': {'West': 'Moonlit Timberland', 'North': 'Pine Haven', 'South': 'Redwood Haven',
-                       'East': 'Cypress Cottage', 'Monster': 'Overthinking monster'},
-    'Redwood Haven': {'West': 'Dewdrop Dell', 'East': 'Silver Birch Copse', 'North': 'Emerald Canopy',
-                      'Item': ['Book', 'Pizza']},
-    'Walnut Retreat': {'West': 'Pine Haven', 'South': 'Cypress Cottage', 'Monster': 'Insecure monster'},
-    'Cypress Cottage': {'West': 'Emerald Canopy', 'South': 'Silver Birch Copse', 'North': 'Walnut Retreat',
-                        'East': 'Forest Haven', 'Monster': 'Angry monster'},
-    'Silver Birch Copse': {'West': 'Redwood Haven', 'North': 'Cypress Cottage', 'Monster': 'Numb monster'},
-    'Forest Haven': {'West': 'Cypress Cottage', 'Item': ['Jumping rope', 'Lipstick']}
-}
+m = Map(3, 6, 0, 1, paths)
 
 # track current room
-current_room = "Maple Sanctuary"
-
-# List of vowels
-vowels = ['a', 'e', 'i', 'o', 'u']
+current_room = ""
 
 # list of inventory
 inventory = []
@@ -60,21 +38,6 @@ def clear():
 
 def draw():
     print("++------------------------++")
-
-
-def save():
-    list = [
-        name,
-        str(confidence),
-        str(ATK)
-    ]
-
-    f = open("load.txt", "w")
-
-    for item in list:
-        f.write(item + "\n")
-    f.close()
-
 
 
 while run:
@@ -154,7 +117,7 @@ while run:
 
             while True:
 
-                hair_length = input("Choose hair length (long/short): ").strip().lower()
+                hair_length = input("Choose hair length (Long/Short): ").strip().lower()
                 if hair_length not in ["short", "long"]:
                     print("Invalid hair length, please choose again.")
                 else:
@@ -186,19 +149,19 @@ while run:
 
             result = game_system.create_character(username, name, hair_length, hair_color, eye_color)
             print(result)
+            input("Press enter to continue...")
             menu2 = False
             play = True
         elif choice == "2":
-            f = open("load.txt", "r")
-            load_list = f.readlines()
-            name = load_list[0][:-1]
-            confidence = load_list[1][:-1]
-            ATK = load_list[2][:-1]
-            clear()
-            print("Welcome back, " + name + "!")
-            input("> ")
-            menu2 = False
-            play = True
+            loaded_data = game_system.load_game(username)
+            if loaded_data:
+                character, current_room, inventory = loaded_data
+                name = character['name']
+                current_room = current_room
+                m.x, m.y = m.get_coordinates_from_room_name(current_room)
+                inventory = inventory
+                menu2 = False
+                play = True
         elif choice == "3":
             f = open("leaderboard.txt", "r")
         elif choice == "4":
@@ -207,72 +170,87 @@ while run:
             quit()
 
     while play:
-        save()
+        room_info = rooms.get(current_room, {})
+        game_system.save_game(username, name, current_room, inventory)
+
         clear()
+        m.print_map()
         print(f"You are in the {current_room}\nInventory : {inventory}\n{'-' * 27}")
+        print("Hint: You can enter 'help' for command information.")
         print(message)
 
-        if "Item" in rooms[current_room].keys():
-            nearby_item = rooms[current_room]["Item"]
-            if nearby_item not in inventory:
-                if nearby_item[0] in vowels:
-                    print(f"You see an {nearby_item}")
+        if "Monster" in room_info:
+            print(f"You encounter a {room_info['Monster']}!")
+            print("Enter 'look' to see the information of the monster")
+        elif "Item" in room_info:
+            item = room_info["Item"]
+            if item[0] in 'AEIOUaeiou':
+                print(f"You see an {room_info['Item']}!")
+            else:
+                print(f"You see a {room_info['Item']}")
+        else:
+            print("There's nothing special here.")
+
+        user_input = input("Enter your command: ").lower().split(' ')
+        action = user_input[0]
+
+        if len(user_input) > 1:
+            argument = " ".join(user_input[1:]).title()
+
+        if action == "go":
+            direction = argument.lower()
+            m.move(direction)
+            current_room = m.room_map.get((m.x, m.y), "Unknown room")
+            message = "You moved " + direction
+
+        elif action == "get":
+            item = argument
+            if item == rooms[current_room].get("Item", "") and item not in inventory:
+                inventory.append(item)
+                message = f"{item} retrieved!"
+            elif item in inventory:
+                message = f"You already have {item}."
+            else:
+                message = f"{item} cannot be picked up."
+
+        elif action == "look":
+            monster_name = room_info.get("Monster")
+            if monster_name:
+                monster = monsters.get(monster_name)
+                if monster:
+                    print(f"Name: {monster.name}")
+                    print(f"Description: {monster.description}")
+                    print(f"Health: {monster.health}")
+                    print(f"Attack: {monster.attack}")
+                    print(f"Items Required: {', '.join(monster.items_required)}")
+                    print(f"Hint: {monster.hint}")
+                    input("Press 'Enter' to continue...")
                 else:
-                    print(f"You see a {nearby_item}")
+                    print("There's no monster here.")
+            else:
+                print("Sorry, there is nothing to look at. :(")
 
-        if "Monster" in rooms[current_room].keys():
-            print(f"You encounter {rooms[current_room]['Monster']}!")
 
-        user_input = input("Enter your move: ")
+        elif action == "quit":
+            answer = input("Save and Exit game? Y/N\nYour answer: ").upper()
+            if answer == "Y":
+                game_system.save_game(username, name, current_room, inventory)
+                print("Game Saved Successfully!")
+                print("Thank you for playing The Wood, I will see you when I see you again!")
+                exit(0)
+            elif answer == "N":
+                pass
+            else:
+                print("Invalid Command")
 
-        next_move = user_input.split(' ')
-
-        action = next_move[0].title()
-
-        item = "Item"
-        direction = "null"
-
-        if len(next_move) > 1:
-            item = next_move[1:]
-            direction = next_move[1].title()
-
-            item = " ".join(item).title()
-
-        if action == "Go":
-            try:
-                current_room = rooms[current_room][direction]
-                message = f"You travel {direction}"
-            except:
-                message = "You can't go that way."
-
-        elif action == "Get":
-            try:
-                if item == rooms[current_room]["Item"]:
-                    if item not in inventory:
-                        inventory.append(rooms[current_room]["Item"])
-                        message = f"{item} retrieved!"
-                    else:
-                        message = f"You already have the {item}."
-                else:
-                    message = f"Can't find {item}"
-            except:
-                message = f"Can't find {item}"
-
-        elif action == "0":
-            save()
-            break
+        elif action == "help":
+            print("1. Enter 'Go east/west/south/north' to move among rooms. \n")
+            print("2. Enter 'Get (the name of the item)' to pick items.\n")
+            print("3. Enter 'Look' to get the information of the monsters.\n")
+            print("4. Enter 'Quit' to quit the game.")
+            input("Press Enter to continue...")
 
         else:
             message = "Invalid Command"
 
-
-        # draw()
-        # print("0 - SAVE and QUIT")
-        # draw()
-        #
-        # dest = input("# ")
-        #
-        # if dest == "0":
-        #     play = False
-        #     menu = True
-        #     save()
+print("You have exited the game. Thank you for playing!")

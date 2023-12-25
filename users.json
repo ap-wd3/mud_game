@@ -61,6 +61,48 @@
                 "hair_length": "long",
                 "hair_color": "Blue",
                 "eye_color": "Green"
+            },
+            {
+                "name": "adam",
+                "hair_length": "long",
+                "hair_color": "White",
+                "eye_color": "Yellow"
+            },
+            {
+                "name": "shani",
+                "bmi_category": "long",
+                "hair_length": "Pink",
+                "hair_color": "Green",
+                "game_state": [
+                    {
+                        "current_room": "Maple Sanctuary",
+                        "inventory": [
+                            "Mirror",
+                            "Cake",
+                            "Book"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "shannon",
+                "hair_length": "long",
+                "hair_color": "Pink",
+                "eye_color": "Green",
+                "game_state": [
+                    {
+                        "current_room": "Mystic Moss Grove",
+                        "inventory": [
+                            "Mirror",
+                            "Cake",
+                            "Smart Planner",
+                            "Clock",
+                            "Book",
+                            "Jumping Rope",
+                            "Pizza"
+                        ]
+                    }
+                ]
             }
         ],
         "game_state": {

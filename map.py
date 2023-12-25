@@ -8,11 +8,31 @@ class Map:
         self.x = player_x
         self.y = player_y
         self.paths = paths
+        self.room_map = {
+            (0, 0): 'Whispering Pines',
+            (0, 1): 'Maple Sanctuary',
+            (1, 1): 'Moonlit Timberland',
+            (0, 2): 'Dewdrop Dell',
+            (1, 0): 'Pine Haven',
+            (2, 1): 'Emerald Canopy',
+            (1, 2): 'Redwood Haven',
+            (2, 0): 'Walnut Retreat',
+            (3, 1): 'Cypress Cottage',
+            (2, 2): 'Silver Birch Copse',
+            (3, 0): 'Enchanted Thicket',
+            (4, 1): 'Forest Haven',
+            (3, 2): 'Mystic Moss Grove',
+            (5, 1): 'Sunbeam Glade'
+        }
 
+    def get_coordinates_from_room_name(self, room_name):
+        reverse_map = {name: coords for coords, name in self.room_map.items()}
+        default_coords = (0, 0)
+        return reverse_map.get(room_name, default_coords)
     def move(self, direction):
         new_x, new_y = self.x, self.y
 
-        if direction == "n":
+        if direction == "north":
             new_y -= 1
             if new_y >= 0:
                 # Check if moving from the second row to the first row
@@ -24,13 +44,14 @@ class Map:
 
                 if new_x >= 0 and ((new_x, new_y), (self.x, self.y)) in self.paths:
                     self.x, self.y = new_x, new_y
-                    print(f"Current position of [u]: X={self.x}, Y={self.y}")
                 else:
                     print("Cannot go north")
+                    input("Press enter to continue...")
             else:
                 print("Out of bound, cannot go north")
+                input("Press enter to continue...")
 
-        elif direction == "s":
+        elif direction == "south":
             new_y += 1
             if new_y < self.height:
                 # Check if moving from the first row to the second row
@@ -43,29 +64,30 @@ class Map:
 
                 if new_x < self.width and ((self.x, self.y), (new_x, new_y)) in self.paths:
                     self.x, self.y = new_x, new_y
-                    print(f"Current position of [u]: X={self.x}, Y={self.y}")
                 else:
                     print("Cannot go south")
+                    input("Press enter to continue...")
             else:
                 print("Out of bound, cannot go south")
+                input("Press enter to continue...")
 
-        elif direction == "e":
+        elif direction == "east":
             new_x += 1
             # Check for a horizontal path to the right
             if new_x < self.width and ((self.x, self.y), (new_x, self.y)) in self.paths:
                 self.x = new_x
-                print(f"Current position of [u]: X={self.x}, Y={self.y}")
             else:
-                  print("Out of bound, cannot go east")
+                print("Out of bound, cannot go east")
+                input("Press enter to continue...")
 
-        elif direction == "w":
+        elif direction == "west":
             new_x -= 1
             # Check for a horizontal path to the left
             if new_x >= 0 and ((new_x, self.y), (self.x, self.y)) in self.paths:
                 self.x = new_x
-                print(f"Current position of [u]: X={self.x}, Y={self.y}")
             else:
                 print("Out of bound, cannot go west")
+                input("Press enter to continue...")
 
     def print_map(self):
         for y in range(self.height):
@@ -102,6 +124,7 @@ class Map:
                 sys.stdout.write("\n")
 
 
+
 paths = [
     # Horizontal paths
     ((0, 0), (1, 0)), ((1, 0), (2, 0)), ((2, 0), (3, 0)),  # First row
@@ -119,3 +142,25 @@ paths = [
     ((1, 1), (0, 2)), ((2, 1), (1, 2)), ((3, 1), (2, 2)), ((
         4, 1), (3, 2)),  # Southward paths (second to third row
 ]
+
+rooms = {
+    'Maple Sanctuary': {'East': 'Moonlit Timberland', 'Item': 'Smart Planner'},
+    'Moonlit Timberland': {'West': 'Maple Sanctuary', 'North': 'Maple Sanctuary', 'South': 'Dewdrop Dell',
+                           'East': 'Emerald Canopy', 'Monster': 'Insecure Monster'},
+    'Whispering Pines': {'South': 'Moonlit Timberland', 'East': 'Pine Haven', 'Monster': 'Diet Monster'},
+    'Dewdrop Dell': {'North': 'Moonlit Timberland', 'East': 'Redwood Haven', 'Monster': 'Balance Monster'},
+    'Pine Haven': {'South': 'Emerald Canopy', 'East': 'Walnut Retreat', 'West': 'Whispering Pines',
+                   'Item': 'Mirror'},
+    'Emerald Canopy': {'West': 'Moonlit Timberland', 'North': 'Pine Haven', 'South': 'Redwood Haven',
+                       'East': 'Cypress Cottage', 'Monster': 'Overthinking Monster'},
+    'Redwood Haven': {'West': 'Dewdrop Dell', 'East': 'Silver Birch Copse', 'North': 'Emerald Canopy',
+                      'Item': 'Key of Ascent'},
+    'Walnut Retreat': {'West': 'Pine Haven', 'South': 'Cypress Cottage', 'Monster': 'Insecure Monster'},
+    'Cypress Cottage': {'West': 'Emerald Canopy', 'South': 'Silver Birch Copse', 'North': 'Walnut Retreat',
+                        'East': 'Forest Haven', 'Monster': 'Glass Ceiling Monster'},
+    'Silver Birch Copse': {'West': 'Redwood Haven', 'North': 'Cypress Cottage', 'Monster': 'Harassment Monster'},
+    'Forest Haven': {'West': 'Cypress Cottage', 'Item': 'Book'},
+    'Mystic Moss Grove': {'West': 'Silver Birch Copse', 'North': 'Forest Haven', 'Item': 'Pizza'},
+    'Enchanted Thicket': {'West': 'Walnut Retreat', 'South': 'Forest Haven', 'Item': 'Clock'},
+    'Sunbeam Glade': {'West': 'Forest Haven', 'Item': 'Jumping Rope'},
+}
