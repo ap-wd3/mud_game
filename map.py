@@ -71,6 +71,7 @@ class Map:
                 print("Out of bound, cannot go south")
                 input("Press enter to continue...")
 
+
         elif direction == "east":
             new_x += 1
             # Check for a horizontal path to the right
@@ -79,6 +80,7 @@ class Map:
             else:
                 print("Out of bound, cannot go east")
                 input("Press enter to continue...")
+
 
         elif direction == "west":
             new_x -= 1
@@ -128,8 +130,10 @@ class Map:
 paths = [
     # Horizontal paths
     ((0, 0), (1, 0)), ((1, 0), (2, 0)), ((2, 0), (3, 0)),  # First row
+
     ((0, 1), (1, 1)), ((1, 1), (2, 1)), ((2, 1), (3, 1)
                                          ), ((3, 1), (4, 1)), ((4, 1), (5, 1)),  # Second row
+
     ((0, 2), (1, 2)), ((1, 2), (2, 2)), ((2, 2), (3, 2)),  # Third row
 
     # Vertical paths

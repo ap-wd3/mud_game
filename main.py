@@ -1,3 +1,4 @@
+
 import os
 import platform
 import json
@@ -253,4 +254,3 @@ while run:
         else:
             message = "Invalid Command"
 
-print("You have exited the game. Thank you for playing!")
