@@ -36,8 +36,6 @@ if __name__ == "__main__":
         '=': Fore.WHITE
     }
 
-    
-
     lipstick = Item(lip_sword_data, color_mapping)
 
     print("Lip Sword:")
