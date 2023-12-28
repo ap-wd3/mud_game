@@ -147,3 +147,24 @@ paths = [
         4, 1), (3, 2)),  # Southward paths (second to third row
 ]
 
+rooms = {
+    'Maple Sanctuary': {'East': 'Moonlit Timberland'},
+    'Moonlit Timberland': {'West': 'Maple Sanctuary', 'North': 'Maple Sanctuary', 'South': 'Dewdrop Dell',
+                           'East': 'Emerald Canopy',  'Item': 'Smart Planner'},
+    'Whispering Pines': {'South': 'Moonlit Timberland', 'East': 'Pine Haven', 'Monster': 'Diet Monster'},
+    'Dewdrop Dell': {'North': 'Moonlit Timberland', 'East': 'Redwood Haven', 'Monster': 'Balance Monster'},
+    'Pine Haven': {'South': 'Emerald Canopy', 'East': 'Walnut Retreat', 'West': 'Whispering Pines',
+                   'Item': 'Mirror'},
+    'Emerald Canopy': {'West': 'Moonlit Timberland', 'North': 'Pine Haven', 'South': 'Redwood Haven',
+                       'East': 'Cypress Cottage', 'Monster': 'Overthinking Monster'},
+    'Redwood Haven': {'West': 'Dewdrop Dell', 'East': 'Silver Birch Copse', 'North': 'Emerald Canopy',
+                      'Item': 'Clock'},
+    'Walnut Retreat': {'West': 'Pine Haven', 'South': 'Cypress Cottage', 'Monster': 'Insecure Monster'},
+    'Cypress Cottage': {'West': 'Emerald Canopy', 'South': 'Silver Birch Copse', 'North': 'Walnut Retreat',
+                        'East': 'Forest Haven', 'Monster': 'Glass Ceiling Monster'},
+    'Silver Birch Copse': {'West': 'Redwood Haven', 'North': 'Cypress Cottage', 'Monster': 'Harassment Monster'},
+    'Forest Haven': {'West': 'Cypress Cottage', 'Item': 'Book'},
+    'Mystic Moss Grove': {'West': 'Silver Birch Copse', 'North': 'Forest Haven', 'Item': 'Pizza'},
+    'Enchanted Thicket': {'West': 'Walnut Retreat', 'South': 'Forest Haven', 'Item': 'Key'},
+    'Sunbeam Glade': {'West': 'Forest Haven', 'Item': 'Jumping Rope'},
+}

@@ -7,6 +7,9 @@ import os
 # from monster import Monster
 # from player import Player
 import json
+from rich import print
+from rich.style import Style
+from rich.console import Console
 
 
 def clear():
@@ -15,55 +18,54 @@ def clear():
     else:
         os.system("clear")
 
-
 def draw():
-    print("++------------------------++")
+    print("[aquamarine3]++------------------------++[/]")
 
 class GameSystem:
     def __init__(self):
         self.user_manager = UserManager()
         self.logged_in_user = None
-        # self.player = Player()
-        # self.rooms = {}
-        # self.create_world()
+        self.console = Console()
 
-
-    def create_user(self, username, password, email):
-        return self.user_manager.create_user(username, password, email)
-
+    def colored_input(self, prompt,color="green"):
+        self.console.print(prompt, style=color, end="")
+        user_input = input()
+        return user_input
     def login(self, username, password):
         if self.user_manager.verify_user(username, password):
             self.logged_in_user = username
             return "Logged in successfully."
-        return "Error: Incorrect username or password."
 
-    def reset_password(self, username, email, new_password):
-        return self.user_manager.reset_password(username, email, new_password)
+        else:
+            print("[deep_pink2]Error: Incorrect username or password.[/]")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
 
-    def create_character(self, username, name, bmi_category, hair_length, hair_color):
+
+    def create_character(self, username, name, hair_length, hair_color, eye_color):
         if not self.logged_in_user:
-            return "Error: You must be logged in to create a character."
+            print("Error: You must be logged in to create a character.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
         if username != self.logged_in_user:
-            return "Error: You can only create characters for your logged-in account."
+            print("Error: You can only create characters for your logged-in account.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
 
         user_data = self.user_manager.users.get(username)
 
         if any(char['name'] == name for char in user_data['characters']):
-            return "Error: Character name already exists."
+            print("Error: Character name already exists.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
 
-        new_character = Character(name, bmi_category, hair_length, hair_color)
+        new_character = Character(name, hair_length, hair_color, eye_color)
         user_data['characters'].append(new_character.to_dict())
         self.user_manager.save_users()
-        return f"Character '{name}' created successfully."
+        return f"Character '{name}' has {hair_length} and {hair_color} hair, and her eyes are {eye_color}"
 
-    def logout(self):
-        self.logged_in_user = None
-        return "Logged out successfully."
 
     def save_game(self, username, name, current_room, inventory, confidence, rooms):
         # Check if the user exists
         if username not in self.user_manager.users:
             print("Error: User not found.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
             return
 
         user_data = self.user_manager.users[username]
@@ -77,6 +79,7 @@ class GameSystem:
 
         if character is None:
             print(f"Error: Character {name} not found.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
             return
 
         # Replace old game state with the new game state
@@ -95,6 +98,7 @@ class GameSystem:
                 json.dump(self.user_manager.users, file, indent=4)
         except IOError:
             print("Error: File not found or inaccessible.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def load_game(self, username):
         try:
@@ -102,6 +106,7 @@ class GameSystem:
                 users_data = json.load(file)
         except IOError:
             print("Error: File not found or inaccessible.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
             return None
 
         user_data = users_data.get(username, {})
@@ -114,6 +119,7 @@ class GameSystem:
             draw()
         else:
             print("No characters available for this user.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
             return None
 
         try:
@@ -121,18 +127,20 @@ class GameSystem:
             character = user_data['characters'][choice - 1]
         except (ValueError, IndexError):
             print("Invalid selection.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
             return None
 
         if 'game_state' in character and character['game_state']:
             game_state = character['game_state'][-1]
             print(f"Game loaded successfully for character {character['name']}.")
-            # Ensure that the game state includes 'current_room' and 'inventory'
+            self.colored_input("Press Enter to continue...", color="pale_green1")
             current_room = game_state.get('current_room', "Default Room Name")
             inventory = game_state.get('inventory', [])
             rooms = game_state.get('rooms', {})
             return (character, current_room, inventory,rooms)
         else:
             print(f"No saved game state for character {character['name']}.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
             return None
 
     def save_score(self, name, username, bonus):
@@ -142,10 +150,13 @@ class GameSystem:
                 data = json.load(file)
         except FileNotFoundError:
             print("File not found. A new file will be created.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
         except json.JSONDecodeError:
             print("Error reading the JSON file. Starting a new leaderboard.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
 
         entry_found = False
         for entry in data:
@@ -160,8 +171,10 @@ class GameSystem:
             with open("leaderboard.json", 'w') as file:
                 json.dump(data, file, indent=4)
             print(f"Score for {name} saved successfully.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
         except Exception as e:
             print(f"An error occurred while writing to the file: {e}")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def load_score(self, name, username):
         try:
@@ -172,10 +185,13 @@ class GameSystem:
                     return entry.get("score", 0)
         except FileNotFoundError:
             print("Leaderboard file not found.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
         except json.JSONDecodeError:
             print("Error reading the JSON file.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
         return None
 
     def load_leaderboard(self):
@@ -184,12 +200,15 @@ class GameSystem:
                 data = json.load(file)
         except FileNotFoundError:
             print("Error: File not found or inaccessible.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
             return
         except json.JSONDecodeError:
             print("Error: JSON file is not properly formatted.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
             return
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
             return
         data.sort(key=lambda x: x.get("score", 0), reverse=True)
         print("LEADERBOARD\n"
@@ -202,7 +221,9 @@ class GameSystem:
 
     def delete_account(self, username):
         if self.logged_in_user != username:
-            return "Error: You can only delete your own account."
+            print("Error: You can only delete your own account.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
+
         else:
             print(f"{username} has been deleted successfully.")
             return self.user_manager.delete_account(username)
@@ -210,10 +231,12 @@ class GameSystem:
     def delete_character(self, username):
         user_data = self.user_manager.users.get(username, None)
         if user_data is None:
-            return "Error: User not found."
+            print("Error: User not found.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
 
         if not user_data['characters']:
-            return "No characters available for this user."
+            print("No characters available for this user.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
 
         clear()
         draw()
@@ -226,7 +249,8 @@ class GameSystem:
             choice = int(input("# "))
             assert 1 <= choice <= len(user_data['characters'])
         except (ValueError, AssertionError):
-            return "Invalid selection."
+            print("Invalid selection.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
 
         # Delete the selected character
         del user_data['characters'][choice - 1]
