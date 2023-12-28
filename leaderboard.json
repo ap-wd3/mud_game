@@ -48,5 +48,20 @@
         "Player": "Mint",
         "Charactor name": "test9",
         "score": 10
+    },
+    {
+        "Player": "shan",
+        "Charactor name": "shanshan",
+        "score": 20
+    },
+    {
+        "Player": "shan",
+        "Charactor name": "shani",
+        "score": 0
+    },
+    {
+        "Player": "shan",
+        "Charactor name": "shanni",
+        "score": 110
     }
 ]

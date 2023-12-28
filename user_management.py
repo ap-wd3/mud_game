@@ -1,16 +1,28 @@
 import utils
+from rich import print
+from rich.style import Style
+from rich.console import Console
 
 class UserManager:
     def __init__(self, storage_file='users.json'):
         self.storage_file = storage_file
         self.users = utils.load_data(self.storage_file)
+        self.console = Console()
+
+    def colored_input(self, prompt,color="green"):
+        self.console.print(prompt, style=color, end="")
+        user_input = input()
+        return user_input
 
     def create_user(self, username, password, email):
         if username in self.users:
-            return "Error: Username already taken."
-        self.users[username] = {'password': password, 'email': email, 'characters': []}
-        utils.save_data(self.users, self.storage_file)
-        return "User created successfully."
+            print("Error: Username already taken.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
+        else:
+            self.users[username] = {'password': password, 'email': email, 'characters': []}
+            utils.save_data(self.users, self.storage_file)
+            print("User created successfully.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def save_users(self):
         utils.save_data(self.users, self.storage_file)
@@ -22,18 +34,23 @@ class UserManager:
 
     def reset_password(self, username, email, new_password):
         if username not in self.users:
-            return "Error: User does not exist."
+            print("Error: User does not exist.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
         if self.users[username]['email'] != email:
-            return "Error: Incorrect email."
+            print("Error: Incorrect email.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
         self.users[username]['password'] = new_password
         utils.save_data(self.users, self.storage_file)
-        return "Password reset successfully."
+        print("Password reset successfully.")
+        self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def delete_account(self, username):
         if username not in self.users:
-            return "Error: User does not exist."
+            print("Error: User does not exist.")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
 
         del self.users[username]
 
         self.save_users()
-        return "Account deleted successfully."
+        print("Account deleted successfully.")
+        self.colored_input("Press Enter to continue...", color="pale_green1")

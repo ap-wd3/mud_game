@@ -13,6 +13,8 @@ class Monster:
 
 
 
+
+
 monsters = {
     'Diet Monster':Monster('Diet Monster',
                            "Born from society's pressure on women to be skinny and obession with dieting and the constant struggle between indulgence and restraint, \n"
