@@ -43,6 +43,13 @@ class GamePlay:
     def draw_separator(self):
         print("[aquamarine3]++------------------------++[/]")
 
+    def print_colorized_ascii_art(self, file_path, hair_color,  eye_color):
+        with open(file_path, 'r') as file:
+            ascii_art = file.read()
+            ascii_art = ascii_art.replace('@', f'[{hair_color}]@[/{hair_color}]')
+            ascii_art = ascii_art.replace('0', f'[{eye_color}]0[/{eye_color}]')
+            print(ascii_art)
+
     def main_menu(self):
         self.clear_screen()
         self.draw_separator()
@@ -62,12 +69,12 @@ class GamePlay:
             self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def handle_login(self):
-        username = self.colored_input("Enter your username: ", color="light_goldenrod1")
-        password = self.colored_input("Enter your password: ", color="light_goldenrod1")
+        username = self.colored_input("Enter your username: ", color="light_steel_blue")
+        password = self.colored_input("Enter your password: ", color="light_steel_blue")
         self.draw_separator()
         result = self.game_system.login(username, password)
         if result == 'Logged in successfully.':
-            print(result)
+            print(f'[slate_blue3]{result}[/]')
             self.colored_input("Press Enter to continue...", color="pale_green1")
             self.username = username
             self.menu1 = False
@@ -77,17 +84,17 @@ class GamePlay:
             self.menu2 = False
 
     def handle_registration(self):
-        username = self.colored_input("Choose your username: ", color="light_goldenrod1")
-        password = self.colored_input("Choose your username: ", color="light_goldenrod1")
-        email = self.colored_input("Enter your email address: ", color="light_goldenrod1")
+        username = self.colored_input("Choose your username: ", color="light_steel_blue")
+        password = self.colored_input("Choose your password: ", color="light_steel_blue")
+        email = self.colored_input("Enter your email address: ", color="light_steel_blue")
         self.user_manager.create_user(username, password, email)
 
 
 
     def handle_password_reset(self):
-        username = self.colored_input("Enter your username: ", color="light_goldenrod1")
-        email = self.colored_input("Enter your email address for password reset:  ", color="light_goldenrod1")
-        new_password = self.colored_input("Enter your new password: ", color="light_goldenrod1")
+        username = self.colored_input("Enter your username: ", color="light_steel_blue")
+        email = self.colored_input("Enter your email address for password reset:  ", color="light_steel_blue")
+        new_password = self.colored_input("Enter your new password: ", color="light_steel_blue")
         self.user_manager.reset_password(username, email, new_password)
 
     def handle_quit_menu1(self):
@@ -96,7 +103,7 @@ class GamePlay:
     def secondary_menu(self):
         self.clear_screen()
         self.draw_separator()
-        print("1, NEW GAME\n2, LOAD GAME\n3, LEADERBOARD\n4, RULES\n5, DELETE ACCOUNT\n6, DELETE CHARACTERS\n7, QUIT GAME")
+        print("1, [thistle3]NEW GAME[/]\n2, [thistle3]LOAD GAME[/]\n3, [thistle3]LEADERBOARD[/]\n4, [thistle3]RULES[/]\n5, [thistle3]DELETE ACCOUNT[/]\n6, [thistle3]DELETE CHARACTERS[/]\n7, [thistle3]QUIT GAME[/]")
         self.draw_separator()
         choice = self.colored_input("#", color="sandy_brown")
         if choice == "1":
@@ -142,10 +149,10 @@ class GamePlay:
         hair_color = 'Unknown'
         while hair_color == 'Unknown':
             print("Choose hair color:")
-            print("1: Pink")
-            print("2: Blue")
-            print("3: White")
-            color_options = {'1': 'Pink', '2': 'Blue', '3': 'White'}
+            print("1: Cyan")
+            print("2: Red")
+            print("3: Yellow")
+            color_options = {'1': 'cyan', '2': 'red', '3': 'yellow'}
             hair_color_choice = input("Select option (1, 2, or 3): ").strip()
             hair_color = color_options.get(hair_color_choice, "Unknown")
             if hair_color == 'Unknown':
@@ -155,17 +162,23 @@ class GamePlay:
         eye_color = 'Unknown'
         while eye_color == 'Unknown':
             print("Choose eye color:")
-            print("1:Yellow")
+            print("1:Blue")
             print("2: Green")
             print("3: Red")
-            color_options = {'1': 'Yellow', '2': 'Green', '3': 'Red'}
+            color_options = {'1': 'blue', '2': 'green', '3': 'red'}
             eye_color_choice = input("Select option (1, 2, or 3): ").strip()
             eye_color = color_options.get(eye_color_choice, "Unknown")
             if eye_color == 'Unknown':
                 print("Invalid option, please choose again.")
                 self.colored_input("Press Enter to continue...", color="pale_green1")
         result = self.game_system.create_character(self.username, name, hair_length, hair_color, eye_color)
-        print(result)
+        short_hair_file_path = 'resource/short_hair.txt'
+        long_hair_file_path = 'resource/long_hair.txt'
+        if hair_length == 'short':
+            self.print_colorized_ascii_art(short_hair_file_path, hair_color, eye_color)
+        elif hair_length == 'long':
+            self.print_colorized_ascii_art(long_hair_file_path, hair_color, eye_color)
+        print(f'[light_pink1]{result}[/]')
         self.colored_input("Press Enter to continue...", color="pale_green1")
         self.play = True
         self.menu2 = False
@@ -184,7 +197,7 @@ class GamePlay:
             self.menu2 = False
         else:
             self.play = False
-            self.menu2 = False
+            self.menu2 = True
 
 
 
@@ -214,6 +227,7 @@ class GamePlay:
 
     def game_loop(self):
         while self.play and self.confidence > 0:
+            self.game_system.load_score(self.character_name, self.username)
             self.current_room = self.map.room_map.get((self.map.x, self.map.y), "Unknown room")
             self.room_info = self.rooms.get(self.current_room, {})
             self.clear_screen()

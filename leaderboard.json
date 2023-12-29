@@ -63,5 +63,20 @@
         "Player": "shan",
         "Charactor name": "shanni",
         "score": 110
+    },
+    {
+        "Player": "Adam",
+        "Charactor name": "test002",
+        "score": 20
+    },
+    {
+        "Player": "Adam",
+        "Charactor name": "test001",
+        "score": 10
+    },
+    {
+        "Player": "shan",
+        "Charactor name": "shannon",
+        "score": 20
     }
 ]
