@@ -125,7 +125,7 @@ class GamePlay:
               "3, [thistle3]RESET PASSWORD[/]\n"
               "4, [thistle3]QUIT[/]")
         self.draw_separator()
-        choice = self.colored_input("#", color="sandy_brown")
+        choice = self.colored_input("# ", color="sandy_brown")
         if choice == "1":
             self.handle_login()
         elif choice == "2":
@@ -154,6 +154,10 @@ class GamePlay:
             self.menu2 = False
 
     def handle_registration(self):
+        self.clear_screen()
+        self.draw_separator()
+        print("Create new account or type 'back' to go back to main menu.")
+        self.draw_separator()
         username = self.colored_input("Choose your username: ", color="light_steel_blue")
         if username.lower() == "back":
             self.menu1 = True
@@ -193,7 +197,7 @@ class GamePlay:
         self.draw_separator()
         print("or type 'BACK' to go back to main menu")
         self.draw_separator()
-        choice = self.colored_input("#", color="sandy_brown")
+        choice = self.colored_input("# ", color="sandy_brown")
         if choice == "1":
             self.handle_new_game()
         elif choice == "2":
@@ -327,7 +331,8 @@ class GamePlay:
         self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def handle_rules(self):
-        print("Collect the right item(s) to defeat monsters. Find more hints by observing each monster")
+        print("Collect the right item(s) to defeat monsters. Find more hints by observing each monster\n")
+        print(self.keyCommand)
         self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def handle_delete_account(self):

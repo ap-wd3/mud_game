@@ -706,5 +706,10 @@
                 ]
             }
         ]
+    },
+    "Mint": {
+        "password": "Mint",
+        "email": "Mint@gmail.com",
+        "characters": []
     }
 }
