@@ -27,7 +27,11 @@ class UserManager:
     def save_users(self):
         utils.save_data(self.users, self.storage_file)
 
+    def reload_data(self):
+        self.users = utils.load_data(self.storage_file)
+
     def verify_user(self, username, password):
+        self.reload_data()
         if username not in self.users:
             return False
         return self.users[username]['password'] == password

@@ -91,6 +91,9 @@ class Map:
                 print("Out of bound, cannot go west")
                 input("Press enter to continue...")
 
+        else:
+            return "invalid input"
+
     def print_map(self):
         for y in range(self.height):
             # Adding an initial offset for the first and third rows

@@ -114,15 +114,21 @@ class GameSystem:
             for i, character in enumerate(user_data['characters'], start=1):
                 print(f"{i}, {character['name']}")
             draw()
+            print("or type 'BACK' to go back to main menu")
+            draw()
         else:
             print("[deep_pink2]No characters available for this user.[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
             return None
 
-        try:
-            choice = int(input("# "))
+        choice = input("# ")
+        if choice.lower() == 'back':
+            print(choice)
+            return 'back'
+        elif choice.isdigit():
+            choice = int(choice)
             character = user_data['characters'][choice - 1]
-        except (ValueError, IndexError):
+        else:
             print("[deep_pink2]Invalid selection.[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
             return None
@@ -157,13 +163,13 @@ class GameSystem:
 
         entry_found = False
         for entry in data:
-            if entry.get("Player") == username and entry.get("Charactor name") == name:
+            if entry.get("Player") == username and entry.get("Character name") == name:
                 entry["score"] = bonus
                 entry_found = True
                 break
 
         if not entry_found:
-            data.append({"Player": username, "Charactor name": name, "score": bonus})
+            data.append({"Player": username, "Character name": name, "score": bonus})
         try:
             with open("leaderboard.json", 'w') as file:
                 json.dump(data, file, indent=4)
@@ -189,7 +195,7 @@ class GameSystem:
         except Exception as e:
             print(f"[deep_pink2]An unexpected error occurred: {e}[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
-        return None
+
 
     def load_leaderboard(self):
         try:
