@@ -115,7 +115,7 @@ class GameSystem:
             for i, character in enumerate(user_data['characters'], start=1):
                 print(f"{i}, {character['name']}")
             draw()
-            print("or type 'BACK' to go back to main menu")
+            print("Type 'BACK' to go back to main menu")
             draw()
         else:
             print("[deep_pink2]No characters available for this user.[/]")
@@ -230,13 +230,13 @@ class GameSystem:
             return
 
         del self.user_manager.users[username]
-        self.update_leaderboard_after_deletion(username)
+        self.delete_leaderboard(username)
         self.save_users()
 
         print("Account deleted successfully.")
         self.colored_input("Press Enter to continue...", color="pale_green1")
 
-    def update_leaderboard_after_deletion(self, username):
+    def delete_leaderboard(self, username):
         self.leaderboard = utils.load_data(self.user_manager.leaderboard_file)
         self.leaderboard = [entry for entry in self.leaderboard if entry.get("Player") != username]
         utils.save_data(self.leaderboard, self.user_manager.leaderboard_file)
@@ -260,17 +260,39 @@ class GameSystem:
         for i, character in enumerate(user_data['characters'], start=1):
             print(f"{i}, {character['name']}")
         draw()
+        print("type 'BACK' to go back to main menu")
+        draw()
 
-        try:
-            choice = int(input("# "))
+        choice = input("# ")
+        if choice.lower() == 'back':
+            print(choice)
+            return 'back'
+        elif choice.isdigit():
+            choice = int(choice)
             assert 1 <= choice <= len(user_data['characters'])
-        except (ValueError, AssertionError):
+        else:
             print("[deep_pink2]Invalid selection.[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
 
+        # try:
+        #     choice = int(input("# "))
+        #     assert 1 <= choice <= len(user_data['characters'])
+        # except (ValueError, AssertionError):
+        #     print("[deep_pink2]Invalid selection.[/]")
+        #     self.colored_input("Press Enter to continue...", color="pale_green1")
+
         # Delete the selected character
+        character_name = user_data['characters'][choice - 1]['name']
         del user_data['characters'][choice - 1]
+        self.delete_leaderboard_character(username, character_name)
 
         # Save the updated user data
         self.user_manager.save_users()
         print(f"Character deleted successfully.")
+        self.colored_input("Press Enter to continue...", color="pale_green1")
+
+    def delete_leaderboard_character(self, username, character_name):
+        self.leaderboard = utils.load_data(self.user_manager.leaderboard_file)
+        self.leaderboard = [entry for entry in self.leaderboard
+                            if not (entry.get("Player") == username and entry.get("Character name") == character_name)]
+        utils.save_data(self.leaderboard, self.user_manager.leaderboard_file)

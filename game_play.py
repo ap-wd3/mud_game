@@ -195,7 +195,7 @@ class GamePlay:
               "6, [thistle3]DELETE CHARACTERS[/]\n"
               "7, [thistle3]QUIT GAME[/]")
         self.draw_separator()
-        print("or type 'BACK' to go back to main menu")
+        print("Type 'BACK' to go back to main menu")
         self.draw_separator()
         choice = self.colored_input("# ", color="sandy_brown")
         if choice == "1":
@@ -303,12 +303,9 @@ class GamePlay:
             else:
                 character, current_room, inventory, rooms = loaded_data
                 self.character_name = character['name']
-                # print(self.character_name)
-                # input("Press enter to continue...")
                 self.current_room = current_room
                 self.inventory = inventory
                 self.rooms = rooms
-                # Update map coordinates based on current room
                 self.map.x, self.map.y = self.map.get_coordinates_from_room_name(self.current_room)
                 self.play = True
                 self.menu2 = False
@@ -341,7 +338,12 @@ class GamePlay:
         self.menu1 = True
 
     def handle_delete_character(self):
-        self.game_system.delete_character(self.username)
+        deleted_character = self.game_system.delete_character(self.username)
+        if deleted_character:
+            if deleted_character == 'back':
+                self.menu2 = True
+            else:
+                self.game_system.delete_character(self.username)
 
     def handle_quit(self):
         quit()
@@ -441,7 +443,8 @@ class GamePlay:
                 self.game_system.save_game(self.username, self.character_name, self.current_room, self.inventory, self.confidence, self.rooms)
                 print("Game Saved Successfully!")
                 print("Thank you for playing The Wood, I will see you when I see you again!")
-                exit(0)
+                self.play = False
+                self.menu2 = True
             elif answer == "N":
                 pass
             else:
@@ -458,6 +461,7 @@ class GamePlay:
             else:
                 print("There's no monster to attack here.")
                 self.colored_input("Press Enter to continue...", color="pale_green1")
+
         else:
             print("Invalid Command")
             self.colored_input("Press Enter to continue...", color="pale_green1")
