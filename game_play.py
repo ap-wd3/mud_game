@@ -123,7 +123,8 @@ class GamePlay:
         print("1, [thistle3]LOGIN[/]\n"
               "2, [thistle3]NEW REGISTRATION[/]\n"
               "3, [thistle3]RESET PASSWORD[/]\n"
-              "4, [thistle3]QUIT[/]")
+              "4, [thistle3]QUIT[/]"
+              "5, [thistle3]QUIT!![/]")
         self.draw_separator()
         choice = self.colored_input("#", color="sandy_brown")
         if choice == "1":
