@@ -93,5 +93,10 @@
         "Player": "shanshan",
         "Character name": "test",
         "score": 20
+    },
+    {
+        "Player": "hi",
+        "Character name": "shannon",
+        "score": 130
     }
 ]

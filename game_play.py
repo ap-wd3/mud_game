@@ -7,6 +7,7 @@ from user_management import UserManager
 from rich import print
 from rich.style import Style
 from rich.console import Console
+import time
 
 
 class GamePlay:
@@ -29,17 +30,17 @@ class GamePlay:
         self.rooms = rooms
         self.user_manager = UserManager()
         self.console = Console()
-        self.instruction = f"Welcome to the wood, [green]{self.character_name}[/]!\n" \
+        self.instruction = f"Welcome to the wood[green]{self.character_name}[/]!\n" \
                            f"Our wood is under attack by monsters\n" \
                            f"Each [salmon1]monster[/] can be defeated by [pink3]specific item(s)[/]\n" \
                            f"Please find those items and [red]defeat all monsters[/] to bring peace back to the wood...\n"
         self.keyCommand = f"[cyan1]COMMAND                             DESCRIPTIONS[/]\n" \
-                          f"Go <East/West/North/South>----------Move between areas\n" \
+                          f"[white]Go <East/West/North/South>----------Move between areas\n" \
                           f"Get <item>--------------------------Pick up the item\n" \
                           f"Look--------------------------------See monster's details including hints\n" \
                           f"Attack------------------------------Attack the monster\n" \
                           f"Help--------------------------------See game's rules and command\n" \
-                          f"Quit--------------------------------Save and Exit the game\n"
+                          f"Quit--------------------------------Save and Exit the game[/]\n"
         self.book_path = 'resource/book.txt'
 
     def colored_input(self, prompt, color="green"):
@@ -58,10 +59,23 @@ class GamePlay:
 
     def print_colorized_ascii_art(self, file_path, hair_color,  eye_color):
         with open(file_path, 'r') as file:
-            ascii_art = file.read()
-            ascii_art = ascii_art.replace('@', f'[{hair_color}]@[/{hair_color}]')
-            ascii_art = ascii_art.replace('0', f'[{eye_color}]0[/{eye_color}]')
-            print(ascii_art)
+            ascii = file.read()
+            placeholders = {
+                '@':'<@>',
+                '0': '<0>'
+            }
+            for char, placeholder in placeholders.items():
+                ascii = ascii.replace(char, placeholder)
+
+            colored_strings = {
+                '<@>': f'[{hair_color}]@[/]',
+                '<0>': f'[{eye_color}]0[/]'
+            }
+
+            for placeholder, colored in colored_strings.items():
+                ascii = ascii.replace(placeholder, colored)
+
+            return ascii
 
     def print_ascii_items(self, file_path):
         with open(file_path, 'r') as file:
@@ -88,7 +102,7 @@ class GamePlay:
                 ascii = ascii.replace(char, placeholder)
 
             # Replace placeholders with formatted strings
-            formatted_strings = {
+            colored_strings = {
                 '<0>': '[bright_white]0[/]',
                 '<A>': '[cyan1]A[/]',
                 '<H>': '[gold3]H[/gold3]',
@@ -104,18 +118,73 @@ class GamePlay:
                 '<V>': '[orange3]V[/orange3]',
             }
 
-            for placeholder, formatted in formatted_strings.items():
-                ascii = ascii.replace(placeholder, formatted)
+            for placeholder, colored in colored_strings.items():
+                ascii = ascii.replace(placeholder, colored)
 
             return ascii
 
     def print_ascii_monsters(self, file_path):
         with open(file_path, 'r') as file:
             ascii = file.read()
-            ascii = ascii.replace('i', f'[light_slate_blue]i[/]')
-            ascii = ascii.replace('@', f'[pink1]@[/]')
-            ascii = ascii.replace('D', f'[pale_turquoise1]D[/]')
+
+
+            placeholders = {
+                '0': '<0>',
+                '(': '<(>',
+                ')': '<)>',
+                '^': '<^>',
+                'U': '<U>',
+                '~': '<~>',
+                'i': '<i>',
+                'p': '<p>',
+                'd': '<d>',
+                'b': '<b>',
+                'D': '<D>',
+            }
+
+            for char, placeholder in placeholders.items():
+                ascii = ascii.replace(char, placeholder)
+
+            # Replace placeholders with formatted strings
+            colored_strings = {
+                '<0>': '[bright_white]0[/]',
+                '<(>': '[khaki1]([/]',
+                '<)>': '[khaki1])[/]',
+                '<^>': '[khaki1]^|[/]',
+                '<U>': '[sandy_brown]U[/]',
+                '<~>': '[khaki1]~[/]',
+                '<i>': '[plum2]i[/]',
+                '<p>': '[dark_sea_green2]p[/]',
+                '<b>': '[dark_sea_green2]b[/]',
+                '<d>': '[dark_sea_green2]d[/]',
+                '<D>': '[dark_sea_green2]D[/]',
+            }
+
+            for placeholder, colored in colored_strings.items():
+                ascii = ascii.replace(placeholder, colored)
+
             return ascii
+
+    def print_monster_info(self, name, health, attack, loot, items_required):
+        # Table Border Constants
+        column_width = 30
+        line = '-' * (column_width * 2 + 7)
+
+        # Print table header
+        print(line)
+        print(f"| {'Attribute':<{column_width}} | {'Information':{column_width}} |")
+        print(line)
+
+
+        print(f"| {'Name':<{column_width}} | {name:<{column_width}} |")
+        print(f"| {'Health':<{column_width}} | {health:<{column_width}} |")
+        print(f"| {'Attack':<{column_width}} | {attack:<{column_width}} |")
+        print(f"| {'Loot':<{column_width}} | {loot:<{column_width}} |")
+        items_str = ', '.join(items_required)
+        print(f"| {'Items Needed':<{column_width}} | {items_str:<{column_width}} |")
+        print(line)
+
+
 
     def main_menu(self):
         self.clear_screen()
@@ -123,8 +192,7 @@ class GamePlay:
         print("1, [thistle3]LOGIN[/]\n"
               "2, [thistle3]NEW REGISTRATION[/]\n"
               "3, [thistle3]RESET PASSWORD[/]\n"
-              "4, [thistle3]QUIT[/]"
-              "5, [thistle3]TEST[/]")
+              "4, [thistle3]QUIT[/]")
         self.draw_separator()
         choice = self.colored_input("#", color="sandy_brown")
         if choice == "1":
@@ -140,8 +208,8 @@ class GamePlay:
             self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def handle_login(self):
-        username = self.colored_input("Enter your username: ", color="light_steel_blue")
-        password = self.colored_input("Enter your password: ", color="light_steel_blue")
+        username = self.colored_input("Enter your username: ", color="gold1")
+        password = self.colored_input("Enter your password: ", color="gold1")
         self.draw_separator()
         result = self.game_system.login(username, password)
         if result == 'Logged in successfully.':
@@ -155,15 +223,27 @@ class GamePlay:
             self.menu2 = False
 
     def handle_registration(self):
-        username = self.colored_input("Choose your username: ", color="light_steel_blue")
-        password = self.colored_input("Choose your password: ", color="light_steel_blue")
-        email = self.colored_input("Enter your email address: ", color="light_steel_blue")
-        self.user_manager.create_user(username, password, email)
+        username = self.colored_input("Choose your username: ", color="gold1")
+        if username.lower() == "back":
+            self.menu1 = True
+            self.menu2 = False
+        else:
+            password = self.colored_input("Choose your password: ", color="gold1")
+            if password.lower() == "back":
+                self.menu1 = True
+                self.menu2 = False
+            else:
+                if password.lower() == "back":
+                    self.menu1 = True
+                    self.menu2 = False
+                else:
+                    email = self.colored_input("Enter your email address: ", color="gold1")
+                    self.user_manager.create_user(username, password, email)
 
     def handle_password_reset(self):
-        username = self.colored_input("Enter your username: ", color="light_steel_blue")
-        email = self.colored_input("Enter your email address for password reset:  ", color="light_steel_blue")
-        new_password = self.colored_input("Enter your new password: ", color="light_steel_blue")
+        username = self.colored_input("Enter your username: ", color="gold1")
+        email = self.colored_input("Enter your email address for password reset:  ", color="gold1")
+        new_password = self.colored_input("Enter your new password: ", color="gold1")
         self.user_manager.reset_password(username, email, new_password)
 
     def handle_quit_menu1(self):
@@ -238,7 +318,7 @@ class GamePlay:
         hair_color = 'Unknown'
         while hair_color == 'Unknown':
             print("Choose hair color:")
-            print("1: Cyan")
+            print("1: [cyan]Cyan[/]")
             print("2: Red")
             print("3: Yellow")
             color_options = {'1': 'cyan', '2': 'red', '3': 'yellow'}
@@ -270,9 +350,9 @@ class GamePlay:
         short_hair_file_path = 'resource/short_hair.txt'
         long_hair_file_path = 'resource/long_hair.txt'
         if hair_length == 'short':
-            self.print_colorized_ascii_art(short_hair_file_path, hair_color, eye_color)
+            print(self.print_colorized_ascii_art(short_hair_file_path, hair_color, eye_color))
         elif hair_length == 'long':
-            self.print_colorized_ascii_art(long_hair_file_path, hair_color, eye_color)
+            print(self.print_colorized_ascii_art(long_hair_file_path, hair_color, eye_color))
         print(f'[light_pink1]{result}[/]')
         self.colored_input("Press Enter to continue...", color="pale_green1")
         self.game_introduction()
@@ -344,32 +424,45 @@ class GamePlay:
             self.room_info = self.rooms.get(self.current_room, {})
             self.clear_screen()
             self.map.print_map()
-            print(f"You are in the {self.current_room}\nInventory : {self.inventory}\n{'-' * 27}")
-            print("Hint: You can enter 'help' for command information.")
-            print(f"Confidence: {self.confidence}")
+            print()
+            self.draw_separator()
+            print(f"You are in the {self.current_room}\n\nInventory : {self.inventory}")
+            self.draw_separator()
+            print(f"[bold]Your current confidence: {self.confidence}[/]")
             print(self.message)
+            print("[orchid1]Hint[/]: You can enter 'help' for command information.\n")
+            self.draw_separator()
 
             if "Monster" in self.room_info:
                 encountered_monster = self.room_info['Monster']
-                print(f"You encounter a {encountered_monster}!")
+                print(f"[bold italic]You encounter a '{encountered_monster}'! [/]")
                 if len(encountered_monster.split()) == 3:
                     print(self.print_ascii_monsters(f'resource/{encountered_monster.split()[0].lower()}{encountered_monster.split()[1].lower()}_monster.txt'))
                 elif len(encountered_monster.split()) == 2:
                     print(self.print_ascii_monsters(f'resource/{encountered_monster.split()[0].lower()}_monster.txt'))
-                print("Enter 'look' to see the information of the monster")
+                print("Enter 'look' to see the information of the monster\n")
+
             elif "Item" in self.room_info:
                 item = self.room_info["Item"]
                 if item[0] in 'AEIOUaeiou':
-                    print(f"You see an {self.room_info['Item']}!")
+                    print(f"You see an {self.room_info['Item']}!\n")
 
                 else:
-                    print(f"You see a {self.room_info['Item']}")
+                    print(f"You see a {self.room_info['Item']}\n")
 
             else:
-                print("There's nothing special here.")
+                if not "Monster" in self.room_info:
+                    print("Defeated all monsters")
+                    input("Press enter to continue..")
+                    exit(0)
+                else:
+                    print("Oops, there's nothing special here.\n")
 
-            user_input = input("Enter your command: ").lower().split(' ')
+            user_input = self.colored_input("Enter your command:", color="gold1").lower().split(' ')
             self.process_command(user_input)
+
+
+
 
     def process_command(self, user_input):
         if not user_input:
@@ -385,7 +478,7 @@ class GamePlay:
                 self.current_room = self.map.room_map.get((self.map.x, self.map.y), "Unknown room")
                 self.message = "You moved " + direction
             else:
-                self.message = "[red]Invalid command. Please use 'Go <East/West/North/South'[/]"
+                self.message = "[deep_pink2]Invalid command. Please use 'Go <East/West/North/South'[/]"
 
         elif action == "get":
             item = argument
@@ -396,7 +489,8 @@ class GamePlay:
                     ascii_item = self.print_ascii_items(f'resource/{item.split()[0].lower()}.txt')
             if item == self.rooms[self.current_room].get("Item", "") and item not in self.inventory:
                 self.inventory.append(item)
-                self.message = f"{ascii_item} \n{item} retrieved!"
+                self.message = f"{ascii_item} \n{item} retrieved!\n"
+                self.draw_separator()
                 self.rooms[self.current_room].pop("Item", None)
 
             elif item in self.inventory:
@@ -405,35 +499,49 @@ class GamePlay:
                 self.message = f"{item} cannot be picked up."
 
         elif action == "look":
+            self.clear_screen()
             monster_name = self.room_info.get("Monster")
             if monster_name:
                 monster = monsters.get(monster_name)
                 if monster:
-                    print(f"Name: {monster.name}")
-                    print(f"Description: {monster.description}")
-                    print(f"Health: {monster.health}")
-                    print(f"Attack: {monster.attack}")
-                    print(f"Items Required: {', '.join(monster.items_required)}")
-                    print(f"Hint: {monster.hint}")
-                    input("Press 'Enter' to continue...")
+                    if len(monster.name.split()) == 3:
+                        print(self.print_ascii_monsters(
+                            f'resource/{monster.name.split()[0].lower()}{monster.name.split()[1].lower()}_monster.txt'))
+                    elif len(monster.name.split()) == 2:
+                        print(
+                            self.print_ascii_monsters(f'resource/{monster.name.split()[0].lower()}_monster.txt'))
+                    time.sleep(2)
+                    print(f"{monster.description}\n")
+                    time.sleep(4)
+                    self.print_monster_info(monster.name, monster.health, monster.attack, monster.loot,
+                                                         monster.items_required)
+                    print()
+                    time.sleep(2)
+                    print(f"{monster.hint}\n")
+                    time.sleep(2)
+
+                    self.colored_input("Press Enter to continue...", color="pale_green1")
                 else:
                     print("There's no monster here.")
             else:
                 print("Sorry, there is nothing to look at. :(")
 
         elif action == "quit":
+            self.clear_screen()
             answer = input("Save and Exit game? Y/N\nYour answer: ").upper()
             if answer == "Y":
                 self.game_system.save_game(self.username, self.character_name, self.current_room, self.inventory, self.confidence, self.rooms)
-                print("Game Saved Successfully!")
+                self.clear_screen()
+                print("[gold1]Game Saved Successfully![/]")
                 print("Thank you for playing The Wood, I will see you when I see you again!")
                 exit(0)
             elif answer == "N":
                 pass
             else:
-                print("Invalid Command")
+                print("[]Invalid Command")
 
         elif action == "help":
+            self.clear_screen()
             print(self.keyCommand)
             self.colored_input("Press Enter to continue...", color="pale_green1")
 

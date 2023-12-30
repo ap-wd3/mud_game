@@ -415,21 +415,14 @@
         "email": "hi@gmail.com",
         "characters": [
             {
-                "name": "hi",
-                "hair_length": "long",
+                "name": "shanshan",
+                "hair_length": "short",
                 "hair_color": "cyan",
                 "eye_color": "green",
-                "bonus": 0
-            },
-            {
-                "name": "hihi",
-                "hair_length": "long",
-                "hair_color": "cyan",
-                "eye_color": "blue",
                 "bonus": 0,
                 "game_state": [
                     {
-                        "current_room": "Forest Haven",
+                        "current_room": "Silver Birch Copse",
                         "inventory": [
                             "Smart Planner",
                             "Book"
@@ -513,21 +506,14 @@
                 ]
             },
             {
-                "name": "testascii",
-                "hair_length": "long",
-                "hair_color": "cyan",
-                "eye_color": "green",
-                "bonus": 0
-            },
-            {
-                "name": "test111",
+                "name": "shani",
                 "hair_length": "long",
                 "hair_color": "cyan",
                 "eye_color": "green",
                 "bonus": 0,
                 "game_state": [
                     {
-                        "current_room": "Maple Sanctuary",
+                        "current_room": "Moonlit Timberland",
                         "inventory": [],
                         "confidence": 100,
                         "rooms": {
@@ -604,6 +590,91 @@
                             "Sunbeam Glade": {
                                 "West": "Forest Haven",
                                 "Item": "Jumping Rope"
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "shannon",
+                "hair_length": "short",
+                "hair_color": "cyan",
+                "eye_color": "green",
+                "bonus": 0,
+                "game_state": [
+                    {
+                        "current_room": "Emerald Canopy",
+                        "inventory": [
+                            "Book",
+                            "Jumping Rope",
+                            "Mirror",
+                            "Smart Planner",
+                            "Clock",
+                            "Pizza",
+                            "Key"
+                        ],
+                        "confidence": 100,
+                        "rooms": {
+                            "Maple Sanctuary": {
+                                "East": "Moonlit Timberland"
+                            },
+                            "Moonlit Timberland": {
+                                "West": "Maple Sanctuary",
+                                "North": "Maple Sanctuary",
+                                "South": "Dewdrop Dell",
+                                "East": "Emerald Canopy"
+                            },
+                            "Whispering Pines": {
+                                "South": "Moonlit Timberland",
+                                "East": "Pine Haven"
+                            },
+                            "Dewdrop Dell": {
+                                "North": "Moonlit Timberland",
+                                "East": "Redwood Haven"
+                            },
+                            "Pine Haven": {
+                                "South": "Emerald Canopy",
+                                "East": "Walnut Retreat",
+                                "West": "Whispering Pines"
+                            },
+                            "Emerald Canopy": {
+                                "West": "Moonlit Timberland",
+                                "North": "Pine Haven",
+                                "South": "Redwood Haven",
+                                "East": "Cypress Cottage"
+                            },
+                            "Redwood Haven": {
+                                "West": "Dewdrop Dell",
+                                "East": "Silver Birch Copse",
+                                "North": "Emerald Canopy"
+                            },
+                            "Walnut Retreat": {
+                                "West": "Pine Haven",
+                                "South": "Cypress Cottage"
+                            },
+                            "Cypress Cottage": {
+                                "West": "Emerald Canopy",
+                                "South": "Silver Birch Copse",
+                                "North": "Walnut Retreat",
+                                "East": "Forest Haven"
+                            },
+                            "Silver Birch Copse": {
+                                "West": "Redwood Haven",
+                                "North": "Cypress Cottage"
+                            },
+                            "Forest Haven": {
+                                "West": "Cypress Cottage"
+                            },
+                            "Mystic Moss Grove": {
+                                "West": "Silver Birch Copse",
+                                "North": "Forest Haven"
+                            },
+                            "Enchanted Thicket": {
+                                "West": "Walnut Retreat",
+                                "South": "Forest Haven"
+                            },
+                            "Sunbeam Glade": {
+                                "West": "Forest Haven"
                             }
                         }
                     }

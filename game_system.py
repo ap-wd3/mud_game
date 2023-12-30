@@ -135,7 +135,7 @@ class GameSystem:
 
         if 'game_state' in character and character['game_state']:
             game_state = character['game_state'][-1]
-            print(f"Game loaded successfully for character {character['name']}.")
+            print(f"[slate_blue3]Game loaded successfully for character {character['name']}.[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
             current_room = game_state.get('current_room', "Default Room Name")
             inventory = game_state.get('inventory', [])
@@ -173,7 +173,7 @@ class GameSystem:
         try:
             with open("leaderboard.json", 'w') as file:
                 json.dump(data, file, indent=4)
-            print(f"Score for {name} saved successfully!")
+            print(f"[slate_blue3]Score for {name} saved successfully![/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
         except Exception as e:
             print(f"[deep_pink2]An error occurred while writing to the file: {e}[/]")
@@ -228,7 +228,7 @@ class GameSystem:
             self.colored_input("Press Enter to continue...", color="pale_green1")
 
         else:
-            print(f"{username} has been deleted successfully.")
+            print(f"[slate_blue3]{username} has been deleted successfully.[/]")
             return self.user_manager.delete_account(username)
 
     def delete_character(self, username):
@@ -243,7 +243,7 @@ class GameSystem:
 
         clear()
         draw()
-        print("Select a character to delete:")
+        print("[light_steel_blue]Select a character to delete:[/]")
         for i, character in enumerate(user_data['characters'], start=1):
             print(f"{i}, {character['name']}")
         draw()
@@ -260,4 +260,4 @@ class GameSystem:
 
         # Save the updated user data
         self.user_manager.save_users()
-        print(f"Character deleted successfully.")
+        print("[slate_blue3]Character deleted successfully.[/]")
