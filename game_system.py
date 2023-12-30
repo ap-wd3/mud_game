@@ -1,5 +1,6 @@
 from character import Character
 from user_management import UserManager
+import utils
 import platform
 from map import Map, paths
 import os
@@ -217,19 +218,31 @@ class GameSystem:
         print("LEADERBOARD\n"
               "NAME                SCORE")
         for entry in data:
-            name = entry.get("Charactor name", "Unknown")
+            name = entry.get("Character name", "Unknown")
             username = entry.get("Player", "Unknown")
             score = entry.get("score", 0)
             print(f"{name} ({username})".ljust(20)+ f"{score}")
 
     def delete_account(self, username):
-        if self.logged_in_user != username:
-            print("[deep_pink2]Error: You can only delete your own account.[/]")
+        if username not in self.user_manager.users:
+            print("Error: User does not exist.")
             self.colored_input("Press Enter to continue...", color="pale_green1")
+            return
 
-        else:
-            print(f"{username} has been deleted successfully.")
-            return self.user_manager.delete_account(username)
+        del self.user_manager.users[username]
+        self.update_leaderboard_after_deletion(username)
+        self.save_users()
+
+        print("Account deleted successfully.")
+        self.colored_input("Press Enter to continue...", color="pale_green1")
+
+    def update_leaderboard_after_deletion(self, username):
+        self.leaderboard = utils.load_data(self.user_manager.leaderboard_file)
+        self.leaderboard = [entry for entry in self.leaderboard if entry.get("Player") != username]
+        utils.save_data(self.leaderboard, self.user_manager.leaderboard_file)
+
+    def save_users(self):
+        utils.save_data(self.user_manager.users, self.user_manager.storage_file)
 
     def delete_character(self, username):
         user_data = self.user_manager.users.get(username, None)

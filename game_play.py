@@ -337,13 +337,11 @@ class GamePlay:
 
     def handle_delete_account(self):
         self.game_system.delete_account(self.username)
-        input("Press 'Enter' to continue...")
         self.menu2 = False
         self.menu1 = True
 
     def handle_delete_character(self):
         self.game_system.delete_character(self.username)
-        input("Press 'Enter' to continue...")
 
     def handle_quit(self):
         quit()
