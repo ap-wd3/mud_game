@@ -1,5 +1,6 @@
 from character import Character
 from user_management import UserManager
+import utils
 import platform
 from map import Map, paths
 import os
@@ -114,7 +115,7 @@ class GameSystem:
             for i, character in enumerate(user_data['characters'], start=1):
                 print(f"{i}, {character['name']}")
             draw()
-            print("or type 'BACK' to go back to main menu")
+            print("Type 'BACK' to go back to main menu")
             draw()
         else:
             print("[deep_pink2]No characters available for this user.[/]")
@@ -217,19 +218,37 @@ class GameSystem:
         print("LEADERBOARD\n"
               "NAME                SCORE")
         for entry in data:
-            name = entry.get("Charactor name", "Unknown")
+            name = entry.get("Character name", "Unknown")
             username = entry.get("Player", "Unknown")
             score = entry.get("score", 0)
             print(f"{name} ({username})".ljust(20)+ f"{score}")
 
     def delete_account(self, username):
-        if self.logged_in_user != username:
-            print("[deep_pink2]Error: You can only delete your own account.[/]")
+        if username not in self.user_manager.users:
+            print("Error: User does not exist.")
             self.colored_input("Press Enter to continue...", color="pale_green1")
+            return
+
 
         else:
             print(f"[slate_blue3]{username} has been deleted successfully.[/]")
             return self.user_manager.delete_account(username)
+
+        del self.user_manager.users[username]
+        self.delete_leaderboard(username)
+        self.save_users()
+
+        print("Account deleted successfully.")
+        self.colored_input("Press Enter to continue...", color="pale_green1")
+
+    def delete_leaderboard(self, username):
+        self.leaderboard = utils.load_data(self.user_manager.leaderboard_file)
+        self.leaderboard = [entry for entry in self.leaderboard if entry.get("Player") != username]
+        utils.save_data(self.leaderboard, self.user_manager.leaderboard_file)
+
+    def save_users(self):
+        utils.save_data(self.user_manager.users, self.user_manager.storage_file)
+
 
     def delete_character(self, username):
         user_data = self.user_manager.users.get(username, None)
@@ -247,17 +266,43 @@ class GameSystem:
         for i, character in enumerate(user_data['characters'], start=1):
             print(f"{i}, {character['name']}")
         draw()
+        print("type 'BACK' to go back to main menu")
+        draw()
 
-        try:
-            choice = int(input("# "))
+        choice = input("# ")
+        if choice.lower() == 'back':
+            print(choice)
+            return 'back'
+        elif choice.isdigit():
+            choice = int(choice)
             assert 1 <= choice <= len(user_data['characters'])
-        except (ValueError, AssertionError):
+        else:
             print("[deep_pink2]Invalid selection.[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
 
+        # try:
+        #     choice = int(input("# "))
+        #     assert 1 <= choice <= len(user_data['characters'])
+        # except (ValueError, AssertionError):
+        #     print("[deep_pink2]Invalid selection.[/]")
+        #     self.colored_input("Press Enter to continue...", color="pale_green1")
+
         # Delete the selected character
+        character_name = user_data['characters'][choice - 1]['name']
         del user_data['characters'][choice - 1]
+        self.delete_leaderboard_character(username, character_name)
 
         # Save the updated user data
         self.user_manager.save_users()
+
         print("[slate_blue3]Character deleted successfully.[/]")
+
+        print(f"Character deleted successfully.")
+        self.colored_input("Press Enter to continue...", color="pale_green1")
+
+    def delete_leaderboard_character(self, username, character_name):
+        self.leaderboard = utils.load_data(self.user_manager.leaderboard_file)
+        self.leaderboard = [entry for entry in self.leaderboard
+                            if not (entry.get("Player") == username and entry.get("Character name") == character_name)]
+        utils.save_data(self.leaderboard, self.user_manager.leaderboard_file)
+

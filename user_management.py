@@ -8,6 +8,8 @@ class UserManager:
         self.storage_file = storage_file
         self.users = utils.load_data(self.storage_file)
         self.console = Console()
+        self.leaderboard_file = 'leaderboard.json'
+        self.leaderboard = utils.load_data(self.leaderboard_file)
 
     def colored_input(self, prompt,color="green"):
         self.console.print(prompt, style=color, end="")

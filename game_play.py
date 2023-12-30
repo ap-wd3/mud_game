@@ -194,7 +194,7 @@ class GamePlay:
               "3, [thistle3]RESET PASSWORD[/]\n"
               "4, [thistle3]QUIT[/]")
         self.draw_separator()
-        choice = self.colored_input("#", color="sandy_brown")
+        choice = self.colored_input("# ", color="sandy_brown")
         if choice == "1":
             self.handle_login()
         elif choice == "2":
@@ -204,7 +204,7 @@ class GamePlay:
         elif choice == "4":
             self.handle_quit_menu1()
         else:
-            print("[deep_pink2]Invalid Input[/]")
+            print("[deep_pink2]Invalid command[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def handle_login(self):
@@ -223,7 +223,15 @@ class GamePlay:
             self.menu2 = False
 
     def handle_registration(self):
+
         username = self.colored_input("Choose your username: ", color="gold1")
+
+        self.clear_screen()
+        self.draw_separator()
+        print("Create new account or type 'back' to go back to main menu.")
+        self.draw_separator()
+        username = self.colored_input("Choose your username: ", color="light_steel_blue")
+
         if username.lower() == "back":
             self.menu1 = True
             self.menu2 = False
@@ -260,9 +268,9 @@ class GamePlay:
               "6, [thistle3]DELETE CHARACTERS[/]\n"
               "7, [thistle3]QUIT GAME[/]")
         self.draw_separator()
-        print("or type 'BACK' to go back to main menu")
+        print("Type 'BACK' to go back to main menu")
         self.draw_separator()
-        choice = self.colored_input("#", color="sandy_brown")
+        choice = self.colored_input("# ", color="sandy_brown")
         if choice == "1":
             self.handle_new_game()
         elif choice == "2":
@@ -276,6 +284,8 @@ class GamePlay:
         elif choice == "6":
             self.handle_delete_character()
         elif choice == "7":
+            print("Thank you for playing The Wood, I will see you when I see you again!")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
             self.handle_quit()
         elif choice.lower() == "back":
             self.menu2 = False
@@ -368,12 +378,9 @@ class GamePlay:
             else:
                 character, current_room, inventory, rooms = loaded_data
                 self.character_name = character['name']
-                # print(self.character_name)
-                # input("Press enter to continue...")
                 self.current_room = current_room
                 self.inventory = inventory
                 self.rooms = rooms
-                # Update map coordinates based on current room
                 self.map.x, self.map.y = self.map.get_coordinates_from_room_name(self.current_room)
                 self.play = True
                 self.menu2 = False
@@ -396,18 +403,22 @@ class GamePlay:
         self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def handle_rules(self):
-        print("Collect the right item(s) to defeat monsters. Find more hints by observing each monster")
+        print("Collect the right item(s) to defeat monsters. Find more hints by observing each monster\n")
+        print(self.keyCommand)
         self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def handle_delete_account(self):
         self.game_system.delete_account(self.username)
-        input("Press 'Enter' to continue...")
         self.menu2 = False
         self.menu1 = True
 
     def handle_delete_character(self):
-        self.game_system.delete_character(self.username)
-        input("Press 'Enter' to continue...")
+        deleted_character = self.game_system.delete_character(self.username)
+        if deleted_character:
+            if deleted_character == 'back':
+                self.menu2 = True
+            else:
+                self.game_system.delete_character(self.username)
 
     def handle_quit(self):
         quit()
@@ -451,11 +462,6 @@ class GamePlay:
                     print(f"You see a {self.room_info['Item']}\n")
 
             else:
-                if not "Monster" in self.room_info:
-                    print("Defeated all monsters")
-                    input("Press enter to continue..")
-                    exit(0)
-                else:
                     print("Oops, there's nothing special here.\n")
 
             user_input = self.colored_input("Enter your command:", color="gold1").lower().split(' ')
@@ -480,23 +486,38 @@ class GamePlay:
             else:
                 self.message = "[deep_pink2]Invalid command. Please use 'Go <East/West/North/South'[/]"
 
+
+
         elif action == "get":
             item = argument
+            current_room_items = self.rooms[self.current_room].get("Item", "")
             if item:
-                if len(item.split()) == 2:
-                    ascii_item = self.print_ascii_items(f'resource/{item.split()[0].lower()}_{item.split()[1].lower()}.txt')
-                elif len(item.split()) == 1:
-                    ascii_item = self.print_ascii_items(f'resource/{item.split()[0].lower()}.txt')
-            if item == self.rooms[self.current_room].get("Item", "") and item not in self.inventory:
-                self.inventory.append(item)
-                self.message = f"{ascii_item} \n{item} retrieved!\n"
-                self.draw_separator()
-                self.rooms[self.current_room].pop("Item", None)
-
-            elif item in self.inventory:
-                self.message = f"You already have {item}."
+                # Check if the item exists in the current room
+                if item == current_room_items:
+                    # Handle the ASCII art for the item
+                    if len(item.split()) == 2:
+                        ascii_item = self.print_ascii_items(
+                            f'resource/{item.split()[0].lower()}_{item.split()[1].lower()}.txt')
+                    elif len(item.split()) == 1:
+                        ascii_item = self.print_ascii_items(f'resource/{item.split()[0].lower()}.txt')
+                    # Add item to inventory if not already there
+                    if item not in self.inventory:
+                        self.inventory.append(item)
+                        self.message = f"{ascii_item} \n{item} retrieved!"
+                        self.rooms[self.current_room].pop("Item", None)
+                else:
+                    if item in self.inventory:
+                        print(f"You already have {item} in your inventory")
+                        input("Press enter to continue")
+                    else:
+                        print("Invalid command")
+                        input("Press enter to continue")
             else:
-                self.message = f"{item} cannot be picked up."
+                # No item specified in the command
+                print("Invalid command: No item specified.")
+                input("Press enter to continue")
+
+
 
         elif action == "look":
             self.clear_screen()
@@ -532,9 +553,8 @@ class GamePlay:
             if answer == "Y":
                 self.game_system.save_game(self.username, self.character_name, self.current_room, self.inventory, self.confidence, self.rooms)
                 self.clear_screen()
-                print("[gold1]Game Saved Successfully![/]")
-                print("Thank you for playing The Wood, I will see you when I see you again!")
-                exit(0)
+                self.play = False
+                self.menu2 = True
             elif answer == "N":
                 pass
             else:
@@ -552,6 +572,7 @@ class GamePlay:
             else:
                 print("There's no monster to attack here.")
                 self.colored_input("Press Enter to continue...", color="pale_green1")
+
         else:
             print("Invalid Command")
             self.colored_input("Press Enter to continue...", color="pale_green1")
