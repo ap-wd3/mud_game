@@ -54,9 +54,6 @@ class UserManager:
         if username not in self.users:
             print("Error: User does not exist.")
             self.colored_input("Press Enter to continue...", color="pale_green1")
-
         del self.users[username]
-
         self.save_users()
-        print("Account deleted successfully.")
         self.colored_input("Press Enter to continue...", color="pale_green1")

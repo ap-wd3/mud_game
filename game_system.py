@@ -174,8 +174,6 @@ class GameSystem:
         try:
             with open("leaderboard.json", 'w') as file:
                 json.dump(data, file, indent=4)
-            print(f"[slate_blue3]Score for {name} saved successfully![/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
         except Exception as e:
             print(f"[deep_pink2]An error occurred while writing to the file: {e}[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
@@ -228,17 +226,12 @@ class GameSystem:
             print("Error: User does not exist.")
             self.colored_input("Press Enter to continue...", color="pale_green1")
             return
-
-
         else:
             print(f"[slate_blue3]{username} has been deleted successfully.[/]")
             return self.user_manager.delete_account(username)
-
         del self.user_manager.users[username]
         self.delete_leaderboard(username)
         self.save_users()
-
-        print("Account deleted successfully.")
         self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def delete_leaderboard(self, username):
@@ -291,13 +284,9 @@ class GameSystem:
         character_name = user_data['characters'][choice - 1]['name']
         del user_data['characters'][choice - 1]
         self.delete_leaderboard_character(username, character_name)
-
         # Save the updated user data
         self.user_manager.save_users()
-
         print("[slate_blue3]Character deleted successfully.[/]")
-
-        print(f"Character deleted successfully.")
         self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def delete_leaderboard_character(self, username, character_name):

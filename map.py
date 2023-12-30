@@ -1,5 +1,5 @@
 import sys
-
+from rich.console import Console
 
 class Map:
     def __init__(self, height, width, player_x, player_y, paths):
@@ -8,6 +8,7 @@ class Map:
         self.x = player_x
         self.y = player_y
         self.paths = paths
+        self.console = Console()
         self.room_map = {
             (0, 0): 'Whispering Pines',
             (0, 1): 'Maple Sanctuary',
@@ -24,7 +25,10 @@ class Map:
             (3, 2): 'Mystic Moss Grove',
             (5, 1): 'Sunbeam Glade'
         }
-
+    def colored_input(self, prompt, color="green"):
+        self.console.print(prompt, style=color, end="")
+        user_input = input()
+        return user_input
     def get_coordinates_from_room_name(self, room_name):
         reverse_map = {name: coords for coords, name in self.room_map.items()}
         default_coords = (0, 0)
@@ -45,11 +49,11 @@ class Map:
                 if new_x >= 0 and ((new_x, new_y), (self.x, self.y)) in self.paths:
                     self.x, self.y = new_x, new_y
                 else:
-                    print("Cannot go north")
-                    input("Press enter to continue...")
+                    self.console.print(f"[deep_pink2]Cannot go north[/]")
+                    self.colored_input("Press Enter to continue...", color="pale_green1")
             else:
-                print("Out of bound, cannot go north")
-                input("Press enter to continue...")
+                self.console.print(f"Out of bound, cannot go north", style='deep_pink2')
+                self.colored_input("Press Enter to continue...", color="pale_green1")
 
         elif direction == "south":
             new_y += 1
@@ -65,11 +69,11 @@ class Map:
                 if new_x < self.width and ((self.x, self.y), (new_x, new_y)) in self.paths:
                     self.x, self.y = new_x, new_y
                 else:
-                    print("Cannot go south")
-                    input("Press enter to continue...")
+                    self.console.print(f"[deep_pink]Cannot go south[/]")
+                    self.colored_input("Press Enter to continue...", color="pale_green1")
             else:
-                print("Out of bound, cannot go south")
-                input("Press enter to continue...")
+                self.console.print(f"[deep_pink]Out of bound, cannot go south[/]")
+                self.colored_input("Press Enter to continue...", color="pale_green1")
 
 
         elif direction == "east":
@@ -78,8 +82,8 @@ class Map:
             if new_x < self.width and ((self.x, self.y), (new_x, self.y)) in self.paths:
                 self.x = new_x
             else:
-                print("Out of bound, cannot go east")
-                input("Press enter to continue...")
+                self.console.print(f"[deep_pink]Out of bound, cannot go east[/]")
+                self.colored_input("Press Enter to continue...", color="pale_green1")
 
 
         elif direction == "west":
@@ -88,11 +92,11 @@ class Map:
             if new_x >= 0 and ((new_x, self.y), (self.x, self.y)) in self.paths:
                 self.x = new_x
             else:
-                print("Out of bound, cannot go west")
-                input("Press enter to continue...")
+                self.console.print("[deep_pink]Out of bound, cannot go west[/]")
+                self.colored_input("Press Enter to continue...", color="pale_green1")
 
         else:
-            return "invalid input"
+             return "invalid input"
 
     def print_map(self):
         for y in range(self.height):
@@ -112,7 +116,7 @@ class Map:
 
                 elif y == 1 and x < 6:  # Second row has 6 rooms
                     if self.x == x and self.y == y:
-                        sys.stdout.write("[u]")  # Player's position
+                        self.console.print("[""[yellow1]u[/]""]", end="")
                     else:
                         sys.stdout.write("[ ]")  # Other rooms
                     # Horizontal paths for this row

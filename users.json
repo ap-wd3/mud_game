@@ -128,20 +128,19 @@
                 "bonus": 0
             },
             {
-                "name": "shanshan",
+                "name": "test002",
                 "hair_length": "short",
-                "hair_color": "red",
-                "eye_color": "red",
+                "hair_color": "cyan",
+                "eye_color": "green",
                 "bonus": 0,
                 "game_state": [
                     {
-                        "current_room": "Sunbeam Glade",
+                        "current_room": "Enchanted Thicket",
                         "inventory": [
                             "Smart Planner",
+                            "Clock",
                             "Mirror",
-                            "Key",
-                            "Book",
-                            "Jumping Rope"
+                            "Key"
                         ],
                         "confidence": 100,
                         "rooms": {
@@ -161,8 +160,7 @@
                             },
                             "Dewdrop Dell": {
                                 "North": "Moonlit Timberland",
-                                "East": "Redwood Haven",
-                                "Monster": "Balance Monster"
+                                "East": "Redwood Haven"
                             },
                             "Pine Haven": {
                                 "South": "Emerald Canopy",
@@ -179,8 +177,7 @@
                             "Redwood Haven": {
                                 "West": "Dewdrop Dell",
                                 "East": "Silver Birch Copse",
-                                "North": "Emerald Canopy",
-                                "Item": "Clock"
+                                "North": "Emerald Canopy"
                             },
                             "Walnut Retreat": {
                                 "West": "Pine Haven",
@@ -191,8 +188,7 @@
                                 "West": "Emerald Canopy",
                                 "South": "Silver Birch Copse",
                                 "North": "Walnut Retreat",
-                                "East": "Forest Haven",
-                                "Monster": "Glass Ceiling Monster"
+                                "East": "Forest Haven"
                             },
                             "Silver Birch Copse": {
                                 "West": "Redwood Haven",
@@ -200,7 +196,8 @@
                                 "Monster": "Harassment Monster"
                             },
                             "Forest Haven": {
-                                "West": "Cypress Cottage"
+                                "West": "Cypress Cottage",
+                                "Item": "Book"
                             },
                             "Mystic Moss Grove": {
                                 "West": "Silver Birch Copse",
@@ -212,7 +209,8 @@
                                 "South": "Forest Haven"
                             },
                             "Sunbeam Glade": {
-                                "West": "Forest Haven"
+                                "West": "Forest Haven",
+                                "Item": "Jumping Rope"
                             }
                         }
                     }

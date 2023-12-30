@@ -35,7 +35,7 @@ class GamePlay:
                            f"Each [salmon1]monster[/] can be defeated by [pink3]specific item(s)[/]\n" \
                            f"Please find those items and [red]defeat all monsters[/] to bring peace back to the wood...\n"
         self.keyCommand = f"[cyan1]COMMAND                             DESCRIPTIONS[/]\n" \
-                          f"[white]Go <East/West/North/South>----------Move between areas\n" \
+                          f"[bright_white]Go <East/West/North/South>----------Move between areas\n" \
                           f"Get <item>--------------------------Pick up the item\n" \
                           f"Look--------------------------------See monster's details including hints\n" \
                           f"Attack------------------------------Attack the monster\n" \
@@ -224,13 +224,11 @@ class GamePlay:
 
     def handle_registration(self):
 
-        username = self.colored_input("Choose your username: ", color="gold1")
-
         self.clear_screen()
         self.draw_separator()
         print("Create new account or type 'back' to go back to main menu.")
         self.draw_separator()
-        username = self.colored_input("Choose your username: ", color="light_steel_blue")
+        username = self.colored_input("Choose your username: ", color="gold1")
 
         if username.lower() == "back":
             self.menu1 = True
@@ -299,6 +297,7 @@ class GamePlay:
 
         logged_in_username = self.username
         while True:
+            self.clear_screen()
             self.draw_separator()
             print("Create the new character or type 'BACK' to go back to the menu")
             self.draw_separator()
@@ -328,7 +327,7 @@ class GamePlay:
         hair_color = 'Unknown'
         while hair_color == 'Unknown':
             print("Choose hair color:")
-            print("1: [cyan]Cyan[/]")
+            print("1: Cyan")
             print("2: Red")
             print("3: Yellow")
             color_options = {'1': 'cyan', '2': 'red', '3': 'yellow'}
@@ -340,7 +339,6 @@ class GamePlay:
             elif hair_color == 'Unknown':
                 print("[deep_pink2]Invalid option, please choose again.[/]")
                 self.colored_input("Press Enter to continue...", color="pale_green1")
-
         eye_color = 'Unknown'
         while eye_color == 'Unknown':
             print("Choose eye color:")
@@ -392,7 +390,6 @@ class GamePlay:
         if loaded_score is not None:
             self.bonus = loaded_score
         else:
-            print("Error")
             self.bonus = 0
 
     def handle_leaderboard(self):
@@ -403,6 +400,7 @@ class GamePlay:
         self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def handle_rules(self):
+        self.clear_screen()
         print("Collect the right item(s) to defeat monsters. Find more hints by observing each monster\n")
         print(self.keyCommand)
         self.colored_input("Press Enter to continue...", color="pale_green1")
@@ -431,19 +429,17 @@ class GamePlay:
 
     def game_loop(self):
         while self.play and self.confidence > 0:
+            self.game_system.save_score(self.character_name, self.username, self.bonus)
             self.current_room = self.map.room_map.get((self.map.x, self.map.y), "Unknown room")
             self.room_info = self.rooms.get(self.current_room, {})
             self.clear_screen()
             self.map.print_map()
             print()
             self.draw_separator()
-            print(f"You are in the {self.current_room}\n\nInventory : {self.inventory}")
-            self.draw_separator()
+            print(f"You are in the {self.current_room}")
+            print(f"Inventory : {self.inventory}")
             print(f"[bold]Your current confidence: {self.confidence}[/]")
-            print(self.message)
-            print("[orchid1]Hint[/]: You can enter 'help' for command information.\n")
             self.draw_separator()
-
             if "Monster" in self.room_info:
                 encountered_monster = self.room_info['Monster']
                 print(f"[bold italic]You encounter a '{encountered_monster}'! [/]")
@@ -451,7 +447,7 @@ class GamePlay:
                     print(self.print_ascii_monsters(f'resource/{encountered_monster.split()[0].lower()}{encountered_monster.split()[1].lower()}_monster.txt'))
                 elif len(encountered_monster.split()) == 2:
                     print(self.print_ascii_monsters(f'resource/{encountered_monster.split()[0].lower()}_monster.txt'))
-                print("Enter 'look' to see the information of the monster\n")
+                print("Enter 'look' to see the information of the monster")
 
             elif "Item" in self.room_info:
                 item = self.room_info["Item"]
@@ -463,7 +459,9 @@ class GamePlay:
 
             else:
                     print("Oops, there's nothing special here.\n")
-
+            print(self.message)
+            print("[orchid1]Hint[/]: You can enter 'help' for command information.")
+            self.draw_separator()
             user_input = self.colored_input("Enter your command:", color="gold1").lower().split(' ')
             self.process_command(user_input)
 
@@ -507,15 +505,15 @@ class GamePlay:
                         self.rooms[self.current_room].pop("Item", None)
                 else:
                     if item in self.inventory:
-                        print(f"You already have {item} in your inventory")
-                        input("Press enter to continue")
+                        print(f"[deep_pink2]You already have {item} in your inventory[\]")
+                        self.colored_input("Press Enter to continue...", color="pale_green1")
                     else:
-                        print("Invalid command")
-                        input("Press enter to continue")
+                        print(f"[deep_pink2]Invalid command, please enter the name of the item[\]")
+                        self.colored_input("Press Enter to continue...", color="pale_green1")
             else:
                 # No item specified in the command
                 print("Invalid command: No item specified.")
-                input("Press enter to continue")
+                self.colored_input("Press Enter to continue...", color="pale_green1")
 
 
 
@@ -574,7 +572,7 @@ class GamePlay:
                 self.colored_input("Press Enter to continue...", color="pale_green1")
 
         else:
-            print("Invalid Command")
+            print(f"[deep_pink2]Invalid Command, please enter 'help' to see command options.[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def handle_monster_encounter(self, monster_name):
