@@ -173,7 +173,7 @@ class GameSystem:
         try:
             with open("leaderboard.json", 'w') as file:
                 json.dump(data, file, indent=4)
-            print(f"Score for {name} saved successfully.")
+            print(f"Score for {name} saved successfully!")
             self.colored_input("Press Enter to continue...", color="pale_green1")
         except Exception as e:
             print(f"[deep_pink2]An error occurred while writing to the file: {e}[/]")
