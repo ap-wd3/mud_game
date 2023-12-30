@@ -135,7 +135,7 @@ class GamePlay:
         elif choice == "4":
             self.handle_quit_menu1()
         else:
-            print("[deep_pink2]Invalid Input[/]")
+            print("[deep_pink2]Invalid command[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def handle_login(self):
@@ -410,11 +410,13 @@ class GamePlay:
                     ascii_item = self.print_ascii_items(f'resource/{item.split()[0].lower()}_{item.split()[1].lower()}.txt')
                 elif len(item.split()) == 1:
                     ascii_item = self.print_ascii_items(f'resource/{item.split()[0].lower()}.txt')
+                else:
+                    print("[deep_pink2]Invalid command[/]")
+
             if item == self.rooms[self.current_room].get("Item", "") and item not in self.inventory:
                 self.inventory.append(item)
                 self.message = f"{ascii_item} \n{item} retrieved!"
                 self.rooms[self.current_room].pop("Item", None)
-
             elif item in self.inventory:
                 self.message = f"You already have {item}."
             else:

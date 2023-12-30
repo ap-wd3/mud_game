@@ -198,8 +198,10 @@
                 "bonus": 0,
                 "game_state": [
                     {
-                        "current_room": "Maple Sanctuary",
-                        "inventory": [],
+                        "current_room": "Moonlit Timberland",
+                        "inventory": [
+                            "Smart Planner"
+                        ],
                         "confidence": 100,
                         "rooms": {
                             "Maple Sanctuary": {
@@ -209,8 +211,7 @@
                                 "West": "Maple Sanctuary",
                                 "North": "Maple Sanctuary",
                                 "South": "Dewdrop Dell",
-                                "East": "Emerald Canopy",
-                                "Item": "Smart Planner"
+                                "East": "Emerald Canopy"
                             },
                             "Whispering Pines": {
                                 "South": "Moonlit Timberland",
