@@ -253,7 +253,7 @@ class GamePlay:
         eye_color = 'Unknown'
         while eye_color == 'Unknown':
             print("Choose eye color:")
-            print("1:Blue")
+            print("1: Blue")
             print("2: Green")
             print("3: Red")
             color_options = {'1': 'blue', '2': 'green', '3': 'red'}

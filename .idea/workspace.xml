@@ -4,28 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d1c2e340-0662-4c3d-b4d5-c25d02c8d676" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/resource/balance_monster.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/book.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/clock.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/diet_monster.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/glassceiling_monster.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/harassment_monster.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/insecure_monster.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/jumping_rope.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/key.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/mirror.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/overthinking_monster.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/pizza.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/smart_planner.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_play.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_play.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_system.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_system.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leaderboard.json" beforeDir="false" afterPath="$PROJECT_DIR$/leaderboard.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/map.py" beforeDir="false" afterPath="$PROJECT_DIR$/map.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_management.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_management.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users.json" beforeDir="false" afterPath="$PROJECT_DIR$/users.json" afterDir="false" />
-    </list>
+    <list default="true" id="d1c2e340-0662-4c3d-b4d5-c25d02c8d676" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -186,6 +165,7 @@
       <workItem from="1703855397716" duration="8469000" />
       <workItem from="1703866694370" duration="13009000" />
       <workItem from="1703921065788" duration="3923000" />
+      <workItem from="1703929678831" duration="739000" />
     </task>
     <servers />
   </component>
