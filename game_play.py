@@ -155,9 +155,21 @@ class GamePlay:
 
     def handle_registration(self):
         username = self.colored_input("Choose your username: ", color="light_steel_blue")
-        password = self.colored_input("Choose your password: ", color="light_steel_blue")
-        email = self.colored_input("Enter your email address: ", color="light_steel_blue")
-        self.user_manager.create_user(username, password, email)
+        if username.lower() == "back":
+            self.menu1 = True
+            self.menu2 = False
+        else:
+            password = self.colored_input("Choose your password: ", color="light_steel_blue")
+            if password.lower() == "back":
+                self.menu1 = True
+                self.menu2 = False
+            else:
+                if password.lower() == "back":
+                    self.menu1 = True
+                    self.menu2 = False
+                else:
+                    email = self.colored_input("Enter your email address: ", color="light_steel_blue")
+                    self.user_manager.create_user(username, password, email)
 
     def handle_password_reset(self):
         username = self.colored_input("Enter your username: ", color="light_steel_blue")
