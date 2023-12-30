@@ -18,18 +18,18 @@ class Monster:
 monsters = {
     'Diet Monster':Monster('Diet Monster',
                            "Born from society's pressure on women to be skinny and obession with dieting and the constant struggle between indulgence and restraint, \n"
-                           "the Diet Monster feeds on the guilt and confusion surrounding food choices.\n"
-                           "It thrives in environments where food is both a source of comfort and anxiety.\n",
+                           "the Diet Monster feeds on the guilt and confusion surrounding food choices."
+                           "It thrives in environments where food is both a source of comfort and anxiety.",
                            100,
                            20,
                            'Cloak of Self-Acceptance',
                            ['Pizza', 'Jumping Rope'],
                            'To defeat the Diet Monster, you need both pizza and rope. With pizza you can form a healthy relationship with food and with rope you can exercise to keep yourself fit.',
                            20),
-    'Insecure Monster':Monster('Insecure Monster',  "The Insecure Monster avoids direct conflict, \n"
-                                                    "preferring to undermine its opponents subtly.\n"
+    'Insecure Monster':Monster('Insecure Monster',  "The Insecure Monster avoids direct conflict,"
+                                                    "preferring to undermine its opponents subtly."
                                                     "It attacks by planting seeds of doubt and feeding on the resulting uncertainty and hesitation.\n"
-                                                    "It's not particularly strong or aggressive,\n"
+                                                    "It's not particularly strong or aggressive,"
                                                     " but it's elusive and difficult to confront head-on because it plays on the inner fears of its adversaries.",
                                100,
                                20,
