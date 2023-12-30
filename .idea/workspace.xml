@@ -5,26 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d1c2e340-0662-4c3d-b4d5-c25d02c8d676" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/resource/balance_monster.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/book.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/clock.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/diet_monster.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/glassceiling_monster.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/harassment_monster.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/insecure_monster.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/jumping_rope.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/key.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/mirror.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/overthinking_monster.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/pizza.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resource/smart_planner.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_play.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_play.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_system.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_system.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leaderboard.json" beforeDir="false" afterPath="$PROJECT_DIR$/leaderboard.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/map.py" beforeDir="false" afterPath="$PROJECT_DIR$/map.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_management.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_management.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users.json" beforeDir="false" afterPath="$PROJECT_DIR$/users.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,8 +47,8 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Yushan&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/thisgirlcan/Desktop/mud_game&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Mint&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/mac/Desktop/mud_game&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -217,10 +199,5 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-  </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/mud_game$.coverage" NAME=" Coverage Results" MODIFIED="1703701137764" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
-    <SUITE FILE_PATH="coverage/mud_game$game_system.coverage" NAME="game_system Coverage Results" MODIFIED="1703257258883" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/script" />
-    <SUITE FILE_PATH="coverage/mud_game$main.coverage" NAME="main Coverage Results" MODIFIED="1703257568799" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/script" />
   </component>
 </project>
