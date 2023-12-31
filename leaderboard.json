@@ -1,7 +1,12 @@
 [
     {
         "Player": "shan",
-        "Character name": "test002",
-        "score": 40
+        "Character name": "test",
+        "score": 0
+    },
+    {
+        "Player": "Adam",
+        "Character name": "Alconor",
+        "score": 130
     }
 ]

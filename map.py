@@ -1,5 +1,6 @@
 import sys
 from rich.console import Console
+from rich import print as rprint
 
 class Map:
     def __init__(self, height, width, player_x, player_y, paths):
@@ -49,10 +50,10 @@ class Map:
                 if new_x >= 0 and ((new_x, new_y), (self.x, self.y)) in self.paths:
                     self.x, self.y = new_x, new_y
                 else:
-                    self.console.print(f"[deep_pink2]Cannot go north[/]")
+                    self.console.print("Cannot go north", style="deep_pink2")
                     self.colored_input("Press Enter to continue...", color="pale_green1")
             else:
-                self.console.print(f"Out of bound, cannot go north", style='deep_pink2')
+                self.console.print("Out of bound, cannot go north", style='deep_pink2')
                 self.colored_input("Press Enter to continue...", color="pale_green1")
 
         elif direction == "south":
@@ -69,10 +70,10 @@ class Map:
                 if new_x < self.width and ((self.x, self.y), (new_x, new_y)) in self.paths:
                     self.x, self.y = new_x, new_y
                 else:
-                    self.console.print(f"[deep_pink]Cannot go south[/]")
+                    self.console.print("Cannot go south", style="deep_pink2")
                     self.colored_input("Press Enter to continue...", color="pale_green1")
             else:
-                self.console.print(f"[deep_pink]Out of bound, cannot go south[/]")
+                self.console.print("Out of bound, cannot go south", style="deep_pink2")
                 self.colored_input("Press Enter to continue...", color="pale_green1")
 
 
@@ -82,7 +83,7 @@ class Map:
             if new_x < self.width and ((self.x, self.y), (new_x, self.y)) in self.paths:
                 self.x = new_x
             else:
-                self.console.print(f"[deep_pink]Out of bound, cannot go east[/]")
+                self.console.print("Out of bound, cannot go east", style="deep_pink2")
                 self.colored_input("Press Enter to continue...", color="pale_green1")
 
 
@@ -92,7 +93,7 @@ class Map:
             if new_x >= 0 and ((new_x, self.y), (self.x, self.y)) in self.paths:
                 self.x = new_x
             else:
-                self.console.print("[deep_pink]Out of bound, cannot go west[/]")
+                self.console.print("Out of bound, cannot go west", style="deep_pink2")
                 self.colored_input("Press Enter to continue...", color="pale_green1")
 
         else:
@@ -108,19 +109,24 @@ class Map:
                 # Print rooms in each row
                 if y != 1 and x < 4:  # First and third rows have 4 rooms
                     if self.x == x and self.y == y:
-                        sys.stdout.write("[u]")  # Player's position
+                        rprint("[""[yellow1]u[/]""]", end="")  # Player's position
                     else:
                         sys.stdout.write("[ ]")  # Other rooms
                     # Horizontal paths for these rows
                     sys.stdout.write("-" if x < 3 else " ")
 
+
                 elif y == 1 and x < 6:  # Second row has 6 rooms
+
                     if self.x == x and self.y == y:
-                        self.console.print("[""[yellow1]u[/]""]", end="")
+                        rprint("[""[yellow1]u[/]""]", end="")
                     else:
                         sys.stdout.write("[ ]")  # Other rooms
                     # Horizontal paths for this row
                     sys.stdout.write("-" if x < 5 else " ")
+
+
+
 
             sys.stdout.write("\n")  # New line after each row of rooms
 

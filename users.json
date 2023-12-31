@@ -114,35 +114,18 @@
         "email": "shan@gmail.ocm",
         "characters": [
             {
-                "name": "test001",
-                "hair_length": "short",
+                "name": "test",
+                "hair_length": "long",
                 "hair_color": "red",
                 "eye_color": "red",
-                "bonus": 0
-            },
-            {
-                "name": "shan",
-                "hair_length": "short",
-                "hair_color": "red",
-                "eye_color": "red",
-                "bonus": 0
-            },
-            {
-                "name": "test002",
-                "hair_length": "short",
-                "hair_color": "cyan",
-                "eye_color": "green",
                 "bonus": 0,
                 "game_state": [
                     {
-                        "current_room": "Enchanted Thicket",
+                        "current_room": "Cypress Cottage",
                         "inventory": [
-                            "Smart Planner",
-                            "Clock",
-                            "Mirror",
-                            "Key"
+                            "Smart Planner"
                         ],
-                        "confidence": 100,
+                        "confidence": 80,
                         "rooms": {
                             "Maple Sanctuary": {
                                 "East": "Moonlit Timberland"
@@ -160,12 +143,14 @@
                             },
                             "Dewdrop Dell": {
                                 "North": "Moonlit Timberland",
-                                "East": "Redwood Haven"
+                                "East": "Redwood Haven",
+                                "Monster": "Balance Monster"
                             },
                             "Pine Haven": {
                                 "South": "Emerald Canopy",
                                 "East": "Walnut Retreat",
-                                "West": "Whispering Pines"
+                                "West": "Whispering Pines",
+                                "Item": "Mirror"
                             },
                             "Emerald Canopy": {
                                 "West": "Moonlit Timberland",
@@ -177,7 +162,8 @@
                             "Redwood Haven": {
                                 "West": "Dewdrop Dell",
                                 "East": "Silver Birch Copse",
-                                "North": "Emerald Canopy"
+                                "North": "Emerald Canopy",
+                                "Item": "Clock"
                             },
                             "Walnut Retreat": {
                                 "West": "Pine Haven",
@@ -188,7 +174,8 @@
                                 "West": "Emerald Canopy",
                                 "South": "Silver Birch Copse",
                                 "North": "Walnut Retreat",
-                                "East": "Forest Haven"
+                                "East": "Forest Haven",
+                                "Monster": "Glass Ceiling Monster"
                             },
                             "Silver Birch Copse": {
                                 "West": "Redwood Haven",
@@ -206,7 +193,8 @@
                             },
                             "Enchanted Thicket": {
                                 "West": "Walnut Retreat",
-                                "South": "Forest Haven"
+                                "South": "Forest Haven",
+                                "Item": "Key"
                             },
                             "Sunbeam Glade": {
                                 "West": "Forest Haven",
@@ -215,6 +203,19 @@
                         }
                     }
                 ]
+            }
+        ]
+    },
+    "Adam": {
+        "password": "123",
+        "email": "danko.adam.dmd@gmail.com",
+        "characters": [
+            {
+                "name": "Alconor",
+                "hair_length": "long",
+                "hair_color": "red",
+                "eye_color": "green",
+                "bonus": 0
             }
         ]
     }
