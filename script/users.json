@@ -121,17 +121,13 @@
                 "bonus": 0,
                 "game_state": [
                     {
-                        "current_room": "Sunbeam Glade",
-                        "inventory": [
-                            "Pizza",
-                            "Book",
-                            "Jumping Rope",
-                            "Key"
-                        ],
-                        "confidence": 60,
+                        "current_room": "Silver Birch Copse",
+                        "inventory": [],
+                        "confidence": 0,
                         "rooms": {
                             "Maple Sanctuary": {
-                                "East": "Moonlit Timberland"
+                                "East": "Moonlit Timberland",
+                                "Item": "Confidence Booster"
                             },
                             "Moonlit Timberland": {
                                 "West": "Maple Sanctuary",
@@ -142,7 +138,8 @@
                             },
                             "Whispering Pines": {
                                 "South": "Moonlit Timberland",
-                                "East": "Pine Haven"
+                                "East": "Pine Haven",
+                                "Monster": "Diet Monster"
                             },
                             "Dewdrop Dell": {
                                 "North": "Moonlit Timberland",
@@ -170,7 +167,8 @@
                             },
                             "Walnut Retreat": {
                                 "West": "Pine Haven",
-                                "South": "Cypress Cottage"
+                                "South": "Cypress Cottage",
+                                "Monster": "Insecure Monster"
                             },
                             "Cypress Cottage": {
                                 "West": "Emerald Canopy",
@@ -185,18 +183,22 @@
                                 "Monster": "Harassment Monster"
                             },
                             "Forest Haven": {
-                                "West": "Cypress Cottage"
+                                "West": "Cypress Cottage",
+                                "Item": "Book"
                             },
                             "Mystic Moss Grove": {
                                 "West": "Silver Birch Copse",
-                                "North": "Forest Haven"
+                                "North": "Forest Haven",
+                                "Item": "Pizza"
                             },
                             "Enchanted Thicket": {
                                 "West": "Walnut Retreat",
-                                "South": "Forest Haven"
+                                "South": "Forest Haven",
+                                "Item": "Key"
                             },
                             "Sunbeam Glade": {
-                                "West": "Forest Haven"
+                                "West": "Forest Haven",
+                                "Item": "Jumping Rope"
                             }
                         }
                     }
