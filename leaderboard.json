@@ -1,12 +1,17 @@
 [
     {
-        "Player": "shan",
-        "Character name": "test",
-        "score": 0
-    },
-    {
         "Player": "Adam",
         "Character name": "Alconor",
         "score": 130
+    },
+    {
+        "Player": "shan",
+        "Character name": "shanshan",
+        "score": 130
+    },
+    {
+        "Player": "shan",
+        "Character name": "test003",
+        "score": 0
     }
 ]

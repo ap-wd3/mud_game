@@ -56,7 +56,7 @@ class GameSystem:
         new_character = Character(name, hair_length, hair_color, eye_color)
         user_data['characters'].append(new_character.to_dict())
         self.user_manager.save_users()
-        return f"Character '{name}' has {hair_length} and {hair_color} hair, and her eyes are {eye_color}"
+        return f"Character '{name}' has '{hair_length}' and '{hair_color}' hair, and her eyes are '{eye_color}'"
 
 
     def save_game(self, username, name, current_room, inventory, confidence, rooms):

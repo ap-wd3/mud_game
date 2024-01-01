@@ -8,6 +8,8 @@ from rich import print
 from rich.style import Style
 from rich.console import Console
 import time
+from colorama import Fore, Style
+import sys
 
 
 class GamePlay:
@@ -173,17 +175,38 @@ class GamePlay:
 
         # Print table header
         print(line)
-        print(f"| {'Attribute':<{column_width}} | {'Information':{column_width}} |")
+        print(f"| [violet]{'Attribute':<{column_width}}[/] | [violet]{'Information':{column_width}}[/] |")
         print(line)
 
 
-        print(f"| {'Name':<{column_width}} | {name:<{column_width}} |")
-        print(f"| {'Health':<{column_width}} | {health:<{column_width}} |")
-        print(f"| {'Attack':<{column_width}} | {attack:<{column_width}} |")
-        print(f"| {'Loot':<{column_width}} | {loot:<{column_width}} |")
+        print(f"| [yellow1]{'Name':<{column_width}}[/] | {name:<{column_width}} |")
+        print(f"| [yellow1]{'Health':<{column_width}}[/] | {health:<{column_width}} |")
+        print(f"| [yellow1]{'Attack':<{column_width}}[/] | {attack:<{column_width}} |")
+        print(f"| [yellow1]{'Loot':<{column_width}}[/] | {loot:<{column_width}} |")
         items_str = ', '.join(items_required)
-        print(f"| {'Items Needed':<{column_width}} | {items_str:<{column_width}} |")
+        print(f"| [yellow1]{'Items Needed':<{column_width}}[/] | {items_str:<{column_width}} |")
         print(line)
+
+    def typing_effect(self, text, delay=0.05, color_words=None):
+        def get_color(word, color_words):
+            for key, color in color_words.items():
+                if word.startswith(key):
+                    return color, len(key)
+            return None, 0
+
+        i = 0
+        while i < len(text):
+            if color_words:
+                color, length = get_color(text[i:], color_words)
+                if color:
+                    sys.stdout.write(color + text[i:i + length] + Style.RESET_ALL)
+                    i += length
+                    continue
+
+            sys.stdout.write(text[i])
+            sys.stdout.flush()
+            time.sleep(delay)
+            i += 1
 
 
 
@@ -316,7 +339,7 @@ class GamePlay:
                 break
 
         while True:
-            hair_length = input("Choose hair length (Long/Short): ").strip().lower()
+            hair_length = self.colored_input("Choose hair length ('Long/Short'): ", color="gold1").strip().lower()
             if hair_length.lower() == "back":
                 self.menu2 = True
                 return
@@ -328,12 +351,12 @@ class GamePlay:
 
         hair_color = 'Unknown'
         while hair_color == 'Unknown':
-            print("Choose hair color:")
+            print(f"[gold1]Choose hair color:[/]")
             print("1: Cyan")
             print("2: Red")
             print("3: Yellow")
             color_options = {'1': 'cyan', '2': 'red', '3': 'yellow'}
-            hair_color_choice = input("Select option (1, 2, or 3): ").strip()
+            hair_color_choice = self.colored_input("Select option ('1, 2, or 3'): ", color="gold1").strip()
             hair_color = color_options.get(hair_color_choice, "Unknown")
             if hair_color_choice.lower() == "back":
                 self.menu2 = True
@@ -343,12 +366,12 @@ class GamePlay:
                 self.colored_input("Press Enter to continue...", color="pale_green1")
         eye_color = 'Unknown'
         while eye_color == 'Unknown':
-            print("Choose eye color:")
+            print(f"[gold1]Choose eye color:[/]")
             print("1: Blue")
             print("2: Green")
             print("3: Red")
             color_options = {'1': 'blue', '2': 'green', '3': 'red'}
-            eye_color_choice = input("Select option (1, 2, or 3): ").strip()
+            eye_color_choice = self.colored_input("Select option (1, 2, or 3): ", color="gold1").strip()
             eye_color = color_options.get(eye_color_choice, "Unknown")
             if eye_color_choice.lower() == "back":
                 self.menu2 = True
@@ -363,7 +386,7 @@ class GamePlay:
             print(self.print_colorized_ascii_art(short_hair_file_path, hair_color, eye_color))
         elif hair_length == 'long':
             print(self.print_colorized_ascii_art(long_hair_file_path, hair_color, eye_color))
-        print(f'[light_pink1]{result}[/]')
+        print({result})
         self.colored_input("Press Enter to continue...", color="pale_green1")
         self.game_introduction()
         self.play = True
@@ -438,9 +461,9 @@ class GamePlay:
             self.map.print_map()
             print()
             self.draw_separator()
-            print(f"You are in the {self.current_room}")
-            print(f"Inventory : {self.inventory}")
-            print(f"[bold]Your current confidence: {self.confidence}[/]")
+            print(f"You are in the '{self.current_room}'")
+            print(f"[medium_purple1]Inventory : [/]{self.inventory}")
+            print(f"[medium_purple1]Your current confidence:[/] {self.confidence}")
             self.draw_separator()
 
             if self.any_monsters_left():
@@ -458,11 +481,11 @@ class GamePlay:
                 elif "Item" in self.room_info:
                     item = self.room_info["Item"]
                     if item[0] in 'AEIOUaeiou':
-                        print(f"You see an {self.room_info['Item']}!\n")
+                        print(f"You see an '{self.room_info['Item']}'!\n")
                     else:
-                        print(f"You see a {self.room_info['Item']}\n")
+                        print(f"You see a '{self.room_info['Item']}'\n")
                 else:
-                    print("Oops, there's nothing special here.\n")
+                    print(f"[deep_pink2]Oops, there's nothing special here now.[/]\n")
 
                 print(self.message)
                 print("[orchid1]Hint[/]: You can enter 'help' for command information.")
@@ -482,35 +505,45 @@ class GamePlay:
 
     def handle_ending(self):
         self.clear_screen()
-        print("Congratulations! You have cured all the monsters in the wood.")
-        time.sleep(2)
-        print("The monsters want to have a word with you.")
-        time.sleep(2)
+        self.typing_effect("Congratulations! You have cured all the monsters in the wood.\n\n")
+        time.sleep(1)
+        self.typing_effect("The monsters want to have a word with you.\n")
+        time.sleep(1)
         self.draw_separator()
-        print(
-            'Diet Monster says with enthusiasm, "I can eat anything I like, but to stay healthy and strong, I make sure to exercise too!"\n')
-        time.sleep(2)
-        print(
-            'Balance Monster shares, "I\'m going to make plans to balance my life, so it feels just right and not too much to handle!"\n')
-        time.sleep(2)
-        print(
-            'Overthinking Monster says, "When I see myself in the mirror, I realize it\'s time to take action, not just ponder. Otherwise, nothing will change, and I might miss out on something wonderful!"\n')
-        time.sleep(2)
-        print(
-            'Insecure Monster shares, "When I read books, I focus on me. I\'ve learned to love myself instead of worrying about what others think. My life deserves the best!"\n')
-        time.sleep(2)
-        print(
-            'Glass Ceiling Monster says, "With the key of awareness and action, I\'ve broken through barriers. Now, I see a world where everyone, regardless of gender, can reach their fullest potential. Let\'s build a future of equality and opportunity for all!"\n')
-        time.sleep(2)
-        print(
-            'The Harassment Monster cheers, "I never knew how strong you are. You can achieve anything you set your mind to. Don\'t let anyone hurt you again. You\'ve got this!"\n')
+        self.typing_effect('Diet Monster says with enthusiasm, \n"The pizza is so yummy! '
+                           'I can eat anything I like, \nbut to stay healthy and strong, I make sure to exercise with '
+                           'your jumping rope too!"\n\n',
+                           color_words={"pizza": Fore.YELLOW, "jumping rope": Fore.YELLOW})
+        time.sleep(1)
+        self.typing_effect('Balance Monster shares, \n"I\'m going to make plans with the smart planner to balance '
+                           'my life, \nso it feels just right and not too much to handle!"\n\n',
+                           color_words={"smart planner": Fore.YELLOW})
+        time.sleep(1)
+        self.typing_effect('Overthinking Monster says, \n"When I see myself in the mirror, I realize it\'s '
+                           'time to take action, not just ponder. \nOtherwise, nothing will change, and I might miss '
+                           'out on something wonderful!"\n\n', color_words={"mirror": Fore.YELLOW})
+        time.sleep(1)
+        self.typing_effect('The Insecure Monster shares, \n"When I read books, I focus on me. \nI\'ve learned '
+                           'to love myself instead of worrying about what others think. My life deserves the best!"\n\n',
+                           color_words={"books": Fore.YELLOW})
+        time.sleep(1)
+        self.typing_effect('Glass Ceiling Monster says, \n“With the key of awareness and action, I\'ve broken '
+                           'through barriers. \nNow, I see a world where everyone, regardless of gender, can reach '
+                           'their fullest potential. \nLet\'s build a future of equality and opportunity for all!”\n\n',
+                           color_words={"key": Fore.YELLOW})
+        time.sleep(1)
+        self.typing_effect('The Harassment Monster cheers, \n"I never knew how strong you are. You can achieve '
+                           'ANYTHING you set your mind to. \nDon\'t let anyone hurt you again. You\'ve got this!"\n\n',
+                           color_words={"ANYTHING": Fore.YELLOW})
         self.draw_separator()
         self.colored_input("Press Enter to continue...", color="pale_green1")
         self.clear_screen()
-        print(
-            'You\'ve faced so much in life. Every monster you encountered served as a valuable teacher, shaping you into the amazing person you are today. Embrace the strength you\'ve gained from those challenges!\n')
-        time.sleep(2)
-        print('Thank you for playing our game and hope your confidence is 100%! ʕっ•ᴥ•ʔっ\n')
+        self.typing_effect('You\'ve faced so much in life. \nEvery monster you encountered served as a valuable '
+                           'teacher, shaping you into the amazing person you are today. \nEmbrace the strength '
+                           'you\'ve gained from those challenges!\n\n')
+        time.sleep(1)
+        self.typing_effect('Thank you for playing our game and hope your confidence is 100%! ʕっ•ᴥ•ʔっ\n',
+                           color_words={"ʕっ•ᴥ•ʔっ": Fore.CYAN})
         self.draw_separator()
         self.colored_input("Press Enter to continue...", color="pale_green1")
         self.menu2 = True
@@ -530,9 +563,9 @@ class GamePlay:
             result = self.map.move(direction)
             if result != "invalid input":
                 self.current_room = self.map.room_map.get((self.map.x, self.map.y), "Unknown room")
-                self.message = "You moved " + direction
+                self.message = "You moved '" + direction + "'"
             else:
-                self.message = "[deep_pink2]Invalid command. Please use 'Go <East/West/North/South'[/]"
+                self.message = "[deep_pink2]Invalid command. Please use [/]'Go <East/West/North/South'"
 
 
 
@@ -551,7 +584,7 @@ class GamePlay:
                     # Add item to inventory if not already there
                     if item not in self.inventory:
                         self.inventory.append(item)
-                        self.message = f"{ascii_item} \n{item} retrieved!"
+                        self.message = f"{ascii_item} \n'{item}' retrieved!"
                         self.rooms[self.current_room].pop("Item", None)
                 else:
                     if item in self.inventory:
@@ -598,7 +631,7 @@ class GamePlay:
 
         elif action == "quit":
             self.clear_screen()
-            answer = self.colored_input("[light_coral]Save and Exit game? [/]'Y/N'\n[gold1]Your answer:[/] ").upper()
+            answer = self.colored_input("[deep_pink2]Save and Exit game? [/]'Y/N'\n[gold1]Your answer:[/] ").upper()
             if answer == "Y":
                 self.game_system.save_game(self.username, self.character_name, self.current_room, self.inventory,
                                            self.confidence, self.rooms)
@@ -660,7 +693,7 @@ class GamePlay:
 
         if monster.health == 0:
             time.sleep(2)
-            print(f"'{monster.name}' [dark_slate_gray2]has been defeated.[/] [dark_slate_gray2]You've gained[/] '{monster.loot}' [dark_slate_gray2]and[/] {monster.bonus} [dark_slate_gray2]points.[/]")
+            print(f"'{monster.name}' [dark_slate_gray2]has been defeated.[/] [dark_slate_gray2]You've gained[/] '{monster.loot}' [dark_slate_gray2]and[/] '{monster.bonus}' [dark_slate_gray2]points.[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
             self.rooms[self.current_room].pop("Monster", None)
             self.bonus += monster.bonus
