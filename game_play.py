@@ -36,7 +36,7 @@ class GamePlay:
         self.instruction = f"Welcome to the wood[green]{self.character_name}[/]!\n" \
                            f"Our wood is under attack by monsters\n" \
                            f"Each [salmon1]monster[/] can be defeated by [pink3]specific item(s)[/]\n" \
-                           f"Please find those items and [red]defeat all monsters[/] to bring peace back to the wood...\n"
+                           f"Please find those items and [red]defeat all monsters[/] to bring peace back to the wood..."
         self.keyCommand = f"[cyan1]COMMAND                             DESCRIPTIONS[/]\n" \
                           f"[bright_white]Go <East/West/North/South>----------Move between areas\n" \
                           f"Get <item>--------------------------Pick up the item\n" \
@@ -80,6 +80,10 @@ class GamePlay:
 
             return ascii
 
+    def print_ascii(self, file_path):
+        with open(file_path, 'r') as file:
+            ascii = file.read()
+            return ascii
     def print_ascii_items(self, file_path):
         with open(file_path, 'r') as file:
             ascii = file.read()
@@ -99,6 +103,7 @@ class GamePlay:
                 '▄': '<▄>',
                 'W': '<W>',
                 'V': '<V>',
+                'o': '<o>'
             }
 
             for char, placeholder in placeholders.items():
@@ -119,6 +124,7 @@ class GamePlay:
                 '<▄>': '[green]▄[/green]',
                 '<W>': '[light_pink4]W[/light_pink4]',
                 '<V>': '[orange3]V[/orange3]',
+                '<o>': '[hot_pink3]o[/]'
             }
 
             for placeholder, colored in colored_strings.items():
@@ -143,6 +149,7 @@ class GamePlay:
                 'd': '<d>',
                 'b': '<b>',
                 'D': '<D>',
+                '%': '<%>'
             }
 
             for char, placeholder in placeholders.items():
@@ -161,6 +168,7 @@ class GamePlay:
                 '<b>': '[dark_sea_green2]b[/]',
                 '<d>': '[dark_sea_green2]d[/]',
                 '<D>': '[dark_sea_green2]D[/]',
+                '<%>': '[green_yellow]%[/]'
             }
 
             for placeholder, colored in colored_strings.items():
@@ -218,17 +226,23 @@ class GamePlay:
               "3, [thistle3]RESET PASSWORD[/]\n"
               "4, [thistle3]QUIT[/]")
         self.draw_separator()
-        choice = self.colored_input("# ", color="sandy_brown")
-        if choice == "1":
-            self.handle_login()
-        elif choice == "2":
-            self.handle_registration()
-        elif choice == "3":
-            self.handle_password_reset()
-        elif choice == "4":
-            self.handle_quit_menu1()
-        else:
-            print("[deep_pink2]Invalid command[/]")
+        #error handling
+        try:
+            choice = self.colored_input("# ", color="sandy_brown")
+            if choice == "1":
+                self.handle_login()
+            elif choice == "2":
+                self.handle_registration()
+            elif choice == "3":
+                self.handle_password_reset()
+            elif choice == "4":
+                self.handle_quit_menu1()
+            else:
+                print("[deep_pink2]Invalid command[/]")
+                self.colored_input("Press Enter to continue...", color="pale_green1")
+            #error handling
+        except Exception as e:
+            print(f"[deep_pink2]An error occurred: {e}[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def handle_login(self):
@@ -306,8 +320,9 @@ class GamePlay:
         elif choice == "6":
             self.handle_delete_character()
         elif choice == "7":
-
-            print("Thank you for playing The Wood, I will see you when I see you again!")
+            self.clear_screen()
+            print(self.print_ascii('resource/good_bye.txt'))
+            print()
             self.colored_input("Press Enter to continue...", color="pale_green1")
             self.handle_quit()
         elif choice.lower() == "back":
@@ -326,7 +341,7 @@ class GamePlay:
             self.draw_separator()
             print("Create the new character or type 'BACK' to go back to the menu")
             self.draw_separator()
-            name = input("Enter your character's name: ").strip()
+            name = self.colored_input("Enter your character's name: ", color="gold1").strip()
             if name.lower() == "back":
                 self.menu2 = True
                 return
@@ -344,7 +359,7 @@ class GamePlay:
                 self.menu2 = True
                 return
             elif hair_length not in ["short", "long"]:
-                print("[deep_pink2]Invalid hair length, please choose again.[/]")
+                print("[deep_pink2](＞﹏＜)Oops, I need a [/]'long/short'")
                 self.colored_input("Press Enter to continue...", color="pale_green1")
             else:
                 break
@@ -362,7 +377,7 @@ class GamePlay:
                 self.menu2 = True
                 return
             elif hair_color == 'Unknown':
-                print("[deep_pink2]Invalid option, please choose again.[/]")
+                print("[deep_pink2](＞﹏＜)Oops, I need a number[/]")
                 self.colored_input("Press Enter to continue...", color="pale_green1")
         eye_color = 'Unknown'
         while eye_color == 'Unknown':
@@ -371,13 +386,13 @@ class GamePlay:
             print("2: Green")
             print("3: Red")
             color_options = {'1': 'blue', '2': 'green', '3': 'red'}
-            eye_color_choice = self.colored_input("Select option (1, 2, or 3): ", color="gold1").strip()
+            eye_color_choice = self.colored_input("Select option ('1, 2, or 3'): ", color="gold1").strip()
             eye_color = color_options.get(eye_color_choice, "Unknown")
             if eye_color_choice.lower() == "back":
                 self.menu2 = True
                 return
             elif eye_color == 'Unknown':
-                print("Invalid option, please choose again.")
+                print("[deep_pink2](＞﹏＜)Oops, I need a number[/]")
                 self.colored_input("Press Enter to continue...", color="pale_green1")
         result = self.game_system.create_character(self.username, name, hair_length, hair_color, eye_color)
         short_hair_file_path = 'resource/short_hair.txt'
@@ -386,7 +401,8 @@ class GamePlay:
             print(self.print_colorized_ascii_art(short_hair_file_path, hair_color, eye_color))
         elif hair_length == 'long':
             print(self.print_colorized_ascii_art(long_hair_file_path, hair_color, eye_color))
-        print({result})
+        print(f'[italic]{result}[/]')
+        print()
         self.colored_input("Press Enter to continue...", color="pale_green1")
         self.game_introduction()
         self.play = True
@@ -399,10 +415,11 @@ class GamePlay:
                 self.play = False
                 self.menu2 = True
             else:
-                character, current_room, inventory, rooms = loaded_data
+                character, current_room, inventory, rooms, confidence = loaded_data
                 self.character_name = character['name']
                 self.current_room = current_room
                 self.inventory = inventory
+                self.confidence = confidence
                 self.rooms = rooms
                 self.map.x, self.map.y = self.map.get_coordinates_from_room_name(self.current_room)
                 self.play = True
@@ -448,7 +465,10 @@ class GamePlay:
 
     def game_introduction(self):
         self.clear_screen()
+        print(self.print_ascii('resource/welcome.txt'))
+        self.draw_separator()
         print(self.instruction)
+        self.draw_separator()
         print(self.keyCommand)
         self.colored_input("Press Enter to continue...", color="pale_green1")
 
@@ -583,9 +603,22 @@ class GamePlay:
                         ascii_item = self.print_ascii_items(f'resource/{item.split()[0].lower()}.txt')
                     # Add item to inventory if not already there
                     if item not in self.inventory:
-                        self.inventory.append(item)
-                        self.message = f"{ascii_item} \n'{item}' retrieved!"
-                        self.rooms[self.current_room].pop("Item", None)
+                        if item.lower() == 'confidence booster':
+                            if self.confidence < 100:
+                                time.sleep(2)
+                                print("[indian_red]Confidece +20[/]")
+                                time.sleep(2)
+                                self.message = f"{ascii_item} \nYour 'Confidence' is boosted!"
+                                self.confidence += 20
+                                self.rooms[self.current_room].pop("Item", None)
+                            else:
+                                print("[deep_pink2]You are confident enough to beat the monsters, no need to get the confidence booster.[/]")
+                                self.colored_input("Press Enter to continue...", color="pale_green1")
+
+                        else:
+                            self.inventory.append(item)
+                            self.message = f"{ascii_item} \n'{item}' retrieved!"
+                            self.rooms[self.current_room].pop("Item", None)
                 else:
                     if item in self.inventory:
                         print(f"[deep_pink2]You already have {item} in your inventory[/]")
@@ -595,7 +628,7 @@ class GamePlay:
                         self.colored_input("Press Enter to continue...", color="pale_green1")
             else:
                 # No item specified in the command
-                print("Invalid command: No item specified.")
+                print("[deep_pink2]Invalid command: No item specified.[/]")
                 self.colored_input("Press Enter to continue...", color="pale_green1")
 
 
@@ -676,6 +709,8 @@ class GamePlay:
             damage = 100 // len(monster.items_required)
             monster.health -= damage
             time.sleep(2)
+            print("[indian_red]_(´ཀ`」 ∠)_[/]")
+            time.sleep(2)
             print(f"[indian_red]{monster.name} health -{damage}[/]")
             if len(monster.items_required) >= 2:
                 if monster.health > 0:
@@ -685,11 +720,14 @@ class GamePlay:
 
         else:
             time.sleep(2)
-            self.draw_separator()
-            print(f"[plum2](;´༎ຶД༎ຶ`) oh no! You don't have the items in your inventory to attack the monster, now {monster.name} said something awful about you to attack you.[/]")
+            print()
+            print(f"[plum2]( ´•︵•` ) Oh no! You don't have the items in your inventory to attack the monster, {monster.name} will say something to attack you![/]")
+            time.sleep(2)
+            print()
+            print(f"[hot_pink3]{monster.name} said:[/] Look at you, {self.character_name}. {monster.words}\n")
             time.sleep(2)
             print(f"[indian_red]Your confidence -{monster.attack}")
-            self.confidence -= 20
+            self.confidence -= monster.attack
 
         if monster.health == 0:
             time.sleep(2)
@@ -699,7 +737,9 @@ class GamePlay:
             self.bonus += monster.bonus
             self.game_system.save_score(self.character_name, self.username, self.bonus)
         elif self.confidence == 0:
-            print("Game over! Maybe next time!")
+            self.clear_screen()
+            print(self.print_ascii('resource/game_over.txt'))
+            print("[indian_red]Your confidence is 0, you are not self-assured enough to beat all the monsters in the wood, come back when you are stronger![/]\n")
             self.colored_input("Press Enter to continue...", color="pale_green1")
             self.game_system.save_game(self.username, self.character_name, self.current_room, self.inventory,
                                        self.confidence, self.rooms)
@@ -708,6 +748,8 @@ class GamePlay:
             time.sleep(2)
             print(f"[bold italic]Monster's health: {monster.health}[/]")
             time.sleep(2)
+            if self.confidence < 0:
+                self.confidence = 0
             print(f"[bold italic]Your confidence: {self.confidence}[/]")
             self.draw_separator()
             time.sleep(2)

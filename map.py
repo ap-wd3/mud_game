@@ -161,7 +161,7 @@ paths = [
 ]
 
 rooms = {
-    'Maple Sanctuary': {'East': 'Moonlit Timberland'},
+    'Maple Sanctuary': {'East': 'Moonlit Timberland', 'Item': 'Confidence Booster'},
     'Moonlit Timberland': {'West': 'Maple Sanctuary', 'North': 'Maple Sanctuary', 'South': 'Dewdrop Dell',
                            'East': 'Emerald Canopy',  'Item': 'Smart Planner'},
     'Whispering Pines': {'South': 'Moonlit Timberland', 'East': 'Pine Haven', 'Monster': 'Diet Monster'},

@@ -108,6 +108,8 @@ class GameSystem:
             return None
 
         user_data = users_data.get(username, {})
+        user_data = users_data.get(username, {})
+
         if 'characters' in user_data and user_data['characters']:
             clear()
             draw()
@@ -118,34 +120,42 @@ class GameSystem:
             print("Type 'BACK' to go back to main menu")
             draw()
         else:
-            print("[deep_pink2]No characters available for this user.[/]")
+            print("[deep_pink2](*꒦ິ꒳꒦ີ)Oops, no characters available for this user.[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
             return None
+
+
 
         choice = input("# ")
-        if choice.lower() == 'back':
-            print(choice)
-            return 'back'
-        elif choice.isdigit():
-            choice = int(choice)
-            character = user_data['characters'][choice - 1]
-        else:
-            print("[deep_pink2]Invalid selection.[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
-            return None
+        try:
+            if choice.lower() == 'back':
+                print(choice)
+                return 'back'
+            elif choice.isdigit():
+                choice = int(choice)
+                character = user_data['characters'][choice - 1]
+            else:
+                print("[deep_pink2](＞﹏＜)Oops, I need a [/]'back' [deep_pink2]or a number.[/]")
+                self.colored_input("Press Enter to continue...", color="pale_green1")
+                return None
 
-        if 'game_state' in character and character['game_state']:
-            game_state = character['game_state'][-1]
-            print(f"[slate_blue3]Game loaded successfully for character {character['name']}.[/]")
+            if 'game_state' in character and character['game_state']:
+                game_state = character['game_state'][-1]
+                print(f"[slate_blue3]Game loaded successfully for character '{character['name']}'.[/]")
+                self.colored_input("Press Enter to continue...", color="pale_green1")
+                current_room = game_state.get('current_room', "Default Room Name")
+                inventory = game_state.get('inventory', [])
+                rooms = game_state.get('rooms', {})
+                confidence = game_state.get('confidence', 100)
+                return (character, current_room, inventory,rooms, confidence)
+            else:
+                print(f"[deep_pink2]No saved game state for character {character['name']}.[/]")
+                self.colored_input("Press Enter to continue...", color="pale_green1")
+                return None
+        #handle index out of range error
+        except IndexError:
+            print("[deep_pink2](＞﹏＜)Oops, character index out of range, please try again.[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
-            current_room = game_state.get('current_room', "Default Room Name")
-            inventory = game_state.get('inventory', [])
-            rooms = game_state.get('rooms', {})
-            return (character, current_room, inventory,rooms)
-        else:
-            print(f"[deep_pink2]No saved game state for character {character['name']}.[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
-            return None
 
     def save_score(self, name, username, bonus):
         data = []
