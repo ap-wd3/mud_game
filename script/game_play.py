@@ -44,7 +44,7 @@ class GamePlay:
                           f"Attack------------------------------Attack the monster\n" \
                           f"Help--------------------------------See game's rules and command\n" \
                           f"Quit--------------------------------Save and Exit the game[/]\n"
-        self.book_path = 'resource/book.txt'
+        self.book_path = '../resource/book.txt'
 
     def colored_input(self, prompt, color="green"):
         self.console.print(prompt, style=color, end="")
@@ -251,7 +251,7 @@ class GamePlay:
         self.draw_separator()
         result = self.game_system.login(username, password)
         if result == 'Logged in successfully.':
-            print(f'[slate_blue3]{result}[/]')
+            print(f'[dark_slate_gray2]{result}[/]')
             self.colored_input("Press Enter to continue...", color="pale_green1")
             self.username = username
             self.menu1 = False
@@ -282,6 +282,7 @@ class GamePlay:
                     self.menu2 = False
                 else:
                     email = self.colored_input("Enter your email address: ", color="gold1")
+                    self.user_manager.reload_data()
                     self.user_manager.create_user(username, password, email)
 
     def handle_password_reset(self):
@@ -321,7 +322,7 @@ class GamePlay:
             self.handle_delete_character()
         elif choice == "7":
             self.clear_screen()
-            print(self.print_ascii('resource/good_bye.txt'))
+            print(self.print_ascii('../resource/good_bye.txt'))
             print()
             self.colored_input("Press Enter to continue...", color="pale_green1")
             self.handle_quit()
@@ -395,8 +396,8 @@ class GamePlay:
                 print("[deep_pink2](＞﹏＜)Oops, I need a number[/]")
                 self.colored_input("Press Enter to continue...", color="pale_green1")
         result = self.game_system.create_character(self.username, name, hair_length, hair_color, eye_color)
-        short_hair_file_path = 'resource/short_hair.txt'
-        long_hair_file_path = 'resource/long_hair.txt'
+        short_hair_file_path = '../resource/short_hair.txt'
+        long_hair_file_path = '../resource/long_hair.txt'
         if hair_length == 'short':
             print(self.print_colorized_ascii_art(short_hair_file_path, hair_color, eye_color))
         elif hair_length == 'long':
@@ -465,7 +466,7 @@ class GamePlay:
 
     def game_introduction(self):
         self.clear_screen()
-        print(self.print_ascii('resource/welcome.txt'))
+        print(self.print_ascii('../resource/welcome.txt'))
         self.draw_separator()
         print(self.instruction)
         self.draw_separator()
@@ -492,10 +493,10 @@ class GamePlay:
                     print(f"[bold italic]You encounter a '{encountered_monster}'! [/]")
                     if len(encountered_monster.split()) == 3:
                         print(self.print_ascii_monsters(
-                            f'resource/{encountered_monster.split()[0].lower()}{encountered_monster.split()[1].lower()}_monster.txt'))
+                            f'../resource/{encountered_monster.split()[0].lower()}{encountered_monster.split()[1].lower()}_monster.txt'))
                     elif len(encountered_monster.split()) == 2:
                         print(
-                            self.print_ascii_monsters(f'resource/{encountered_monster.split()[0].lower()}_monster.txt'))
+                            self.print_ascii_monsters(f'../resource/{encountered_monster.split()[0].lower()}_monster.txt'))
                     print("Enter 'look' to see the information of the monster")
 
                 elif "Item" in self.room_info:
@@ -598,9 +599,9 @@ class GamePlay:
                     # Handle the ASCII art for the item
                     if len(item.split()) == 2:
                         ascii_item = self.print_ascii_items(
-                            f'resource/{item.split()[0].lower()}_{item.split()[1].lower()}.txt')
+                            f'../resource/{item.split()[0].lower()}_{item.split()[1].lower()}.txt')
                     elif len(item.split()) == 1:
-                        ascii_item = self.print_ascii_items(f'resource/{item.split()[0].lower()}.txt')
+                        ascii_item = self.print_ascii_items(f'../resource/{item.split()[0].lower()}.txt')
                     # Add item to inventory if not already there
                     if item not in self.inventory:
                         if item.lower() == 'confidence booster':
@@ -641,10 +642,10 @@ class GamePlay:
                 if monster:
                     if len(monster.name.split()) == 3:
                         print(self.print_ascii_monsters(
-                            f'resource/{monster.name.split()[0].lower()}{monster.name.split()[1].lower()}_monster.txt'))
+                            f'../resource/{monster.name.split()[0].lower()}{monster.name.split()[1].lower()}_monster.txt'))
                     elif len(monster.name.split()) == 2:
                         print(
-                            self.print_ascii_monsters(f'resource/{monster.name.split()[0].lower()}_monster.txt'))
+                            self.print_ascii_monsters(f'../resource/{monster.name.split()[0].lower()}_monster.txt'))
                     time.sleep(2)
                     print(f"{monster.description}\n")
                     time.sleep(4)
@@ -737,10 +738,15 @@ class GamePlay:
             self.bonus += monster.bonus
             self.game_system.save_score(self.character_name, self.username, self.bonus)
         elif self.confidence == 0:
+            time.sleep(2)
             self.clear_screen()
-            print(self.print_ascii('resource/game_over.txt'))
-            print("[indian_red]Your confidence is 0, you are not self-assured enough to beat all the monsters in the wood, come back when you are stronger![/]\n")
+            print(self.print_ascii('../resource/game_over.txt'))
+            print("[indian_red]Your confidence is 0, you are not self-assured enough to beat all the monsters in the wood, come back when you are stronger and more confident![/]\n")
             self.colored_input("Press Enter to continue...", color="pale_green1")
+            self.confidence = 100
+            self.current_room = 'Maple Sanctuary'
+            self.rooms = rooms
+            self.inventory =[]
             self.game_system.save_game(self.username, self.character_name, self.current_room, self.inventory,
                                        self.confidence, self.rooms)
             exit(0)

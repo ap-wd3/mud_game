@@ -18,12 +18,12 @@ class UserManager:
 
     def create_user(self, username, password, email):
         if username in self.users:
-            print("Error: Username already taken.")
+            print("[deep_pink2]Error: Username already taken.[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
         else:
             self.users[username] = {'password': password, 'email': email, 'characters': []}
             utils.save_data(self.users, self.storage_file)
-            print("User created successfully.")
+            print(f"[dark_slate_gray2]{username} created successfully.[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
 
     def save_users(self):
@@ -56,4 +56,5 @@ class UserManager:
             self.colored_input("Press Enter to continue...", color="pale_green1")
         del self.users[username]
         self.save_users()
+
         self.colored_input("Press Enter to continue...", color="pale_green1")
