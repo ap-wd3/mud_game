@@ -34,10 +34,11 @@ class Map:
         reverse_map = {name: coords for coords, name in self.room_map.items()}
         default_coords = (0, 0)
         return reverse_map.get(room_name, default_coords)
+
     def move(self, direction):
         new_x, new_y = self.x, self.y
 
-        if direction == "north":
+        if direction == "n" or direction == "north":
             new_y -= 1
             if new_y >= 0:
                 # Check if moving from the second row to the first row
@@ -56,7 +57,7 @@ class Map:
                 self.console.print("Out of bound, cannot go north", style='deep_pink2')
                 self.colored_input("Press Enter to continue...", color="pale_green1")
 
-        elif direction == "south":
+        elif direction == "s" or direction == "south":
             new_y += 1
             if new_y < self.height:
                 # Check if moving from the first row to the second row
@@ -76,8 +77,7 @@ class Map:
                 self.console.print("Out of bound, cannot go south", style="deep_pink2")
                 self.colored_input("Press Enter to continue...", color="pale_green1")
 
-
-        elif direction == "east":
+        elif direction == "e" or direction == "east":
             new_x += 1
             # Check for a horizontal path to the right
             if new_x < self.width and ((self.x, self.y), (new_x, self.y)) in self.paths:
@@ -86,8 +86,7 @@ class Map:
                 self.console.print("Out of bound, cannot go east", style="deep_pink2")
                 self.colored_input("Press Enter to continue...", color="pale_green1")
 
-
-        elif direction == "west":
+        elif direction == "w" or direction == "west":
             new_x -= 1
             # Check for a horizontal path to the left
             if new_x >= 0 and ((new_x, self.y), (self.x, self.y)) in self.paths:
@@ -97,7 +96,7 @@ class Map:
                 self.colored_input("Press Enter to continue...", color="pale_green1")
 
         else:
-             return "invalid input"
+            return "invalid input"
 
     def print_map(self):
         for y in range(self.height):

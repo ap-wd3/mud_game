@@ -2,6 +2,7 @@ import utils
 from rich import print
 from rich.style import Style
 from rich.console import Console
+import sys
 
 class UserManager:
     def __init__(self, storage_file='users.json'):
@@ -25,6 +26,7 @@ class UserManager:
             utils.save_data(self.users, self.storage_file)
             print(f"[dark_slate_gray2]{username} created successfully.[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
+            return "User created successfully."
 
     def save_users(self):
         utils.save_data(self.users, self.storage_file)
@@ -58,3 +60,19 @@ class UserManager:
         self.save_users()
 
         self.colored_input("Press Enter to continue...", color="pale_green1")
+
+    def username_verify(self, username):
+        if username in self.users:
+            print("[deep_pink2]Error: Username already taken.[/]")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
+            self.clear_last_two_lines(3)
+            return username in self.users
+        else:
+            pass
+
+    def clear_last_two_lines(self, num_lines):
+        for _ in range(num_lines):
+            # Move up one line
+            sys.stdout.write('\033[F')
+            # Clear the line
+            sys.stdout.write('\033[K')

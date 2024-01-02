@@ -10,6 +10,7 @@ from rich.console import Console
 import time
 from colorama import Fore, Style
 import sys
+import getpass
 
 
 class GamePlay:
@@ -36,7 +37,8 @@ class GamePlay:
         self.instruction = f"Welcome to the wood[green]{self.character_name}[/]!\n" \
                            f"Our wood is under attack by monsters\n" \
                            f"Each [salmon1]monster[/] can be defeated by [pink3]specific item(s)[/]\n" \
-                           f"Please find those items and [red]defeat all monsters[/] to bring peace back to the wood..."
+                           f"Please find those items and [red]defeat all monsters[/] to bring peace back to the wood...\n"\
+                           f"If you don't have the [pink3]items needed[/] to attack the monster, your [indian_red]confidencet[/] will be decreased, and when your [indian_red]confidence[/] is 0, you will lose the game."
         self.keyCommand = f"[cyan1]COMMAND                             DESCRIPTIONS[/]\n" \
                           f"[bright_white]Go <East/West/North/South>----------Move between areas\n" \
                           f"Get <item>--------------------------Pick up the item\n" \
@@ -45,6 +47,7 @@ class GamePlay:
                           f"Help--------------------------------See game's rules and command\n" \
                           f"Quit--------------------------------Save and Exit the game[/]\n"
         self.book_path = '../resource/book.txt'
+        self.history_message = ""
 
     def colored_input(self, prompt, color="green"):
         self.console.print(prompt, style=color, end="")
@@ -220,11 +223,14 @@ class GamePlay:
 
     def main_menu(self):
         self.clear_screen()
+        print(self.print_ascii('../resource/main_menu.txt'))
         self.draw_separator()
         print("1, [thistle3]LOGIN[/]\n"
               "2, [thistle3]NEW REGISTRATION[/]\n"
               "3, [thistle3]RESET PASSWORD[/]\n"
               "4, [thistle3]QUIT[/]")
+        self.draw_separator()
+        print("Enter number to choose menu option")
         self.draw_separator()
         #error handling
         try:
@@ -245,14 +251,13 @@ class GamePlay:
             print(f"[deep_pink2]An error occurred: {e}[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
 
-    def handle_login(self):
-        username = self.colored_input("Enter your username: ", color="gold1")
-        password = self.colored_input("Enter your password: ", color="gold1")
+    def handle_login(self, username=None, password=None):
+        if username is None and password is None:
+            username = self.colored_input("Enter your username: ", color="gold1")
+            password = self.colored_input("Enter your password: ", color="gold1")
         self.draw_separator()
         result = self.game_system.login(username, password)
         if result == 'Logged in successfully.':
-            print(f'[dark_slate_gray2]{result}[/]')
-            self.colored_input("Press Enter to continue...", color="pale_green1")
             self.username = username
             self.menu1 = False
             self.menu2 = True
@@ -261,29 +266,80 @@ class GamePlay:
             self.menu2 = False
 
     def handle_registration(self):
-
+        self.user_manager.reload_data()
         self.clear_screen()
         self.draw_separator()
-        print("Create new account or type 'back' to go back to main menu.")
+        print("Create new account or type '(B)ack' to go back to main menu.")
         self.draw_separator()
-        username = self.colored_input("Choose your username: ", color="gold1")
 
-        if username.lower() == "back":
-            self.menu1 = True
-            self.menu2 = False
-        else:
-            password = self.colored_input("Choose your password: ", color="gold1")
-            if password.lower() == "back":
+        # ask for username
+        while True:
+
+            username = input("\033[93mChoose your username: \033[0m")
+            if username.lower() == "back" or username.lower() == "b":
                 self.menu1 = True
                 self.menu2 = False
-            else:
-                if password.lower() == "back":
-                    self.menu1 = True
-                    self.menu2 = False
-                else:
-                    email = self.colored_input("Enter your email address: ", color="gold1")
-                    self.user_manager.reload_data()
-                    self.user_manager.create_user(username, password, email)
+                return
+            if not self.user_manager.username_verify(username):
+                valid_password = False
+                # ask for password
+                while not valid_password:
+                    password = getpass.getpass("\033[93mChoose your password: \033[0m")
+                    if password.lower() == "back" or password.lower() == "b":
+                        self.menu1 = True
+                        self.menu2 = False
+                        return
+
+                    if len(password) < 6:
+                        print("Your password must be at least 6 characters long. Please try again.")
+                        self.colored_input("Press Enter to continue...", color="pale_green1")
+                        self.clear_last_two_lines(3)
+                        continue
+
+                    # Confirm Password
+                    confirm_password = getpass.getpass("\033[93mConfirm your password: \033[0m")
+                    if confirm_password.lower() == "back" or confirm_password.lower() == "b":
+                        self.menu1 = True
+                        self.menu2 = False
+                        return
+
+                    if password != confirm_password:
+                        print("Your password and confirmation do not match. Please try again.")
+                        self.colored_input("Press Enter to continue...", color="pale_green1")
+                        self.clear_last_two_lines(3)
+                        continue
+
+                    valid_password = True  # Password is valid, proceed to email
+
+                # ask for email address
+                while True:
+                    email = input("\033[93mEnter your email address: \033[0m")
+                    self.draw_separator()
+                    if email.lower() == "back" or email.lower() == "b":
+                        self.menu1 = True
+                        self.menu2 = False
+                        return
+
+                    if '@' in email and '.' in email.split('@')[-1]:
+                        break
+                    else:
+                        print("[deep_pink2](⋟﹏⋞)Oops, invalid email format. I need a valid email address.[/]")
+                        self.colored_input("Press Enter to try again...", color="pale_green1")
+                        self.clear_last_two_lines(3)
+                break  # Break out of the outer loop as well
+
+        self.user_manager.reload_data()
+        registration_result = self.user_manager.create_user(username, password, email)
+
+        if registration_result == "User created successfully.":
+            self.handle_login(username=username, password=password)
+
+        else:
+            # Display an error message if registration failed
+            print(f"[deep_pink2]{registration_result}[/]")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
+            pass
+
 
     def handle_password_reset(self):
         username = self.colored_input("Enter your username: ", color="gold1")
@@ -305,7 +361,7 @@ class GamePlay:
               "6, [thistle3]DELETE CHARACTERS[/]\n"
               "7, [thistle3]QUIT GAME[/]")
         self.draw_separator()
-        print("Type 'BACK' to go back to main menu")
+        print("Enter number to choose menu option or type 'BACK' to go back to main menu")
         self.draw_separator()
         choice = self.colored_input("# ", color="sandy_brown")
         if choice == "1":
@@ -479,8 +535,9 @@ class GamePlay:
             self.current_room = self.map.room_map.get((self.map.x, self.map.y), "Unknown room")
             self.room_info = self.rooms.get(self.current_room, {})
             self.clear_screen()
+            print("[bold indian_red]Map of the wood:[/]")
             self.map.print_map()
-            print()
+            print(self.history_message)
             self.draw_separator()
             print(f"You are in the '{self.current_room}'")
             print(f"[medium_purple1]Inventory : [/]{self.inventory}")
@@ -569,24 +626,30 @@ class GamePlay:
         self.colored_input("Press Enter to continue...", color="pale_green1")
         self.menu2 = True
 
-
-
-
     def process_command(self, user_input):
         if not user_input:
             return
 
         action = user_input[0]
         argument = " ".join(user_input[1:]).title() if len(user_input) > 1 else ""
+        direction_map = {
+            'e': 'east',
+            'w': 'west',
+            'n': 'north',
+            's': 'south'
+        }
 
         if action == "go":
+            self.message = ""
             direction = argument.lower()
+            direction_word = direction_map.get(direction, direction)
             result = self.map.move(direction)
             if result != "invalid input":
                 self.current_room = self.map.room_map.get((self.map.x, self.map.y), "Unknown room")
-                self.message = "You moved '" + direction + "'"
+                self.history_message = "You moved '" + direction_word + "'"
             else:
-                self.message = "[deep_pink2]Invalid command. Please use [/]'Go <East/West/North/South'"
+                print("[deep_pink2]Invalid command. Please use 'Go (e)ast, (w)est, (n)orth, (s)outh' to move[/]")
+                self.colored_input("Press Enter to continue...", color="pale_green1")
 
 
 
@@ -634,7 +697,7 @@ class GamePlay:
 
 
 
-        elif action == "look":
+        elif action == "look" or action == "l":
             self.clear_screen()
             monster_name = self.room_info.get("Monster")
             if monster_name:
@@ -648,7 +711,7 @@ class GamePlay:
                             self.print_ascii_monsters(f'../resource/{monster.name.split()[0].lower()}_monster.txt'))
                     time.sleep(2)
                     print(f"{monster.description}\n")
-                    time.sleep(4)
+                    time.sleep(2)
                     self.print_monster_info(monster.name, monster.health, monster.attack, monster.loot,
                                                          monster.items_required)
                     print()
@@ -663,7 +726,7 @@ class GamePlay:
                 print("Sorry, there is nothing to look at. :(")
 
 
-        elif action == "quit":
+        elif action == "quit" or action == "q":
             self.clear_screen()
             answer = self.colored_input("[deep_pink2]Save and Exit game? [/]'Y/N'\n[gold1]Your answer:[/] ").upper()
             if answer == "Y":
@@ -678,12 +741,13 @@ class GamePlay:
             else:
                 print("[]Invalid Command")
 
-        elif action == "help":
+        elif action == "help" or action == "h":
             self.clear_screen()
             print(self.keyCommand)
             self.colored_input("Press Enter to continue...", color="pale_green1")
 
-        elif action == "attack":
+        elif action == "attack" or action == "a":
+            self.clear_screen()
             monster_name = self.room_info.get("Monster")
             if monster_name:
                 self.handle_monster_encounter(monster_name)
@@ -725,7 +789,7 @@ class GamePlay:
             print(f"[plum2]( ´•︵•` ) Oh no! You don't have the items in your inventory to attack the monster, {monster.name} will say something to attack you![/]")
             time.sleep(2)
             print()
-            print(f"[hot_pink3]{monster.name} said:[/] Look at you, {self.character_name}. {monster.words}\n")
+            print(f"[hot_pink3]{monster.name} said:[/] {monster.replace_word(self.username, self.character_name)}\n")
             time.sleep(2)
             print(f"[indian_red]Your confidence -{monster.attack}")
             self.confidence -= monster.attack

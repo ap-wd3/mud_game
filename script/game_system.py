@@ -40,21 +40,23 @@ class GameSystem:
 
 
     def create_character(self, username, name, hair_length, hair_color, eye_color):
-        if not self.logged_in_user:
+        user_data = self.user_manager.users.get(username)
+        if any(char['name'] == name for char in user_data['characters']):
+            print("[deep_pink2]Error: Character name already exists.[/]")
+            self.colored_input("Press Enter to continue...", color="pale_green1")
+        new_character = Character(name, hair_length, hair_color, eye_color)
+        user_data['characters'].append(new_character.to_dict())
+        if not user_data or 'characters' not in user_data:
             print("[deep_pink2]Error: You must be logged in to create a character.[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
         if username != self.logged_in_user:
             print("[deep_pink2]Error: You can only create characters for your logged-in account.[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
 
-        user_data = self.user_manager.users.get(username)
 
-        if any(char['name'] == name for char in user_data['characters']):
-            print("[deep_pink2]Error: Character name already exists.[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
 
-        new_character = Character(name, hair_length, hair_color, eye_color)
-        user_data['characters'].append(new_character.to_dict())
+
+
         self.user_manager.save_users()
         return f"Character '{name}' has '{hair_length}' and '{hair_color}' hair, and her eyes are '{eye_color}'"
 
@@ -252,7 +254,6 @@ class GameSystem:
     def save_users(self):
         utils.save_data(self.user_manager.users, self.user_manager.storage_file)
 
-
     def delete_character(self, username):
         user_data = self.user_manager.users.get(username, None)
         if user_data is None:
@@ -262,6 +263,7 @@ class GameSystem:
         if not user_data['characters']:
             print("[deep_pink2]No characters available for this user.[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
+            return
 
         clear()
         draw()
