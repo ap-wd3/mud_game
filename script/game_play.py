@@ -39,13 +39,13 @@ class GamePlay:
                            f"Each [salmon1]monster[/] can be defeated by [pink3]specific item(s)[/]\n" \
                            f"Please find those items and [red]defeat all monsters[/] to bring peace back to the wood...\n"\
                            f"If you don't have the [pink3]items needed[/] to attack the monster, your [indian_red]confidencet[/] will be decreased, and when your [indian_red]confidence[/] is 0, you will lose the game."
-        self.keyCommand = f"[cyan1]COMMAND                             DESCRIPTIONS[/]\n" \
-                          f"[bright_white]Go <East/West/North/South>----------Move between areas\n" \
-                          f"Get <item>--------------------------Pick up the item\n" \
-                          f"Look--------------------------------See monster's details including hints\n" \
-                          f"Attack------------------------------Attack the monster\n" \
-                          f"Help--------------------------------See game's rules and command\n" \
-                          f"Quit--------------------------------Save and Exit the game[/]\n"
+        self.keyCommand = f"[cyan1]COMMAND                                             DESCRIPTIONS[/]\n" \
+                          f"[bright_white]go <east/west/north/south> or go <e/w/n/s>----------Move between areas\n" \
+                          f"get <the name of the item> -------------------------Pick up the item\n" \
+                          f"look or l-------------------------------------------See monster's details\n" \
+                          f"attack or a-----------------------------------------Attack the monster\n" \
+                          f"help or h-------------------------------------------See game's rules and command\n" \
+                          f"quit or q-------------------------------------------Save and Exit the game[/]\n"
         self.book_path = '../resource/book.txt'
         self.history_message = ""
 
@@ -198,7 +198,7 @@ class GamePlay:
         print(f"| [yellow1]{'Items Needed':<{column_width}}[/] | {items_str:<{column_width}} |")
         print(line)
 
-    def typing_effect(self, text, delay=0.05, color_words=None):
+    def typing_effect(self, text, delay=0.03, color_words=None):
         def get_color(word, color_words):
             for key, color in color_words.items():
                 if word.startswith(key):
@@ -538,8 +538,8 @@ class GamePlay:
             print("[bold indian_red]Map of the wood:[/]")
             self.map.print_map()
             print(self.history_message)
-            self.draw_separator()
             print(f"You are in the '{self.current_room}'")
+            self.draw_separator()
             print(f"[medium_purple1]Inventory : [/]{self.inventory}")
             print(f"[medium_purple1]Your current confidence:[/] {self.confidence}")
             self.draw_separator()
@@ -554,25 +554,38 @@ class GamePlay:
                     elif len(encountered_monster.split()) == 2:
                         print(
                             self.print_ascii_monsters(f'../resource/{encountered_monster.split()[0].lower()}_monster.txt'))
-                    print("Enter 'look' to see the information of the monster")
+                    self.draw_separator()
+                    print("[orchid1 italic bold]💡Hints:[/]\n")
+                    print("[bright_white italic]If you don't have the item(s) to attack the monster, you can go to other rooms and the monster won't attack you.[/]\n")
+                    print("[bright_white italic]Type [green](l)ook[/] to view the info of the monster and the items required to attack the monster[/]\n")
+                    print("[bright_white italic]Type [green](a)ttack[/] to attack the monster.[/]")
 
                 elif "Item" in self.room_info:
                     item = self.room_info["Item"]
+
                     if item[0] in 'AEIOUaeiou':
                         print(f"You see an '{self.room_info['Item']}'!\n")
                     else:
                         print(f"You see a '{self.room_info['Item']}'\n")
+                    self.draw_separator()
+                    print("[orchid1 italic bold]💡Hints:[/]\n")
+                    print(f"[bright_white]Type [green]get {item.lower()}[/] to get the item[/]\n")
                 else:
                     print(f"[deep_pink2]Oops, there's nothing special here now.[/]\n")
-
                 print(self.message)
-                print("[orchid1]Hint[/]: You can enter 'help' for command information.")
+                print("[bright_white italic]Type [green](h)elp[/] to view command instruction[/]")
                 self.draw_separator()
                 user_input = self.colored_input("Enter your command: ", color="gold1").lower().split(' ')
                 self.process_command(user_input)
             else:
                 self.play = False
                 if not self.quit_game:
+                    self.confidence = 100
+                    self.current_room = 'Maple Sanctuary'
+                    self.rooms = rooms
+                    self.inventory = []
+                    self.game_system.save_game(self.username, self.character_name, self.current_room, self.inventory,
+                                               self.confidence, self.rooms)
                     self.handle_ending()
 
     def any_monsters_left(self):
@@ -682,6 +695,7 @@ class GamePlay:
                         else:
                             self.inventory.append(item)
                             self.message = f"{ascii_item} \n'{item}' retrieved!"
+                            print()
                             self.rooms[self.current_room].pop("Item", None)
                 else:
                     if item in self.inventory:
@@ -709,15 +723,14 @@ class GamePlay:
                     elif len(monster.name.split()) == 2:
                         print(
                             self.print_ascii_monsters(f'../resource/{monster.name.split()[0].lower()}_monster.txt'))
-                    time.sleep(2)
                     print(f"{monster.description}\n")
-                    time.sleep(2)
+                    time.sleep(1)
                     self.print_monster_info(monster.name, monster.health, monster.attack, monster.loot,
                                                          monster.items_required)
                     print()
-                    time.sleep(2)
+                    time.sleep(1)
                     print(f"{monster.hint}\n")
-                    time.sleep(2)
+                    time.sleep(1)
 
                     self.colored_input("Press Enter to continue...", color="pale_green1")
                 else:
@@ -742,7 +755,6 @@ class GamePlay:
                 print("[]Invalid Command")
 
         elif action == "help" or action == "h":
-            self.clear_screen()
             print(self.keyCommand)
             self.colored_input("Press Enter to continue...", color="pale_green1")
 
@@ -773,9 +785,10 @@ class GamePlay:
         if has_required_items:
             damage = 100 // len(monster.items_required)
             monster.health -= damage
-            time.sleep(2)
+            print(f"{monster.name} has been attacked by you!")
+            time.sleep(1)
             print("[indian_red]_(´ཀ`」 ∠)_[/]")
-            time.sleep(2)
+            time.sleep(1)
             print(f"[indian_red]{monster.name} health -{damage}[/]")
             if len(monster.items_required) >= 2:
                 if monster.health > 0:

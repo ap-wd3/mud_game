@@ -11,7 +11,7 @@
                 "bonus": 0,
                 "game_state": [
                     {
-                        "current_room": "Moonlit Timberland",
+                        "current_room": "Maple Sanctuary",
                         "inventory": [],
                         "confidence": 100,
                         "rooms": {
@@ -108,9 +108,11 @@
                 "bonus": 0,
                 "game_state": [
                     {
-                        "current_room": "Sunbeam Glade",
+                        "current_room": "Silver Birch Copse",
                         "inventory": [
-                            "Book"
+                            "Book",
+                            "Jumping Rope",
+                            "Pizza"
                         ],
                         "confidence": 80,
                         "rooms": {
@@ -176,8 +178,7 @@
                             },
                             "Mystic Moss Grove": {
                                 "West": "Silver Birch Copse",
-                                "North": "Forest Haven",
-                                "Item": "Pizza"
+                                "North": "Forest Haven"
                             },
                             "Enchanted Thicket": {
                                 "West": "Walnut Retreat",
@@ -185,8 +186,7 @@
                                 "Item": "Key"
                             },
                             "Sunbeam Glade": {
-                                "West": "Forest Haven",
-                                "Item": "Jumping Rope"
+                                "West": "Forest Haven"
                             }
                         }
                     }
