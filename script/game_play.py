@@ -682,9 +682,9 @@ class GamePlay:
                     if item not in self.inventory:
                         if item.lower() == 'confidence booster':
                             if self.confidence < 100:
-                                time.sleep(2)
+                                time.sleep(1)
                                 print("[indian_red]Confidece +20[/]")
-                                time.sleep(2)
+                                time.sleep(1)
                                 self.message = f"{ascii_item} \nYour 'Confidence' is boosted!"
                                 self.confidence += 20
                                 self.rooms[self.current_room].pop("Item", None)
@@ -792,30 +792,30 @@ class GamePlay:
             print(f"[indian_red]{monster.name} health -{damage}[/]")
             if len(monster.items_required) >= 2:
                 if monster.health > 0:
-                    time.sleep(2)
+                    time.sleep(1)
                     self.draw_separator()
                     print(f"[plum2]You may need to attack {monster.name} multiple times till he dies.[/]")
 
         else:
-            time.sleep(2)
+            time.sleep(1)
             print()
             print(f"[plum2]( ´•︵•` ) Oh no! You don't have the items in your inventory to attack the monster, {monster.name} will say something to attack you![/]")
-            time.sleep(2)
+            time.sleep(1)
             print()
             print(f"[hot_pink3]{monster.name} said:[/] {monster.replace_word(self.username, self.character_name)}\n")
-            time.sleep(2)
+            time.sleep(1)
             print(f"[indian_red]Your confidence -{monster.attack}")
             self.confidence -= monster.attack
 
         if monster.health == 0:
-            time.sleep(2)
+            time.sleep(1)
             print(f"'{monster.name}' [dark_slate_gray2]has been defeated.[/] [dark_slate_gray2]You've gained[/] '{monster.loot}' [dark_slate_gray2]and[/] '{monster.bonus}' [dark_slate_gray2]points.[/]")
             self.colored_input("Press Enter to continue...", color="pale_green1")
             self.rooms[self.current_room].pop("Monster", None)
             self.bonus += monster.bonus
             self.game_system.save_score(self.character_name, self.username, self.bonus)
         elif self.confidence == 0:
-            time.sleep(2)
+            time.sleep(1)
             self.clear_screen()
             print(self.print_ascii('../resource/game_over.txt'))
             print("[indian_red]Your confidence is 0, you are not self-assured enough to beat all the monsters in the wood, come back when you are stronger and more confident![/]\n")
@@ -828,14 +828,14 @@ class GamePlay:
                                        self.confidence, self.rooms)
             exit(0)
         else:
-            time.sleep(2)
+            time.sleep(1)
             print(f"[bold italic]Monster's health: {monster.health}[/]")
-            time.sleep(2)
+            time.sleep(1)
             if self.confidence < 0:
                 self.confidence = 0
             print(f"[bold italic]Your confidence: {self.confidence}[/]")
             self.draw_separator()
-            time.sleep(2)
+            time.sleep(1)
             self.colored_input("Press Enter to continue...", color="pale_green1")
 
 
