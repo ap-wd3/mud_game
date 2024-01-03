@@ -1,32 +1,7 @@
 [
     {
         "Player": "shan",
-        "Character name": "shan",
-        "score": 0
-    },
-    {
-        "Player": "faisal",
-        "Character name": "faisal",
-        "score": 0
-    },
-    {
-        "Player": "hi",
-        "Character name": "test",
-        "score": 0
-    },
-    {
-        "Player": "test",
         "Character name": "test001",
         "score": 130
-    },
-    {
-        "Player": "test",
-        "Character name": "shan",
-        "score": 260
-    },
-    {
-        "Player": "test002",
-        "Character name": "test",
-        "score": 0
     }
 ]

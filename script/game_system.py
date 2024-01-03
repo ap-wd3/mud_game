@@ -307,3 +307,16 @@ class GameSystem:
                             if not (entry.get("Player") == username and entry.get("Character name") == character_name)]
         utils.save_data(self.leaderboard, self.user_manager.leaderboard_file)
 
+    def get_bonus(self, username, character_name):
+        try:
+            with open('users.json', 'r') as file:
+                users_data = json.load(file)
+        except IOError:
+            print("Error: File not found or inaccessible.")
+            return None
+
+        user_data = users_data.get(username, {})
+        for character in user_data.get("characters", []):
+            if character.get("name") == character_name:
+                return character.get('bonus')
+        return None
