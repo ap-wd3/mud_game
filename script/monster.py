@@ -30,7 +30,7 @@ class Monster:
             with open('users.json', 'r') as file:
                 users_data = json.load(file)
         except IOError:
-            print("Error: File not found or inaccessible.")
+            print("[deep_pink2](⋟﹏⋞)Oops, file not found or inaccessible.[/]")
             return None
 
         user_data = users_data.get(username, {})
@@ -44,7 +44,7 @@ class Monster:
             with open('users.json', 'r') as file:
                 users_data = json.load(file)
         except IOError:
-            print("Error: File not found or inaccessible.")
+            print("[deep_pink2](⋟﹏⋞)Oops, file not found or inaccessible.[/]")
             return None
 
         user_data = users_data.get(username, {})
@@ -67,7 +67,7 @@ monsters = {
                                "The Insecure Monster stays away from open fights and likes to weaken its enemies in sneaky ways. It attacks by causing doubt and feeding on the uncertainty and pause that follow. This monster isn't very strong or bold, but it's hard to face directly because it uses the deep fears of its opponents against them.",
                                100,
                                20,
-                               'Confidence',
+                               'Courage',
                                ['Book'],
                                'To defeat the Insecure Monster, you need a book. With the book you can equip yourself with knowledge and feel secured.',
                                10,
@@ -105,7 +105,7 @@ monsters = {
                                   "This monster stands for the widespread problem of harassment that women face in different areas of life. It becomes more powerful in places where this kind of behavior is overlooked or seen as normal.",
                                   100,
                                   20,
-                                  'Safe Haven',
+                                  'Strength',
                                   ['Pizza', 'Key', 'Mirror', 'Book', 'Clock'],
                                   'To defeat the Harassment Monster, you need a lot of items which will make you stronger to say no to the harassment and fight against the monster.',
                                   50,

@@ -230,7 +230,7 @@ class GamePlay:
               "3, [thistle3]RESET PASSWORD[/]\n"
               "4, [thistle3]QUIT[/]")
         self.draw_separator()
-        print("Enter number to choose menu option")
+        print("Enter number to choose menu option or '(B)ack' to go back to the main menu option")
         self.draw_separator()
         #error handling
         try:
@@ -343,10 +343,7 @@ class GamePlay:
 
 
     def handle_password_reset(self):
-        username = self.colored_input("Enter your username: ", color="gold1")
-        email = self.colored_input("Enter your email address for password reset:  ", color="gold1")
-        new_password = self.colored_input("Enter your new password: ", color="gold1")
-        self.user_manager.reset_password(username, email, new_password)
+        self.user_manager.reset_password()
 
     def handle_quit_menu1(self):
         exit(0)
@@ -362,7 +359,7 @@ class GamePlay:
               "6, [thistle3]DELETE CHARACTERS[/]\n"
               "7, [thistle3]QUIT GAME[/]")
         self.draw_separator()
-        print("Enter number to choose menu option or type 'BACK' to go back to main menu")
+        print("Enter number to choose menu option or type '(B)ack' to go back to main menu")
         self.draw_separator()
         choice = self.colored_input("# ", color="sandy_brown")
         if choice == "1":
@@ -507,18 +504,21 @@ class GamePlay:
             self.bonus = 0
 
     def handle_reset_game(self):
+        # Resetting in-memory variables
         self.confidence = 100
         self.current_room = 'Maple Sanctuary'
         self.rooms = rooms
         self.inventory = []
-        loaded_bonus = self.game_system.get_bonus(self.username, self.character_name)
-        loaded_bonus = 0
+        self.map = Map(3, 6, 0, 1, paths)
+        self.bonus = 0
+
+        # Save game state
         self.game_system.save_game(self.username, self.character_name, self.current_room, self.inventory,
                                    self.confidence, self.rooms)
-        self.game_system.save_score(self.character_name, self.username, self.bonus)
-        self.map = Map(3, 6, 0, 1, paths)
 
-
+        # Reset and save bonus and score
+        self.game_system.reset_bonus(self.username, self.character_name)
+        self.game_system.reset_leaderboard_score(self.character_name)
 
     def handle_leaderboard(self):
         self.clear_screen()
@@ -578,6 +578,7 @@ class GamePlay:
             if self.any_monsters_left():
                 if "Monster" in self.room_info:
                     encountered_monster = self.room_info['Monster']
+                    monster = monsters.get(encountered_monster)
                     print("[orchid1 italic bold]Room Details:[/]")
                     print(f"You encounter a '{encountered_monster}'!")
                     if len(encountered_monster.split()) == 3:
@@ -586,6 +587,7 @@ class GamePlay:
                     elif len(encountered_monster.split()) == 2:
                         print(
                             self.print_ascii_monsters(f'../resource/{encountered_monster.split()[0].lower()}_monster.txt'))
+                    print(f"[bold italic]Monster's health: {monster.health}[/]")
                     self.draw_separator()
                     print("[orchid1 italic bold]💡Hints:[/]")
                     print("[bright_white]- If you don't have the item(s) to attack the monster, you can go to other rooms and the monster won't attack you.[/]")
@@ -594,7 +596,7 @@ class GamePlay:
 
                 elif "Item" in self.room_info:
                     item = self.room_info["Item"]
-
+                    print("[orchid1 italic bold]Room Details:[/]")
                     if item[0] in 'AEIOUaeiou':
                         print(f"You see an '{self.room_info['Item']}'!")
                     else:
@@ -603,6 +605,7 @@ class GamePlay:
                     print("[orchid1 italic bold]💡Hints:[/]")
                     print(f"[bright_white]- Type [green]get {item.lower()}[/] to get the item[/]")
                 else:
+                    print("[orchid1 italic bold]No Room Details:[/]")
                     print(f"[deep_pink2]Oops, there's nothing special here now.[/]\n")
                 if self.message != "":
                     print(self.message)
@@ -813,16 +816,22 @@ class GamePlay:
         if has_required_items:
             damage = 100 // len(monster.items_required)
             monster.health -= damage
+            print()
+            print("₍₍٩( ᐛ )۶₎₎♪")
             print(f"{monster.name} has been attacked by you!")
+            print()
             time.sleep(1)
+            print(f"[indian_red]{monster.name} says:[/] [italic]I never thought you could be so strong and powerful! Maybe my time has come...[/]")
             print("[indian_red]_(´ཀ`」 ∠)_[/]")
+            print()
             time.sleep(1)
             print(f"[indian_red]{monster.name} health -{damage}[/]")
             if len(monster.items_required) >= 2:
                 if monster.health > 0:
                     time.sleep(1)
                     self.draw_separator()
-                    print(f"[plum2]You may need to attack {monster.name} multiple times till he dies.[/]")
+                    print("[orchid1 italic bold]💡Hints:[/]")
+                    print(f"-You may need to attack {monster.name} multiple times till he dies.")
 
         else:
             time.sleep(1)
@@ -837,7 +846,10 @@ class GamePlay:
 
         if monster.health == 0:
             time.sleep(1)
-            print(f"'{monster.name}' [dark_slate_gray2]has been defeated.[/] [dark_slate_gray2]You've gained[/] '{monster.loot}' [dark_slate_gray2]and[/] '{monster.bonus}' [dark_slate_gray2]points.[/]")
+            print()
+            print("╰(*°▽°*)╯")
+            print(f"'{monster.name}' has been defeated.You've gained '{monster.loot}' and '{monster.bonus}' points.")
+            self.draw_separator()
             self.colored_input("Press Enter to continue...", color="pale_green1")
             self.rooms[self.current_room].pop("Monster", None)
             self.bonus += monster.bonus
@@ -858,11 +870,11 @@ class GamePlay:
             self.play = False
         else:
             time.sleep(1)
+            self.draw_separator()
             print(f"[bold italic]Monster's health: {monster.health}[/]")
             time.sleep(1)
             if self.confidence < 0:
                 self.confidence = 0
-            print(f"[bold italic]Your confidence: {self.confidence}[/]")
             self.draw_separator()
             time.sleep(1)
             self.colored_input("Press Enter to continue...", color="pale_green1")
