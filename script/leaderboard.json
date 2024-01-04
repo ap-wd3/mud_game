@@ -2,6 +2,46 @@
     {
         "Player": "shan",
         "Character name": "test001",
-        "score": 260
+        "score": 0
+    },
+    {
+        "Player": "shan",
+        "Character name": "shan",
+        "score": 0
+    },
+    {
+        "Player": "shan",
+        "Character name": "shanshan",
+        "score": 0
+    },
+    {
+        "Player": "faisal",
+        "Character name": "faisal",
+        "score": 0
+    },
+    {
+        "Player": "test001",
+        "Character name": "mint",
+        "score": 0
+    },
+    {
+        "Player": "test0001",
+        "Character name": "mint001",
+        "score": 0
+    },
+    {
+        "Player": "non",
+        "Character name": "non",
+        "score": 10
+    },
+    {
+        "Player": "shan",
+        "Character name": "002",
+        "score": 0
+    },
+    {
+        "Player": "shan",
+        "Character name": "ssss",
+        "score": 0
     }
 ]

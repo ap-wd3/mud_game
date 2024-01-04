@@ -3,6 +3,7 @@ from rich import print
 from rich.style import Style
 from rich.console import Console
 import sys
+import maskpass
 
 class UserManager:
     def __init__(self, storage_file='users.json'):
@@ -24,12 +25,13 @@ class UserManager:
     def create_user(self, username, password, email):
         if username in self.users:
             print("[deep_pink2](⋟﹏⋞)Oops, username already taken.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
         else:
             self.users[username] = {'password': password, 'email': email, 'characters': []}
             utils.save_data(self.users, self.storage_file)
             print(f"[dark_slate_gray2]{username} created successfully.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            print()
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
             return "User created successfully."
 
     def save_users(self):
@@ -46,44 +48,44 @@ class UserManager:
 
     def reset_password(self):
         while True:
-            username = self.colored_input("Enter your username: ", color="gold1")
+            username = input("\033[93mEnter your username: \033[0m")
             if username.lower() == 'back' or username.lower() == 'b':
                 return
             if username not in self.users:
                 print("[deep_pink2](⋟﹏⋞)Oops, user does not exist.[/]")
-                self.colored_input("Press Enter to try again...", color="pale_green1")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
                 self.overwrite_last_lines(3)
                 continue
             break
         while True:
-            email = self.colored_input("Enter your email address for password reset:  ", color="gold1")
+            email = input("\033[93mEnter your email address for password reset:  \033[0m")
             if email.lower() == 'back' or email.lower() == 'b':
                 return
             if self.users[username]['email'] != email:
                 print("[deep_pink2](⋟﹏⋞)Oops, incorrect email.[/]")
-                self.colored_input("Press Enter to try again...", color="pale_green1")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
                 self.overwrite_last_lines(3)
                 continue
             break
-        new_password = self.colored_input("Enter your new password: ", color="gold1")
+        new_password = maskpass.askpass(prompt="\033[93mEnter your new password: \033[0m", mask="*")
         self.users[username]['password'] = new_password
         utils.save_data(self.users, self.storage_file)
         print("[dark_slate_gray2]Password reset successfully.[/]")
-        self.colored_input("Press Enter to continue...", color="pale_green1")
+        maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
     def delete_account(self, username):
         if username not in self.users:
             print("[deep_pink2](⋟﹏⋞)Oops, user does not exist.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
         del self.users[username]
         self.save_users()
 
-        self.colored_input("Press Enter to continue...", color="pale_green1")
+        maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
     def username_verify(self, username):
         if username in self.users:
             print("[deep_pink2](⋟﹏⋞)Oops, username already taken.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
             self.overwrite_last_lines(3)
             return username in self.users
         else:

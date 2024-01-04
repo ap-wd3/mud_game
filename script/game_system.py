@@ -8,6 +8,7 @@ import json
 from rich import print
 from rich.style import Style
 from rich.console import Console
+import maskpass
 
 
 def clear():
@@ -36,22 +37,22 @@ class GameSystem:
 
         else:
             print("[deep_pink2](＞﹏＜)Oops, incorrect username or password.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
 
     def create_character(self, username, name, hair_length, hair_color, eye_color):
         user_data = self.user_manager.users.get(username)
         if any(char['name'] == name for char in user_data['characters']):
             print("[deep_pink2](＞﹏＜)Oops: character name already exists.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
         new_character = Character(name, hair_length, hair_color, eye_color)
         user_data['characters'].append(new_character.to_dict())
         if not user_data or 'characters' not in user_data:
             print("[deep_pink2](＞﹏＜)Oops, you must be logged in to create a character.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
         if username != self.logged_in_user:
             print("[deep_pink2](＞﹏＜)Oops, you can only create characters for your logged-in account.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
 
 
@@ -65,7 +66,7 @@ class GameSystem:
         # Check if the user exists
         if username not in self.user_manager.users:
             print("[deep_pink2](＞﹏＜)Oops, user not found.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
             return
 
         user_data = self.user_manager.users[username]
@@ -79,7 +80,7 @@ class GameSystem:
 
         if character is None:
             print(f"[deep_pink2](＞﹏＜)Oops, character {name} not found.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
             return
 
         # Replace old game state with the new game state
@@ -98,7 +99,7 @@ class GameSystem:
                 json.dump(self.user_manager.users, file, indent=4)
         except IOError:
             print("[deep_pink2](＞﹏＜)Oops, file not found or inaccessible.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
     def load_game(self, username):
         try:
@@ -106,10 +107,9 @@ class GameSystem:
                 users_data = json.load(file)
         except IOError:
             print("[deep_pink2](＞﹏＜)Oops, file not found or inaccessible.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
             return None
 
-        user_data = users_data.get(username, {})
         user_data = users_data.get(username, {})
 
         if 'characters' in user_data and user_data['characters']:
@@ -119,18 +119,20 @@ class GameSystem:
             for i, character in enumerate(user_data['characters'], start=1):
                 print(f"{i}, {character['name']}")
             draw()
-            print("Type 'BACK' to go back to main menu")
+            print("[orchid1 italic bold]💡Hints:[/]")
+            print("- Type a number to select a character to play")
+            print("- Type '(B)ack' to go back to main menu")
             draw()
         else:
             print("[deep_pink2](＞﹏＜)Oops, no characters available for this user.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
             return None
 
 
 
         choice = input("# ")
         try:
-            if choice.lower() == 'back':
+            if choice.lower() == 'back' or choice.lower() == 'b':
                 print(choice)
                 return 'back'
             elif choice.isdigit():
@@ -138,13 +140,13 @@ class GameSystem:
                 character = user_data['characters'][choice - 1]
             else:
                 print("[deep_pink2](＞﹏＜)Oops, I need a [/]'back' [deep_pink2]or a number.[/]")
-                self.colored_input("Press Enter to try again...", color="pale_green1")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
                 return None
 
             if 'game_state' in character and character['game_state']:
                 game_state = character['game_state'][-1]
                 print(f"[dark_slate_gray2]Game loaded successfully for character '{character['name']}'.[/]")
-                self.colored_input("Press Enter to continue...", color="pale_green1")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
                 current_room = game_state.get('current_room', "Default Room Name")
                 inventory = game_state.get('inventory', [])
                 rooms = game_state.get('rooms', {})
@@ -152,12 +154,12 @@ class GameSystem:
                 return (character, current_room, inventory,rooms, confidence)
             else:
                 print(f"[deep_pink2]No saved game state for character {character['name']}.[/]")
-                self.colored_input("Press Enter to try again...", color="pale_green1")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
                 return None
         #handle index out of range error
         except IndexError:
             print("[deep_pink2](＞﹏＜)Oops, character index out of range, please try again.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
     def save_score(self, name, username, bonus):
         data = []
@@ -166,13 +168,13 @@ class GameSystem:
                 data = json.load(file)
         except FileNotFoundError:
             print("[deep_pink2](＞﹏＜)File not found. A new file will be created.[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
         except json.JSONDecodeError:
             print("[deep_pink2](＞﹏＜)Error reading the JSON file. Starting a new leaderboard.[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
         except Exception as e:
             print(f"[deep_pink2](＞﹏＜)An unexpected error occurred: {e}[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
         entry_found = False
         for entry in data:
@@ -188,7 +190,7 @@ class GameSystem:
                 json.dump(data, file, indent=4)
         except Exception as e:
             print(f"[deep_pink2](＞﹏＜)An error occurred while writing to the file: {e}[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
     def load_score(self, name, username):
         try:
@@ -199,13 +201,13 @@ class GameSystem:
                     return entry.get("score", 0)
         except FileNotFoundError:
             print("[deep_pink2](＞﹏＜)Leaderboard file not found.[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
         except json.JSONDecodeError:
             print("[deep_pink2](＞﹏＜)Error reading the JSON file.[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
         except Exception as e:
             print(f"[deep_pink2](＞﹏＜)An unexpected error occurred: {e}[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
     def load_leaderboard(self):
         try:
@@ -213,15 +215,15 @@ class GameSystem:
                 data = json.load(file)
         except FileNotFoundError:
             print("[deep_pink2](＞﹏＜)Error: File not found or inaccessible.[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
             return
         except json.JSONDecodeError:
             print("[deep_pink2](＞﹏＜)Error: JSON file is not properly formatted.[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
             return
         except Exception as e:
             print(f"[deep_pink2](＞﹏＜)An unexpected error occurred: {e}[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
             return
         data.sort(key=lambda x: x.get("score", 0), reverse=True)
         print("LEADERBOARD\n"
@@ -235,7 +237,7 @@ class GameSystem:
     def delete_account(self, username):
         if username not in self.user_manager.users:
             print("[deep_pink2](＞﹏＜)Oops, user does not exist.[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
             return
         else:
             print(f"[dark_slate_gray2]{username} has been deleted successfully.[/]")
@@ -243,7 +245,7 @@ class GameSystem:
         del self.user_manager.users[username]
         self.delete_leaderboard(username)
         self.save_users()
-        self.colored_input("Press Enter to continue...", color="pale_green1")
+        maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
     def delete_leaderboard(self, username):
         self.leaderboard = utils.load_data(self.user_manager.leaderboard_file)
@@ -257,11 +259,11 @@ class GameSystem:
         user_data = self.user_manager.users.get(username, None)
         if user_data is None:
             print("[deep_pink2](＞﹏＜)Oops, user not found.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
         if not user_data['characters']:
             print("[deep_pink2](＞﹏＜)Oops, no characters available for this user.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
             return
 
         clear()
@@ -270,11 +272,13 @@ class GameSystem:
         for i, character in enumerate(user_data['characters'], start=1):
             print(f"{i}, {character['name']}")
         draw()
-        print("type 'BACK' to go back to main menu")
+        print("[orchid1 italic bold]💡Hints:[/]")
+        print("- Type a number to select a character to delete")
+        print("- Type '(B)ack' to go back to main menu")
         draw()
 
         choice = input("# ")
-        if choice.lower() == 'back':
+        if choice.lower() == 'back' or 'b':
             print(choice)
             return 'back'
         elif choice.isdigit():
@@ -282,14 +286,14 @@ class GameSystem:
             assert 1 <= choice <= len(user_data['characters'])
         else:
             print("[deep_pink2](＞﹏＜)Oops, invalid selection.[/]")
-            self.colored_input("Press Enter to try again...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
         # try:
         #     choice = int(input("# "))
         #     assert 1 <= choice <= len(user_data['characters'])
         # except (ValueError, AssertionError):
         #     print("[deep_pink2]Invalid selection.[/]")
-        #     self.colored_input("Press Enter to continue...", color="pale_green1")
+        #     maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
         # Delete the selected character
         character_name = user_data['characters'][choice - 1]['name']
@@ -298,7 +302,7 @@ class GameSystem:
         # Save the updated user data
         self.user_manager.save_users()
         print("[dark_slate_gray2]Character deleted successfully.[/]")
-        self.colored_input("Press Enter to continue...", color="pale_green1")
+        maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
     def delete_leaderboard_character(self, username, character_name):
         self.leaderboard = utils.load_data(self.user_manager.leaderboard_file)

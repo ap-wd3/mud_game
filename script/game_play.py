@@ -12,6 +12,7 @@ from colorama import Fore, Style
 import sys
 import getpass
 import maskpass
+import json
 
 class GamePlay:
     def __init__(self):
@@ -38,16 +39,19 @@ class GamePlay:
                            f"Our wood is under attack by monsters\n" \
                            f"Each [salmon1]monster[/] can be defeated by [pink3]specific item(s)[/]\n" \
                            f"Please find those items and [red]defeat all monsters[/] to bring peace back to the wood...\n"\
-                           f"If you don't have the [pink3]items needed[/] to attack the monster, your [indian_red]confidencet[/] will be decreased, and when your [indian_red]confidence[/] is 0, you will lose the game."
-        self.keyCommand = f"[cyan1]COMMAND                                             DESCRIPTIONS[/]\n" \
-                          f"[bright_white]go <east/west/north/south> or go <e/w/n/s>----------Move between areas\n" \
-                          f"get <the name of the item> -------------------------Pick up the item\n" \
-                          f"look or l-------------------------------------------See monster's details\n" \
-                          f"attack or a-----------------------------------------Attack the monster\n" \
-                          f"help or h-------------------------------------------See game's rules and command\n" \
-                          f"quit or q-------------------------------------------Save and Exit the game[/]\n"
+                           f"If you don't have the [pink3]items needed[/] to attack the monster, your [indian_red]confidence[/] will be decreased, and when your [indian_red]confidence[/] is 0, you will lose the game."
+        self.keyCommand = f"[cyan1]COMMAND                                               DESCRIPTIONS[/]\n" \
+                          f"[bright_white][green]'go <east/west/north/south>'[/] or [green]'go <e/w/n/s>'[/]--------Move between areas\n" \
+                          f"[green]'get <the name of the item>'[/] -------------------------Pick up the item\n" \
+                          f"[green]'look'[/] or [green]'l'[/]-----------------------------------------See monster's details\n" \
+                          f"[green]'attack'[/] or [green]'a'[/]---------------------------------------Attack the monster\n" \
+                          f"[green]'selfie'[/] or [green]'s'[/]---------------------------------------View your character info\n" \
+                          f"[green]'help'[/] or [green]'h'[/]-----------------------------------------See command information\n" \
+                          f"[green]'quit'[/] or [green]'q'[/]-----------------------------------------Save and Exit the game[/]\n"
         self.book_path = '../resource/book.txt'
         self.history_message = ""
+        self.short_hair_file_path = '../resource/short_hair.txt'
+        self.long_hair_file_path = '../resource/long_hair.txt'
 
     def colored_input(self, prompt, color="green"):
         self.console.print(prompt, style=color, end="")
@@ -225,12 +229,14 @@ class GamePlay:
         self.clear_screen()
         print(self.print_ascii('../resource/main_menu.txt'))
         self.draw_separator()
-        print("1, [thistle3]LOGIN[/]\n"
-              "2, [thistle3]NEW REGISTRATION[/]\n"
-              "3, [thistle3]RESET PASSWORD[/]\n"
+        print("1, [thistle3]LOG IN[/]\n"
+              "2, [thistle3]SIGN UP[/]\n"
+              "3, [thistle3]FORGET PASSWORD[/]\n"
               "4, [thistle3]QUIT[/]")
         self.draw_separator()
-        print("Enter number to choose menu option or '(B)ack' to go back to the main menu option")
+        print("[orchid1 italic bold]💡Hints:[/]")
+        print("- Type a number to choose menu option")
+        print("- Type '(B)ack' to go back to the main menu option")
         self.draw_separator()
         #error handling
         try:
@@ -245,11 +251,11 @@ class GamePlay:
                 self.handle_quit_menu1()
             else:
                 print("[deep_pink2]Invalid command[/]")
-                self.colored_input("Press Enter to continue...", color="pale_green1")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
             #error handling
         except Exception as e:
             print(f"[deep_pink2]An error occurred: {e}[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
     def handle_login(self, username=None, password=None):
         if username is None and password is None:
@@ -274,6 +280,7 @@ class GamePlay:
         self.user_manager.reload_data()
         self.clear_screen()
         self.draw_separator()
+        print("[orchid1 italic bold]💡Hints:[/]")
         print("Create new account or type '(B)ack' to go back to main menu.")
         self.draw_separator()
 
@@ -289,14 +296,14 @@ class GamePlay:
                 # ask for password
                 while not valid_password:
                     # password = getpass.getpass("\033[93mChoose your password: \033[0m")
-                    password = maskpass.askpass(prompt="\033[93mChoose your password: \033[0m", mask="*")
+                    password = maskpass.askpass(prompt="\033[93mChoose your password(At least 6 characters): \033[0m", mask="*")
                     if password.lower() == "back" or password.lower() == "b":
                         self.menu1 = True
                         self.menu2 = False
                         return
                     if len(password) < 6:
-                        print("Your password must be at least 6 characters long. Please try again.")
-                        self.colored_input("Press Enter to continue...", color="pale_green1")
+                        print("[deep_pink2]Your password must be at least [green]6[/] characters long. Please try again.[/]")
+                        maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
                         self.clear_last_two_lines(3)
                         continue
                     # Confirm Password
@@ -306,8 +313,9 @@ class GamePlay:
                         self.menu2 = False
                         return
                     if password != confirm_password:
-                        print("Your password and confirmation do not match. Please try again.")
-                        self.colored_input("Press Enter to continue...", color="pale_green1")
+                        print("[deep_pink2]Your password and confirmation do not match. Please try again.[/]")
+                        maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
+                        
                         self.clear_last_two_lines(4)
                         continue
                     valid_password = True  # Password is valid, proceed to email
@@ -324,8 +332,8 @@ class GamePlay:
                     if '@' in email and '.' in email.split('@')[-1]:
                         break
                     else:
-                        print("[deep_pink2](⋟﹏⋞)Oops, invalid email format. I need a valid email address.[/]")
-                        self.colored_input("Press Enter to try again...", color="pale_green1")
+                        print("[deep_pink2](⋟﹏⋞)Oops, invalid email format. please enter a valid email address.[/]")
+                        maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
                         self.clear_last_two_lines(4)
                 break
 
@@ -338,7 +346,7 @@ class GamePlay:
         else:
             # Display an error message if registration failed
             print(f"[deep_pink2]{registration_result}[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
             pass
 
 
@@ -359,7 +367,9 @@ class GamePlay:
               "6, [thistle3]DELETE CHARACTERS[/]\n"
               "7, [thistle3]QUIT GAME[/]")
         self.draw_separator()
-        print("Enter number to choose menu option or type '(B)ack' to go back to main menu")
+        print("[orchid1 italic bold]💡Hints:[/]")
+        print("- Type a number to choose menu option")
+        print("- Type '(B)ack' to go back to main menu")
         self.draw_separator()
         choice = self.colored_input("# ", color="sandy_brown")
         if choice == "1":
@@ -378,14 +388,14 @@ class GamePlay:
             self.clear_screen()
             print(self.print_ascii('../resource/good_bye.txt'))
             print()
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
             self.handle_quit()
-        elif choice.lower() == "back":
+        elif choice.lower() == "back" or choice.lower() == "b":
             self.menu2 = False
             self.menu1 = True
         else:
             print("[deep_pink2]Invalid Input[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
     def handle_new_game(self):
         self.clear_screen()
@@ -394,33 +404,36 @@ class GamePlay:
         while True:
             self.clear_screen()
             self.draw_separator()
-            print("Create the new character or type 'BACK' to go back to the menu")
+            print("[orchid1 italic bold]💡Hints:[/]")
+            print("Create the new character or type '(B)ack' to go back to the menu")
             self.draw_separator()
             name = self.colored_input("Enter your character's name: ", color="gold1").strip()
-            if name.lower() == "back":
+            if name.lower() == "back" or name.lower() == "b":
                 self.menu2 = True
                 return
             self.character_name = name
             user_data = self.game_system.user_manager.users.get(self.username, {'characters': []})
             if any(char['name'] == name for char in user_data['characters']):
                 print("[deep_pink2]Error: Character name already exists. Please choose a different name.[/]")
-                self.colored_input("Press Enter to continue...", color="pale_green1")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
             else:
                 break
 
         while True:
+            self.draw_separator()
             hair_length = self.colored_input("Choose hair length ('Long/Short'): ", color="gold1").strip().lower()
-            if hair_length.lower() == "back":
+            if hair_length.lower() == "back" or hair_length.lower() == "b":
                 self.menu2 = True
                 return
             elif hair_length not in ["short", "long"]:
-                print("[deep_pink2](＞﹏＜)Oops, I need a [/]'long/short'")
-                self.colored_input("Press Enter to continue...", color="pale_green1")
+                print("[deep_pink2](＞﹏＜)Oops, please type[/]'long/short'")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
             else:
                 break
 
         hair_color = 'Unknown'
         while hair_color == 'Unknown':
+            self.draw_separator()
             print(f"[gold1]Choose hair color:[/]")
             print("1: Cyan")
             print("2: Red")
@@ -428,14 +441,15 @@ class GamePlay:
             color_options = {'1': 'cyan', '2': 'red', '3': 'yellow'}
             hair_color_choice = self.colored_input("Select option ('1, 2, or 3'): ", color="gold1").strip()
             hair_color = color_options.get(hair_color_choice, "Unknown")
-            if hair_color_choice.lower() == "back":
+            if hair_color_choice.lower() == "back" or hair_color_choice.lower() == "b":
                 self.menu2 = True
                 return
             elif hair_color == 'Unknown':
-                print("[deep_pink2](＞﹏＜)Oops, I need a number[/]")
-                self.colored_input("Press Enter to continue...", color="pale_green1")
+                print("[deep_pink2](＞﹏＜)Oops, please type a number[/]")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
         eye_color = 'Unknown'
         while eye_color == 'Unknown':
+            self.draw_separator()
             print(f"[gold1]Choose eye color:[/]")
             print("1: Blue")
             print("2: Green")
@@ -443,22 +457,21 @@ class GamePlay:
             color_options = {'1': 'blue', '2': 'green', '3': 'red'}
             eye_color_choice = self.colored_input("Select option ('1, 2, or 3'): ", color="gold1").strip()
             eye_color = color_options.get(eye_color_choice, "Unknown")
-            if eye_color_choice.lower() == "back":
+            if eye_color_choice.lower() == "back" or eye_color_choice.lower() == "b":
                 self.menu2 = True
                 return
             elif eye_color == 'Unknown':
-                print("[deep_pink2](＞﹏＜)Oops, I need a number[/]")
-                self.colored_input("Press Enter to continue...", color="pale_green1")
+                print("[deep_pink2](＞﹏＜)Oops, please type a number[/]")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
         result = self.game_system.create_character(self.username, name, hair_length, hair_color, eye_color)
-        short_hair_file_path = '../resource/short_hair.txt'
-        long_hair_file_path = '../resource/long_hair.txt'
+
         if hair_length == 'short':
-            print(self.print_colorized_ascii_art(short_hair_file_path, hair_color, eye_color))
+            print(self.print_colorized_ascii_art(self.short_hair_file_path, hair_color, eye_color))
         elif hair_length == 'long':
-            print(self.print_colorized_ascii_art(long_hair_file_path, hair_color, eye_color))
+            print(self.print_colorized_ascii_art(self.long_hair_file_path, hair_color, eye_color))
         print(f'[italic]{result}[/]')
         print()
-        self.colored_input("Press Enter to continue...", color="pale_green1")
+        maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
         self.game_introduction()
         self.play = True
         self.menu2 = False
@@ -467,7 +480,7 @@ class GamePlay:
         loaded_data = self.game_system.load_game(self.username)
         loaded_bonus = self.game_system.get_bonus(self.username, self.character_name)
         if loaded_data:
-            if loaded_data == 'back':
+            if loaded_data == 'back' or loaded_data == 'b':
                 self.play = False
                 self.menu2 = True
             elif loaded_bonus == 130:
@@ -482,7 +495,7 @@ class GamePlay:
                     return
                 else:
                     print("[deep_pink2]Invalid Input[/]")
-                    self.colored_input("Press Enter to continue...", color="pale_green1")
+                    maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
             else:
                 character, current_room, inventory, rooms, confidence = loaded_data
                 self.character_name = character['name']
@@ -525,13 +538,13 @@ class GamePlay:
         self.draw_separator()
         self.game_system.load_leaderboard()
         self.draw_separator()
-        self.colored_input("Press Enter to continue...", color="pale_green1")
+        maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
     def handle_rules(self):
         self.clear_screen()
         print("Collect the right item(s) to defeat monsters. Find more hints by observing each monster\n")
         print(self.keyCommand)
-        self.colored_input("Press Enter to continue...", color="pale_green1")
+        maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
     def handle_delete_account(self):
         self.game_system.delete_account(self.username)
@@ -541,7 +554,7 @@ class GamePlay:
     def handle_delete_character(self):
         deleted_character = self.game_system.delete_character(self.username)
         if deleted_character:
-            if deleted_character == 'back':
+            if deleted_character == 'back' or deleted_character == 'b':
                 self.menu2 = True
             else:
                 self.game_system.delete_character(self.username)
@@ -556,8 +569,16 @@ class GamePlay:
         print(self.instruction)
         self.draw_separator()
         print(self.keyCommand)
-        self.colored_input("Press Enter to continue...", color="pale_green1")
+        maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
+    def find_character_by_name(self, character_name):
+        with open('users.json', 'r') as file:
+            users_data = json.load(file)
+        user_data = users_data.get(self.username, {})
+        for character in user_data.get('characters', []):
+            if character.get('name') == character_name:
+                return character
+        return None
     def game_loop(self):
         while self.play and self.confidence > 0:
             self.game_system.save_score(self.character_name, self.username, self.bonus)
@@ -590,9 +611,9 @@ class GamePlay:
                     print(f"[bold italic]Monster's health: {monster.health}[/]")
                     self.draw_separator()
                     print("[orchid1 italic bold]💡Hints:[/]")
-                    print("[bright_white]- If you don't have the item(s) to attack the monster, you can go to other rooms and the monster won't attack you.[/]")
-                    print("[bright_white]- Type [green](l)ook[/] to view the info of the monster and the items required to attack the monster[/]")
-                    print("[bright_white]- Type [green](a)ttack[/] to attack the monster.[/]")
+                    print("[bright_white]- If you don't have the item(s) to attack the monster, you can go to other rooms and the monster won't attack you[/]")
+                    print("[bright_white]- Type [green]'look'[/] or [green]'l'[/] to view the info of the monster and the items required to attack the monster[/]")
+                    print("[bright_white]- Type [green]'attack'[/] or [green]'a'[/] to attack the monster[/]")
 
                 elif "Item" in self.room_info:
                     item = self.room_info["Item"]
@@ -603,13 +624,16 @@ class GamePlay:
                         print(f"You see a '{self.room_info['Item']}'")
                     self.draw_separator()
                     print("[orchid1 italic bold]💡Hints:[/]")
-                    print(f"[bright_white]- Type [green]get {item.lower()}[/] to get the item[/]")
+                    print(f"[bright_white]- Type [green]'get {item.lower()}[/]' to get the item[/]")
                 else:
                     print("[orchid1 italic bold]No Room Details:[/]")
                     print(f"[deep_pink2]Oops, there's nothing special here now.[/]\n")
                 if self.message != "":
                     print(self.message)
-                print("[bright_white italic]- Type [green](h)elp[/] to view command instruction[/]")
+                print("[bright_white italic]- Type [green]'[gold1 bold]go[/] east/west/south/north'[/] or '[green][gold1 bold]go[/] e/w/s/n[/]' to move between areas.[/]")
+                print("[bright_white italic]- Type [green]'selfie'[/] or [green]'s'[/] to move between areas.[/]")
+                print("[bright white italic]- Type [green]'quit'[/] or [green]'q'[/] to quit the game")
+                print("[bright_white italic]- Type [green]'help'[/] or [green]'h'[/] to view more command information[/]")
                 self.draw_separator()
                 user_input = self.colored_input("Enter your command: ", color="gold1").lower().split(' ')
                 self.process_command(user_input)
@@ -663,7 +687,7 @@ class GamePlay:
                            'ANYTHING you set your mind to. \nDon\'t let anyone hurt you again. You\'ve got this!"\n\n',
                            color_words={"ANYTHING": Fore.YELLOW})
         self.draw_separator()
-        self.colored_input("Press Enter to continue...", color="pale_green1")
+        maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
         self.clear_screen()
         self.typing_effect('You\'ve faced so much in life. \nEvery monster you encountered served as a valuable '
                            'teacher, shaping you into the amazing person you are today. \nEmbrace the strength '
@@ -672,7 +696,7 @@ class GamePlay:
         self.typing_effect('Thank you for playing our game and hope your confidence is 100%! ʕっ•ᴥ•ʔっ\n',
                            color_words={"ʕっ•ᴥ•ʔっ": Fore.CYAN})
         self.draw_separator()
-        self.colored_input("Press Enter to continue...", color="pale_green1")
+        maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
         self.menu2 = True
 
     def process_command(self, user_input):
@@ -696,6 +720,10 @@ class GamePlay:
             if result != "invalid input":
                 self.current_room = self.map.room_map.get((self.map.x, self.map.y), "Unknown room")
                 self.history_message = "You moved '" + direction_word + "'"
+            else:
+                print("[deep_pink2](⋟﹏⋞)Oops, please type [green]'go east/west/south/north'[/] or [green]type 'go e/w/s/n'[/] to move between areas[/]")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
+
 
         elif action == "get":
             item = argument
@@ -720,8 +748,8 @@ class GamePlay:
                                 self.confidence += 20
                                 self.rooms[self.current_room].pop("Item", None)
                             else:
-                                print("[deep_pink2]You are confident enough to beat the monsters, no need to get the confidence booster.[/]")
-                                self.colored_input("Press Enter to continue...", color="pale_green1")
+                                print("[deep_pink2]You have full confidence, so you are confident enough to beat the monsters, no need to get the confidence booster.[/]")
+                                maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
                         else:
                             self.inventory.append(item)
@@ -731,14 +759,14 @@ class GamePlay:
                 else:
                     if item in self.inventory:
                         print(f"[deep_pink2]You already have {item} in your inventory[/]")
-                        self.colored_input("Press Enter to continue...", color="pale_green1")
+                        maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
                     else:
                         print(f"[deep_pink2]Invalid command, please enter the name of the item[/]")
-                        self.colored_input("Press Enter to continue...", color="pale_green1")
+                        maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
             else:
                 # No item specified in the command
                 print("[deep_pink2]Invalid command: No item specified.[/]")
-                self.colored_input("Press Enter to continue...", color="pale_green1")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
 
 
@@ -763,16 +791,22 @@ class GamePlay:
                     print(f"{monster.hint}\n")
                     time.sleep(1)
 
-                    self.colored_input("Press Enter to continue...", color="pale_green1")
+                    maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
                 else:
-                    print("There's no monster here.")
+                    print("[deep_pink2]There's no monster here.[/]")
             else:
-                print("Sorry, there is nothing to look at. :(")
+                print("[deep_pink2]Sorry, there is nothing to look at. :([/]")
 
 
         elif action == "quit" or action == "q":
             self.clear_screen()
-            answer = self.colored_input("[deep_pink2]Save and Exit game? [/]'Y/N'\n[gold1]Your answer:[/] ").upper()
+            print("(╬☉д⊙)Oh!")
+            self.draw_separator()
+            print("[orchid1 italic bold]💡Hints:[/]")
+            print("- Type 'Y' or 'y' to save and exit the game")
+            print("- Type 'N' or 'n' to go back")
+            self.draw_separator()
+            answer = self.colored_input("[deep_pink2]Save and Exit game? [/]'Y/N'\n[gold1]Your answer:[/]").upper()
             if answer == "Y":
                 self.game_system.save_game(self.username, self.character_name, self.current_room, self.inventory,
                                            self.confidence, self.rooms)
@@ -786,8 +820,9 @@ class GamePlay:
                 print("[]Invalid Command")
 
         elif action == "help" or action == "h":
+            self.clear_screen()
             print(self.keyCommand)
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to go back...\033[0m", mask=" ")
 
         elif action == "attack" or action == "a":
             self.clear_screen()
@@ -796,11 +831,32 @@ class GamePlay:
                 self.handle_monster_encounter(monster_name)
             else:
                 print("There's no monster to attack here.")
-                self.colored_input("Press Enter to continue...", color="pale_green1")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
+        elif action == 'selfie' or action == 's':
+            self.clear_screen()
+            character = self.find_character_by_name(self.character_name)
+            character_name = character['name']
+            hair_length = character['hair_length']
+            hair_color = character['hair_color']
+            eye_color = character['eye_color']
+            self.draw_separator()
+            print("[orchid1 italic bold]Your Character Details:[/]")
+            if hair_length == 'short':
+                print(self.print_colorized_ascii_art(self.short_hair_file_path, hair_color, eye_color))
+            elif hair_length == 'long':
+                print(self.print_colorized_ascii_art(self.long_hair_file_path, hair_color, eye_color))
+            print(f"[gold1]Your Name:[/] {character_name.capitalize()}")
+            print(f"[gold1]Your Hair Length[/]: {hair_length.capitalize()}")
+            print(f"[gold1]Your Hair Color:[/] {hair_color.capitalize()}")
+            print(f"[gold1]Your Eye Color:[/] {eye_color.capitalize()}")
+            self.draw_separator()
+            print()
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to go back...\033[0m", mask=" ")
+
 
         else:
-            print(f"[deep_pink2]Invalid Command, please enter 'help' to see command options.[/]")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            print(f"[deep_pink2](⋟﹏⋞)Oops, invalid command, please type 'help' to see command options.[/]")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
     def handle_monster_encounter(self, monster_name):
         monster = monsters.get(monster_name)
@@ -808,7 +864,7 @@ class GamePlay:
 
         if not monster:
             print("There's no monster here.")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
             return
 
         # Check if player has required items
@@ -832,6 +888,7 @@ class GamePlay:
                     self.draw_separator()
                     print("[orchid1 italic bold]💡Hints:[/]")
                     print(f"-You may need to attack {monster.name} multiple times till he dies.")
+                    self.draw_separator()
 
         else:
             time.sleep(1)
@@ -850,7 +907,7 @@ class GamePlay:
             print("╰(*°▽°*)╯")
             print(f"'{monster.name}' has been defeated.You've gained '{monster.loot}' and '{monster.bonus}' points.")
             self.draw_separator()
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
             self.rooms[self.current_room].pop("Monster", None)
             self.bonus += monster.bonus
             self.game_system.save_score(self.character_name, self.username, self.bonus)
@@ -859,7 +916,7 @@ class GamePlay:
             self.clear_screen()
             print(self.print_ascii('../resource/game_over.txt'))
             print("[indian_red]Your confidence is 0, you are not self-assured enough to beat all the monsters in the wood, come back when you are stronger and more confident![/]\n")
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to exit...\033[0m", mask=" ")
             self.confidence = 100
             self.current_room = 'Maple Sanctuary'
             self.rooms = rooms
@@ -877,7 +934,7 @@ class GamePlay:
                 self.confidence = 0
             self.draw_separator()
             time.sleep(1)
-            self.colored_input("Press Enter to continue...", color="pale_green1")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
 
 
