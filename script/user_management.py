@@ -213,7 +213,7 @@ class SaveLoad:
             self.display.draw()
             print("[orchid1 italic bold]💡Hints:[/]")
             print("- Type a number to select a character to play")
-            print("- Type '(B)ack' to go back to main menu")
+            print("- Type 'back' or 'b' to go back to main menu")
             self.display.draw()
         else:
             print("[deep_pink2](＞﹏＜)Oops, no characters available for this user.[/]")

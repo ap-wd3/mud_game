@@ -68,7 +68,7 @@ class GamePlay:
         self.display.draw()
         print("[orchid1 italic bold]💡Hints:[/]")
         print("- Type a number to choose menu option")
-        print("- Type '(B)ack' to go back to the main menu option")
+
         self.display.draw()
         #error handling
         try:
@@ -91,8 +91,22 @@ class GamePlay:
 
     def handle_login(self, username=None, password=None):
         if username is None and password is None:
+            self.display.clear_screen()
+            self.display.draw()
+            print("[orchid1 italic bold]💡Hints:[/]")
+            print("- Type 'back' or 'b' to go back to the main menu")
+            self.display.draw()
             username = input("\033[93mEnter your username: \033[0m")
+            if username.lower() == 'back' or username.lower() == 'b':
+                self.menu1 = True
+                self.menu2 = False
+                return
             password = maskpass.askpass(prompt="\033[93mEnter your password: \033[0m", mask="*")
+            if password.lower() == 'back' or password.lower == 'b':
+                self.menu1 = True
+                self.menu2 = False
+                return
+
         self.display.draw()
         result = self.user_manager.login(username, password)
         if result == 'Logged in successfully.':
@@ -113,7 +127,7 @@ class GamePlay:
         self.display.clear_screen()
         self.display.draw()
         print("[orchid1 italic bold]💡Hints:[/]")
-        print("Create new account or type '(B)ack' to go back to main menu.")
+        print("- Type 'back' or 'b' to go back to main menu")
         self.display.draw()
 
         # ask for username
@@ -201,7 +215,7 @@ class GamePlay:
         self.display.draw()
         print("[orchid1 italic bold]💡Hints:[/]")
         print("- Type a number to choose menu option")
-        print("- Type '(B)ack' to go back to main menu")
+        print("- Type 'back' or 'b' to go back to main menu")
         self.display.draw()
         choice = self.display.colored_input("# ", color="sandy_brown")
         if choice == "1":
@@ -220,7 +234,7 @@ class GamePlay:
             self.display.clear_screen()
             print(self.display.print_ascii_art('../resource/good_bye.txt'))
             print()
-            maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to exit...\033[0m", mask=" ")
             self.handle_quit()
         elif choice.lower() == "back" or choice.lower() == "b":
             self.menu2 = False
@@ -236,7 +250,7 @@ class GamePlay:
             self.display.clear_screen()
             self.display.draw()
             print("[orchid1 italic bold]💡Hints:[/]")
-            print("Create the new character or type '(B)ack' to go back to the menu")
+            print("- Type 'back' or 'b' to go back to the menu")
             self.display.draw()
             name = self.display.colored_input("Enter your character's name: ", color="gold1").strip()
             if name.lower() == "back" or name.lower() == "b":
@@ -356,7 +370,7 @@ class GamePlay:
                     return
                 else:
                     print("[deep_pink2]Invalid Input[/]")
-                    maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
+                    maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
             else:
                 character, current_room, inventory, rooms, confidence = loaded_data
                 self.character_name = character['name']
@@ -408,9 +422,26 @@ class GamePlay:
         maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
     def handle_delete_account(self):
-        self.user_manager.delete_account(self.username)
-        self.menu2 = False
-        self.menu1 = True
+        while True:
+            self.display.clear_screen()
+            self.display.draw()
+            print("[orchid1 italic bold]💡Hints:[/]")
+            print("- Type 'Y' or 'y' to delete your account")
+            print("- Type 'N' or 'n' to go back")
+            self.display.draw()
+            print("[deep_pink2]Your account will be deleted. Are you sure you want to continue?[/] ('Y/N')")
+            answer = self.display.colored_input("[gold1]Your answer:[/] ", ).lower()
+            if answer == "y":
+                self.user_manager.delete_account(self.username)
+                self.menu2 = False
+                self.menu1 = True
+                break
+            elif answer == "n":
+                return
+            else:
+                self.display.draw()
+                print("[deep_pink2]Invalid Input[/]")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
     def handle_delete_character(self):
         deleted_character = Character.delete_character(self, self.username)
@@ -419,6 +450,7 @@ class GamePlay:
                 self.menu2 = True
             else:
                 Character.delete_character(self, self.username)
+
 
     def handle_quit(self):
         quit()
@@ -756,7 +788,7 @@ class GamePlay:
                     time.sleep(1)
                     self.display.draw()
                     print("[orchid1 italic bold]💡Hints:[/]")
-                    print(f"-You may need to attack {monster.name} multiple times till he dies.")
+                    print(f"- You may need to attack {monster.name} multiple times till he dies.")
                     self.display.draw()
 
         else:
@@ -796,7 +828,6 @@ class GamePlay:
             self.play = False
         else:
             time.sleep(1)
-            self.display.draw()
             print(f"[bold italic]Monster's health: {monster.health}[/]")
             time.sleep(1)
             if self.confidence < 0:

@@ -63,28 +63,37 @@ class Character:
         elif choice.isdigit():
             choice = int(choice)
             assert 1 <= choice <= len(user_data['characters'])
+            self.display.clear_screen()
+            self.display.draw()
+            print("[orchid1 italic bold]💡Hints:[/]")
+            print("- Type 'Y' or 'y' to delete the character")
+            print("- Type 'N' or 'n' to go back")
+            self.display.draw()
+            print(f"[deep_pink2]{character['name']} will be deleted. Are you sure you want to continue?[/] ('Y/N')")
+            answer = self.display.colored_input("[gold1]Your answer:[/] ", ).lower()
+            if answer == 'y':
+                character_name = user_data['characters'][choice - 1]['name']
+                del user_data['characters'][choice - 1]
+                self.leaderboard = utils.load_data(self.user_manager.leaderboard_file)
+                self.leaderboard = [entry for entry in self.leaderboard
+                                    if not (
+                                entry.get("Player") == username and entry.get("Character name") == character_name)]
+                utils.save_data(self.leaderboard, self.user_manager.leaderboard_file)
+                # Save the updated user data
+                self.user_manager.save_users()
+                print("[dark_slate_gray2]Character deleted successfully.[/]")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
+            else:
+                return
+
         else:
             print("[deep_pink2](＞﹏＜)Oops, invalid selection.[/]")
             maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
-        # try:
-        #     choice = int(input("# "))
-        #     assert 1 <= choice <= len(user_data['characters'])
-        # except (ValueError, AssertionError):
-        #     print("[deep_pink2]Invalid selection.[/]")
-        #     maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
-        # Delete the selected character
-        character_name = user_data['characters'][choice - 1]['name']
-        del user_data['characters'][choice - 1]
-        self.leaderboard = utils.load_data(self.user_manager.leaderboard_file)
-        self.leaderboard = [entry for entry in self.leaderboard
-                            if not (entry.get("Player") == username and entry.get("Character name") == character_name)]
-        utils.save_data(self.leaderboard, self.user_manager.leaderboard_file)
-        # Save the updated user data
-        self.user_manager.save_users()
-        print("[dark_slate_gray2]Character deleted successfully.[/]")
-        maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
+
+
+
 
 
 
