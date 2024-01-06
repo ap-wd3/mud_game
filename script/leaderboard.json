@@ -8,5 +8,15 @@
         "Player": "shan",
         "Character name": "002",
         "score": 0
+    },
+    {
+        "Player": "test",
+        "Character name": "shanshan",
+        "score": 0
+    },
+    {
+        "Player": "test",
+        "Character name": "test002",
+        "score": 10
     }
 ]

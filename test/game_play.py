@@ -298,44 +298,15 @@ class GamePlay:
         result = character_manager.create_character(self.username, name, hair_length, hair_color, eye_color)
 
         if hair_length == 'short':
-            print(self.display.print_ascii_art(self.short_hair_file_path, 'character', hair_color, eye_color))
+            print(self.display.print_ascii_art(self.short_hair_file_path,'character', hair_color, eye_color))
         elif hair_length == 'long':
             print(self.display.print_ascii_art(self.long_hair_file_path, 'character', hair_color, eye_color))
         print(f'[italic]{result}[/]')
         print()
         maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
-        # start game from default data
-        self.confidence = 100
-        self.current_room = 'Maple Sanctuary'
-        self.rooms = {
-            'Maple Sanctuary': {'East': 'Moonlit Timberland', 'Item': 'Confidence Booster'},
-            'Moonlit Timberland': {'West': 'Maple Sanctuary', 'North': 'Maple Sanctuary', 'South': 'Dewdrop Dell',
-                                   'East': 'Emerald Canopy', 'Item': 'Smart Planner'},
-            'Whispering Pines': {'South': 'Moonlit Timberland', 'East': 'Pine Haven', 'Monster': 'Diet Monster'},
-            'Dewdrop Dell': {'North': 'Moonlit Timberland', 'East': 'Redwood Haven', 'Monster': 'Balance Monster'},
-            'Pine Haven': {'South': 'Emerald Canopy', 'East': 'Walnut Retreat', 'West': 'Whispering Pines',
-                           'Item': 'Mirror'},
-            'Emerald Canopy': {'West': 'Moonlit Timberland', 'North': 'Pine Haven', 'South': 'Redwood Haven',
-                               'East': 'Cypress Cottage', 'Monster': 'Overthinking Monster'},
-            'Redwood Haven': {'West': 'Dewdrop Dell', 'East': 'Silver Birch Copse', 'North': 'Emerald Canopy',
-                              'Item': 'Clock'},
-            'Walnut Retreat': {'West': 'Pine Haven', 'South': 'Cypress Cottage', 'Monster': 'Insecure Monster'},
-            'Cypress Cottage': {'West': 'Emerald Canopy', 'South': 'Silver Birch Copse', 'North': 'Walnut Retreat',
-                                'East': 'Forest Haven', 'Monster': 'Glass Ceiling Monster'},
-            'Silver Birch Copse': {'West': 'Redwood Haven', 'North': 'Cypress Cottage',
-                                   'Monster': 'Harassment Monster'},
-            'Forest Haven': {'West': 'Cypress Cottage', 'Item': 'Book'},
-            'Mystic Moss Grove': {'West': 'Silver Birch Copse', 'North': 'Forest Haven', 'Item': 'Pizza'},
-            'Enchanted Thicket': {'West': 'Walnut Retreat', 'South': 'Forest Haven', 'Item': 'Key'},
-            'Sunbeam Glade': {'West': 'Forest Haven', 'Item': 'Jumping Rope'}
-        }
-        self.inventory = []
-        self.map.x, self.map.y = self.map.get_coordinates_from_room_name(self.current_room)
-        self.save_load.save_game(self.username, self.character_name, self.current_room, self.inventory,
-                                 self.confidence, self.rooms)
         self.game_introduction()
-        self.menu2 = False
         self.play = True
+        self.menu2 = False
 
     def handle_load_game(self):
         loaded_data = self.save_load.load_game(self.username)

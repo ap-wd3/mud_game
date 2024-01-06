@@ -33,8 +33,8 @@ class Character:
             maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
         self.user_manager.save_users()
-        return f"Character '{name}' has '{hair_length}' and '{hair_color}' hair, and her eyes are '{eye_color}'"
-    
+        return f"Character created successfully."
+
     def delete_character(self, username):
         user_data = self.user_manager.users.get(username, None)
         if user_data is None:

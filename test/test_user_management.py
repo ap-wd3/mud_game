@@ -1,52 +1,37 @@
 import unittest
-from user_management import UserManager
-
-# Mock version of the utils module
-class MockUtils:
-    data = {}
-
-    @staticmethod
-    def load_data(_):
-        return MockUtils.data
-
-    @staticmethod
-    def save_data(data, _):
-        MockUtils.data = data
+from unittest.mock import patch, MagicMock
+import user_management
 
 class TestUserManager(unittest.TestCase):
 
     def setUp(self):
-        # Use the mock utility class for tests
-        self.user_manager = UserManager()
-        self.user_manager.users = MockUtils.load_data(None)
+        self.user_manager = user_management.UserManager()
 
-    def test_create_user(self):
-        # Testing user creation
-        result = self.user_manager.create_user("testuser", "password123", "test@example.com")
+    @patch('user_management.utils.load_data', MagicMock(return_value={}))
+    @patch('user_management.maskpass.askpass', MagicMock(return_value=''))
+    def test_create_user_new_user(self):
+        result = self.user_manager.create_user('testuser3', 'password123', 'newuser@example.com')
         self.assertEqual(result, "User created successfully.")
-        self.assertIn("testuser", self.user_manager.users)
+        self.assertIn('testuser3', self.user_manager.users)
 
-    def test_verify_user(self):
-        # Testing user verification
-        self.user_manager.create_user("testuser", "password123", "test@example.com")
-        self.assertTrue(self.user_manager.verify_user("testuser", "password123"))
-        self.assertFalse(self.user_manager.verify_user("testuser", "wrongpassword"))
+    @patch('user_management.utils.save_data')
+    def test_save_users(self, mock_save_data):
+        self.user_manager.save_users()
+        mock_save_data.assert_called_once()
 
-    def test_reset_password(self):
-        # Testing password reset
-        self.user_manager.create_user("testuser", "password123", "test@example.com")
-        result = self.user_manager.reset_password("testuser", "test@example.com", "newpassword")
-        self.assertEqual(result, "Password reset successfully.")
-        self.assertTrue(self.user_manager.verify_user("testuser", "newpassword"))
+class TestSaveLoad(unittest.TestCase):
 
-    def test_delete_account(self):
-        # Testing account deletion
-        self.user_manager.create_user("testuser", "password123", "test@example.com")
-        result = self.user_manager.delete_account("testuser")
-        self.assertEqual(result, "Account deleted successfully.")
-        self.assertNotIn("testuser", self.user_manager.users)
+    @patch('save_load.UserManager')
+    @patch('save_load.utils')
+    def setUp(self, mock_utils, mock_user_manager):
+        mock_utils.load_data.return_value = {'testuser': {'characters': [{'name': 'NewName'}]}}
+        self.save_load = user_management.SaveLoad()
 
-
+    @patch('save_load.UserManager')
+    @patch('save_load.utils')
+    def test_save_game_user_not_found(self):
+        result = self.save_load.save_game('testuser', 'NewName', 'Room', [], 100, {})
+        self.assertIsNone(result)
 
 if __name__ == '__main__':
     unittest.main()

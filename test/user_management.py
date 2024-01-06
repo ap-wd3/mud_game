@@ -14,7 +14,6 @@ class UserManager:
         self.console = Console()
         self.leaderboard_file = 'leaderboard.json'
         self.leaderboard = utils.load_data(self.leaderboard_file)
-        # from GameSystem
         self.logged_in_user = None
         self.display = Display()
         self.leaderboard_manager = Leaderboard()

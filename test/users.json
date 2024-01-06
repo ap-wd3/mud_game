@@ -1,7 +1,45 @@
 {
-    "test_user": {
-        "password": "newpassword",
-        "email": "test@example.com",
+    "newuser": {
+        "password": "password123",
+        "email": "newuser@example.com",
+        "characters": []
+    },
+    "existinguser": {
+        "password": "password123",
+        "email": "user@example.com",
+        "characters": []
+    },
+    "testuser": {
+        "password": "password123",
+        "email": "newuser@example.com",
+        "characters": [
+            {
+                "name": "NewName",
+                "hair_length": "Long",
+                "hair_color": "Red",
+                "eye_color": "Blue"
+            },
+            {
+                "name": "NewName2",
+                "hair_length": "Long",
+                "hair_color": "Red",
+                "eye_color": "Blue"
+            }
+        ]
+    },
+    "testuser1": {
+        "password": "password123",
+        "email": "user@example.com",
+        "characters": []
+    },
+    "testuser2": {
+        "password": "password123",
+        "email": "newuser@example.com",
+        "characters": []
+    },
+    "testuser3": {
+        "password": "password123",
+        "email": "newuser@example.com",
         "characters": []
     }
 }
