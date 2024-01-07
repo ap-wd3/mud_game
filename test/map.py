@@ -138,7 +138,6 @@ class Map:
                 sys.stdout.write("\n")
 
 
-
 paths = [
     # Horizontal paths
     ((0, 0), (1, 0)), ((1, 0), (2, 0)), ((2, 0), (3, 0)),  # First row
@@ -158,6 +157,7 @@ paths = [
     ((1, 1), (0, 2)), ((2, 1), (1, 2)), ((3, 1), (2, 2)), ((
         4, 1), (3, 2)),  # Southward paths (second to third row
 ]
+
 
 rooms = {
     'Maple Sanctuary': {'East': 'Moonlit Timberland', 'Item': 'Confidence Booster'},

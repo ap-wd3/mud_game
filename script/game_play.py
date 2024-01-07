@@ -296,10 +296,10 @@ class GamePlay:
         while eye_color == 'Unknown':
             self.display.draw()
             print(f"[gold1]Choose eye color:[/]")
-            print("1: Blue")
+            print("1: Cyan")
             print("2: Green")
             print("3: Red")
-            color_options = {'1': 'blue', '2': 'green', '3': 'red'}
+            color_options = {'1': 'cyan', '2': 'green', '3': 'red'}
             eye_color_choice = self.display.colored_input("Select option ('1, 2, or 3'): ", color="gold1").strip()
             eye_color = color_options.get(eye_color_choice, "Unknown")
             if eye_color_choice.lower() == "back" or eye_color_choice.lower() == "b":
@@ -444,12 +444,12 @@ class GamePlay:
                 maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
     def handle_delete_character(self):
-        deleted_character = Character.delete_character(self, self.username)
+        deleted_character = self.user_manager.delete_character(self.username)
         if deleted_character:
             if deleted_character == 'back' or deleted_character == 'b':
                 self.menu2 = True
             else:
-                Character.delete_character(self, self.username)
+                self.user_manager.delete_character(self.username)
 
 
     def handle_quit(self):

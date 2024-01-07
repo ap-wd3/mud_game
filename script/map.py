@@ -1,6 +1,7 @@
 import sys
 from rich.console import Console
 from rich import print as rprint
+import maskpass
 
 class Map:
     def __init__(self, height, width, player_x, player_y, paths):
@@ -52,10 +53,10 @@ class Map:
                     self.x, self.y = new_x, new_y
                 else:
                     self.console.print("Cannot go north", style="deep_pink2")
-                    self.colored_input("Press Enter to continue...", color="pale_green1")
+                    maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
             else:
                 self.console.print("Out of bound, cannot go north", style='deep_pink2')
-                self.colored_input("Press Enter to continue...", color="pale_green1")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
         elif direction == "s" or direction == "south":
             new_y += 1
@@ -72,10 +73,11 @@ class Map:
                     self.x, self.y = new_x, new_y
                 else:
                     self.console.print("Cannot go south", style="deep_pink2")
-                    self.colored_input("Press Enter to continue...", color="pale_green1")
+                    maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
             else:
+                print(self.x ,self.y)
                 self.console.print("Out of bound, cannot go south", style="deep_pink2")
-                self.colored_input("Press Enter to continue...", color="pale_green1")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
         elif direction == "e" or direction == "east":
             new_x += 1
@@ -84,7 +86,7 @@ class Map:
                 self.x = new_x
             else:
                 self.console.print("Out of bound, cannot go east", style="deep_pink2")
-                self.colored_input("Press Enter to continue...", color="pale_green1")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
         elif direction == "w" or direction == "west":
             new_x -= 1
@@ -93,7 +95,7 @@ class Map:
                 self.x = new_x
             else:
                 self.console.print("Out of bound, cannot go west", style="deep_pink2")
-                self.colored_input("Press Enter to continue...", color="pale_green1")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
         else:
             return "invalid input"

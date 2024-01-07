@@ -99,7 +99,60 @@ class UserManager:
         self.save_users()
         maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
+    def delete_character(self, username):
+        user_data = self.users.get(username, None)
+        if user_data is None:
+            print("[deep_pink2](＞﹏＜)Oops, user not found.[/]")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
+        if not user_data['characters']:
+            print("[deep_pink2](＞﹏＜)Oops, no characters available for this user.[/]")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
+            return
+
+        self.display.clear_screen()
+        self.display.draw()
+        print("[light_steel_blue]Select a character to delete:[/]")
+        for i, character in enumerate(user_data['characters'], start=1):
+            print(f"{i}, {character['name']}")
+        self.display.draw()
+        print("[orchid1 italic bold]💡Hints:[/]")
+        print("- Type a number to select a character to delete")
+        print("- Type '(B)ack' to go back to main menu")
+        self.display.draw()
+
+        choice = input("# ")
+        if choice.lower() == 'back' or choice.lower() == 'b':
+            return 'back'
+        elif choice.isdigit():
+            choice = int(choice)
+            assert 1 <= choice <= len(user_data['characters'])
+            self.display.clear_screen()
+            self.display.draw()
+            print("[orchid1 italic bold]💡Hints:[/]")
+            print("- Type 'Y' or 'y' to delete the character")
+            print("- Type 'N' or 'n' to go back")
+            self.display.draw()
+            print(f"[deep_pink2]{character['name']} will be deleted. Are you sure you want to continue?[/] ('Y/N')")
+            answer = self.display.colored_input("[gold1]Your answer:[/] ", ).lower()
+            if answer == 'y':
+                character_name = user_data['characters'][choice - 1]['name']
+                del user_data['characters'][choice - 1]
+                self.leaderboard = utils.load_data(self.leaderboard_file)
+                self.leaderboard = [entry for entry in self.leaderboard
+                                    if not (
+                                entry.get("Player") == username and entry.get("Character name") == character_name)]
+                utils.save_data(self.leaderboard, self.leaderboard_file)
+                # Save the updated user data
+                self.save_users()
+                print("[dark_slate_gray2]Character deleted successfully.[/]")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
+            else:
+                return
+
+        else:
+            print("[deep_pink2](＞﹏＜)Oops, invalid selection.[/]")
+            maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
     def get_bonus(self, username, character_name):
         try:
