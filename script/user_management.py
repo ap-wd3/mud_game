@@ -140,8 +140,7 @@ class UserManager:
                 del user_data['characters'][choice - 1]
                 self.leaderboard = utils.load_data(self.leaderboard_file)
                 self.leaderboard = [entry for entry in self.leaderboard
-                                    if not (
-                                entry.get("Player") == username and entry.get("Character name") == character_name)]
+                                    if not (entry.get("Player") == username and entry.get("Character name") == character_name)]
                 utils.save_data(self.leaderboard, self.leaderboard_file)
                 # Save the updated user data
                 self.save_users()
@@ -196,6 +195,7 @@ class UserManager:
             if character.get('name') == character_name:
                 return character
         return None
+
 
 class SaveLoad:
     def __init__(self):
@@ -294,7 +294,7 @@ class SaveLoad:
                 inventory = game_state.get('inventory', [])
                 rooms = game_state.get('rooms', {})
                 confidence = game_state.get('confidence', 100)
-                return (character, current_room, inventory, rooms, confidence)
+                return character, current_room, inventory, rooms, confidence
             else:
                 print(f"[deep_pink2]No saved game state for character {character['name']}.[/]")
                 maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
@@ -303,4 +303,3 @@ class SaveLoad:
         except IndexError:
             print("[deep_pink2](＞﹏＜)Oops, character index out of range, please try again.[/]")
             maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
-

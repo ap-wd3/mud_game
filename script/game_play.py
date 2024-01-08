@@ -14,6 +14,7 @@ from display import Display
 from character import Character
 from leaderboard import Leaderboard
 
+
 class GamePlay:
     def __init__(self):
         self.run = True
@@ -55,8 +56,6 @@ class GamePlay:
         self.display = Display()
         self.leaderboard = Leaderboard()
 
-
-
     def main_menu(self):
         self.display.clear_screen()
         print(self.display.print_ascii_art('../resource/main_menu.txt'))
@@ -68,9 +67,7 @@ class GamePlay:
         self.display.draw()
         print("[orchid1 italic bold]💡Hints:[/]")
         print("- Type a number to choose menu option")
-
         self.display.draw()
-        #error handling
         try:
             choice = self.display.colored_input("# ", color="sandy_brown")
             if choice == "1":
@@ -84,7 +81,6 @@ class GamePlay:
             else:
                 print("[deep_pink2]Invalid command[/]")
                 maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
-            #error handling
         except Exception as e:
             print(f"[deep_pink2]An error occurred: {e}[/]")
             maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
@@ -116,11 +112,6 @@ class GamePlay:
         else:
             self.menu1 = True
             self.menu2 = False
-
-    def clear_last_two_lines(self, num_lines):
-        for _ in range(num_lines):
-            sys.stdout.write('\033[F')
-            sys.stdout.write('\033[K')
 
     def handle_registration(self):
         self.user_manager.reload_data()
@@ -245,7 +236,6 @@ class GamePlay:
 
     def handle_new_game(self):
         self.display.clear_screen()
-        logged_in_username = self.username
         while True:
             self.display.clear_screen()
             self.display.draw()
@@ -392,7 +382,6 @@ class GamePlay:
             self.bonus = 0
 
     def handle_reset_game(self):
-        # Resetting in-memory variables
         self.confidence = 100
         self.current_room = 'Maple Sanctuary'
         self.rooms = rooms
@@ -761,8 +750,6 @@ class GamePlay:
 
     def handle_monster_encounter(self, monster_name):
         monster = monsters.get(monster_name)
-
-
         if not monster:
             print("There's no monster here.")
             maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
@@ -821,7 +808,7 @@ class GamePlay:
             self.confidence = 100
             self.current_room = 'Maple Sanctuary'
             self.rooms = rooms
-            self.inventory =[]
+            self.inventory = []
             self.save_load.save_game(self.username, self.character_name, self.current_room, self.inventory,
                                        self.confidence, self.rooms)
             self.menu2 = True
@@ -835,8 +822,6 @@ class GamePlay:
             self.display.draw()
             time.sleep(1)
             maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
-
-
 
     def run_game(self):
         while self.run:

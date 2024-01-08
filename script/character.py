@@ -1,9 +1,7 @@
 import maskpass
 from user_management import UserManager
 from rich import print
-import utils
 from display import Display
-
 
 
 class Character:
@@ -34,15 +32,6 @@ class Character:
 
         self.user_manager.save_users()
         return f"Character '{name}' has '{hair_length}' and '{hair_color}' hair, and her eyes are '{eye_color}'"
-    
-
-
-
-
-
-
-
-
 
     def to_dict(self):
         return {
@@ -51,4 +40,3 @@ class Character:
             'hair_color': self.hair_color,
             'eye_color': self.eye_color
         }
-

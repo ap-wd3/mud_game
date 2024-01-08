@@ -73,7 +73,7 @@ class TestGamePlay(unittest.TestCase):
 
     @patch('maskpass.askpass', return_value=' ')
     @patch('utils.save_data')
-    def test_handle_new_game_character_interaction(self, mock_save_data, mock_askpass):
+    def test_handle_new_game(self, mock_save_data, mock_askpass):
         self.game.display.colored_input.side_effect = ['NewCharacter', 'Long', '1', '2']
         self.game.handle_new_game()
 

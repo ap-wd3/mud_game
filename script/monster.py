@@ -1,5 +1,6 @@
 import json
 
+
 class Monster:
     def __init__(self, name, description, health, attack, loot, items_required, hint, bonus, words):
         self.name = name
@@ -52,6 +53,7 @@ class Monster:
             if character.get("name") == character_name:
                 return character.get('eye_color')
         return None
+
 
 monsters = {
     'Diet Monster':Monster('Diet Monster',

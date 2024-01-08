@@ -3,6 +3,7 @@ from rich.console import Console
 from rich import print as rprint
 import maskpass
 
+
 class Map:
     def __init__(self, height, width, player_x, player_y, paths):
         self.height = height
@@ -27,10 +28,12 @@ class Map:
             (3, 2): 'Mystic Moss Grove',
             (5, 1): 'Sunbeam Glade'
         }
+
     def colored_input(self, prompt, color="green"):
         self.console.print(prompt, style=color, end="")
         user_input = input()
         return user_input
+
     def get_coordinates_from_room_name(self, room_name):
         reverse_map = {name: coords for coords, name in self.room_map.items()}
         default_coords = (0, 0)
@@ -75,7 +78,7 @@ class Map:
                     self.console.print("Cannot go south", style="deep_pink2")
                     maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
             else:
-                print(self.x ,self.y)
+                print(self.x, self.y)
                 self.console.print("Out of bound, cannot go south", style="deep_pink2")
                 maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
@@ -116,7 +119,6 @@ class Map:
                     # Horizontal paths for these rows
                     sys.stdout.write("-" if x < 3 else " ")
 
-
                 elif y == 1 and x < 6:  # Second row has 6 rooms
 
                     if self.x == x and self.y == y:
@@ -125,10 +127,6 @@ class Map:
                         sys.stdout.write("[ ]")  # Other rooms
                     # Horizontal paths for this row
                     sys.stdout.write("-" if x < 5 else " ")
-
-
-
-
             sys.stdout.write("\n")  # New line after each row of rooms
 
             # Print vertical paths only between the first and second rows, and the second and third rows
@@ -138,7 +136,6 @@ class Map:
                 for x in range(1, 5):  # Four vertical paths
                     sys.stdout.write("|   ")
                 sys.stdout.write("\n")
-
 
 
 paths = [

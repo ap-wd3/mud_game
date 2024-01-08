@@ -6,6 +6,7 @@ from colorama import Style
 from rich.console import Console
 from rich import print
 
+
 class Display:
     def __init__(self):
         self.console = Console()
@@ -25,7 +26,7 @@ class Display:
         print("[aquamarine3]++------------------------++[/]")
 
     def print_monster_info(self, name, health, attack, loot, items_required):
-        # Table Border Constants
+        # Table outline structure
         column_width = 30
         line = '-' * (column_width * 2 + 7)
 
@@ -33,7 +34,6 @@ class Display:
         print(line)
         print(f"| [violet]{'Attribute':<{column_width}}[/] | [violet]{'Information':{column_width}}[/] |")
         print(line)
-
 
         print(f"| [yellow1]{'Name':<{column_width}}[/] | {name:<{column_width}} |")
         print(f"| [yellow1]{'Health':<{column_width}}[/] | {health:<{column_width}} |")

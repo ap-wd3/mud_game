@@ -5,6 +5,7 @@ from rich.console import Console
 import maskpass
 from display import Display
 
+
 class Leaderboard:
     def __init__(self):
         self.logged_in_user = None

@@ -13,5 +13,10 @@
         "Player": "shan",
         "Character name": "test",
         "score": 0
+    },
+    {
+        "Player": "shanshan",
+        "Character name": "shanshan",
+        "score": 0
     }
 ]
