@@ -36,7 +36,7 @@ class TestGamePlay(unittest.TestCase):
         self.game.menu2 = False
         self.game.user_manager = MagicMock()
         self.game.user_manager.users.get.return_value = {'characters': []}
-        self.game.username = 'testuser4'
+        self.game.username = 'newuser'
 
     def test_get_valid_item(self):
         with patch('builtins.print'), patch('maskpass.askpass', return_value=None):
@@ -74,7 +74,7 @@ class TestGamePlay(unittest.TestCase):
     @patch('maskpass.askpass', return_value=' ')
     @patch('utils.save_data')
     def test_handle_new_game(self, mock_save_data, mock_askpass):
-        self.game.display.colored_input.side_effect = ['NewCharacter', 'Long', '1', '2']
+        self.game.display.colored_input.side_effect = ['NewName', 'Long', '1', '2']
         self.game.handle_new_game()
 
 if __name__ == '__main__':

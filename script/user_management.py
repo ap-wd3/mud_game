@@ -92,7 +92,7 @@ class UserManager:
             print("[deep_pink2](⋟﹏⋞)Oops, user does not exist.[/]")
             maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
             return
-        # Delete the user account
+        # Deleting the user account
         del self.users[username]
         print(f"[dark_slate_gray2]{username} has been deleted successfully.[/]")
         self.leaderboard_manager.delete_leaderboard(username)
@@ -142,7 +142,7 @@ class UserManager:
                 self.leaderboard = [entry for entry in self.leaderboard
                                     if not (entry.get("Player") == username and entry.get("Character name") == character_name)]
                 utils.save_data(self.leaderboard, self.leaderboard_file)
-                # Save the updated user data
+                # Saving the updated user data
                 self.save_users()
                 print("[dark_slate_gray2]Character deleted successfully.[/]")
                 maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
@@ -155,16 +155,16 @@ class UserManager:
 
     def get_bonus(self, username, character_name):
         try:
-            with open('users.json', 'r') as file:
+            with open('leaderboard.json', 'r') as file:
                 users_data = json.load(file)
         except IOError:
             print("Error: File not found or inaccessible.")
             return None
 
-        user_data = users_data.get(username, {})
-        for character in user_data.get("characters", []):
-            if character.get("name") == character_name:
-                return character.get('bonus')
+        for entry in users_data:
+            if entry.get("Player") == username and entry.get("Character name") == character_name:
+                return entry.get('score')
+
         return None
 
     def reset_bonus(self, username, character_name):
@@ -172,30 +172,16 @@ class UserManager:
             with open('users.json', 'r') as file:
                 users_data = json.load(file)
 
-            # Reset the bonus for the specific character
             if username in users_data and "characters" in users_data[username]:
                 for character in users_data[username]["characters"]:
                     if character["name"] == character_name:
                         character["bonus"] = 0
 
-            # Save the updated data back to users.json
             with open('users.json', 'w') as file:
                 json.dump(users_data, file, indent=4)
 
         except IOError:
             print("Error: File not found or inaccessible.")
-
-    def find_character_by_name(self, username, character_name):
-        with open('users.json', 'r') as file:
-            users_data = json.load(file)
-
-        user_data = users_data.get(username, {})
-
-        for character in user_data.get('characters', []):
-            if character.get('name') == character_name:
-                return character
-        return None
-
 
 class SaveLoad:
     def __init__(self):
@@ -203,7 +189,7 @@ class SaveLoad:
         self.display = Display()
 
     def save_game(self, username, name, current_room, inventory, confidence, rooms):
-        # Check if the user exists
+        # Checking if the user exists
         with open('users.json', 'r') as json_file:
             user_data = json.load(json_file)
         if username not in user_data:
@@ -213,9 +199,9 @@ class SaveLoad:
 
         character = user_data[username]['characters']
 
-        # Check for 'game_state' and 'characters' keys in user_data
+        # Checking for 'game_state' and 'characters' keys in user_data
         if 'characters' in user_data[username]:
-            # loop through the characters of the specified user
+            # looping through the characters of the user
             for char in user_data[username]['characters']:
                 if char['name'] == name:
                     character = char
@@ -229,7 +215,7 @@ class SaveLoad:
             print(f"[deep_pink2](＞﹏＜)Oops, character {name} not found.[/]")
             maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
             return
-        # Replace old game state with the new game state
+        # Replacing old game state with the new game state
         new_game_state = {
             'current_room': current_room,
             'inventory': inventory,
@@ -239,9 +225,8 @@ class SaveLoad:
 
         character['game_state'] = [new_game_state]
 
-        # Save to file
         try:
-            with open('users.json', 'w') as file:  # Adjust file name as necessary
+            with open('users.json', 'w') as file:
                 json.dump(user_data, file, indent=4)
         except IOError:
             print("[deep_pink2](＞﹏＜)Oops, file not found or inaccessible.[/]")
@@ -276,21 +261,18 @@ class SaveLoad:
         choice = input("# ")
         try:
             if choice.lower() == 'back' or choice.lower() == 'b':
-                print(choice)
                 return 'back'
             elif choice.isdigit():
                 choice = int(choice)
                 character = user_data['characters'][choice - 1]
             else:
-                print("[deep_pink2](＞﹏＜)Oops, I need a [/]'back' [deep_pink2]or a number.[/]")
+                print("[deep_pink2](＞﹏＜)Oops, please enter [/]'back' [deep_pink2]or a valid number.[/]")
                 maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
                 return None
 
             if 'game_state' in character and character['game_state']:
                 game_state = character['game_state'][-1]
-                print(f"[dark_slate_gray2]Game loaded successfully for character '{character['name']}'.[/]")
-                maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
-                current_room = game_state.get('current_room', "Default Room Name")
+                current_room = game_state.get('current_room', "Maple Sanctuary")
                 inventory = game_state.get('inventory', [])
                 rooms = game_state.get('rooms', {})
                 confidence = game_state.get('confidence', 100)
@@ -299,7 +281,7 @@ class SaveLoad:
                 print(f"[deep_pink2]No saved game state for character {character['name']}.[/]")
                 maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
                 return None
-        # handle index out of range error
+        # Handling index out of range error
         except IndexError:
             print("[deep_pink2](＞﹏＜)Oops, character index out of range, please try again.[/]")
             maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")

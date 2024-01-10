@@ -40,6 +40,7 @@ class Leaderboard:
             data.append({"Player": username, "Character name": name, "score": bonus})
         try:
             with open("leaderboard.json", 'w') as file:
+                #https://docs.python.org/3/library/json.html
                 json.dump(data, file, indent=4)
         except Exception as e:
             print(f"[deep_pink2](＞﹏＜)An error occurred while writing to the file: {e}[/]")
@@ -82,6 +83,8 @@ class Leaderboard:
         print("LEADERBOARD\n"
               "NAME                SCORE")
         for entry in data:
+            # Retrieving the character name, username, score from the entry.
+            # If it doesn't exist, use "Unknown" or 0.
             name = entry.get("Character name", "Unknown")
             username = entry.get("Player", "Unknown")
             score = entry.get("score", 0)
@@ -92,12 +95,12 @@ class Leaderboard:
             with open('leaderboard.json', 'r') as file:
                 leaderboard_data = json.load(file)
 
-            # Reset the score for the specific character
+            # Resetting the score for the character
             for entry in leaderboard_data:
                 if entry["Character name"] == character_name:
                     entry["score"] = 0
 
-            # Save the updated data back to leaderboard.json
+            # Saving the updated data to leaderboard.json
             with open('leaderboard.json', 'w') as file:
                 json.dump(leaderboard_data, file, indent=4)
 

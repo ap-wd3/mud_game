@@ -6,9 +6,9 @@ from user_management import UserManager
 class TestResetPassword(unittest.TestCase):
     def setUp(self):
         self.user_manager = UserManager()
-        self.username = 'test'
-        self.email = 'test@test.com'
-        self.new_password = '123123'
+        self.username = 'newuser'
+        self.email = 'newuser@example.com'
+        self.new_password = 'password123'
 
 
 class TestInit(TestResetPassword):

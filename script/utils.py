@@ -1,4 +1,5 @@
 import json
+#Saving and loading data
 def load_data(file_path):
     try:
         with open(file_path, 'r') as file:

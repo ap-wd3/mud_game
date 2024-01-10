@@ -19,7 +19,7 @@ class TestInit(TestDeleteAccount):
 class TestDeleteA(TestDeleteAccount):
     @patch('user_management.maskpass.askpass', create=True)
     def test_delete_account_username_found(self, mock_askpass):
-        username = "test"
+        username = "newuser"
         mock_askpass.side_effect = ['']
         self.user_manager.delete_account(username)
         self.assertNotIn(username, self.user_manager.users)

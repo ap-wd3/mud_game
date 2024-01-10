@@ -29,12 +29,10 @@ class Display:
         # Table outline structure
         column_width = 30
         line = '-' * (column_width * 2 + 7)
-
-        # Print table header
+        # Printing table header
         print(line)
         print(f"| [violet]{'Attribute':<{column_width}}[/] | [violet]{'Information':{column_width}}[/] |")
         print(line)
-
         print(f"| [yellow1]{'Name':<{column_width}}[/] | {name:<{column_width}} |")
         print(f"| [yellow1]{'Health':<{column_width}}[/] | {health:<{column_width}} |")
         print(f"| [yellow1]{'Attack':<{column_width}}[/] | {attack:<{column_width}} |")
@@ -42,7 +40,7 @@ class Display:
         items_str = ', '.join(items_required)
         print(f"| [yellow1]{'Items Needed':<{column_width}}[/] | {items_str:<{column_width}} |")
         print(line)
-
+    #Changing the color of specific characters in the ascii art
     def print_ascii_art(self, file_path, mode='basic', hair_color=None, eye_color=None):
         with open(file_path, 'r') as file:
             ascii_art = file.read()
@@ -114,10 +112,10 @@ class Display:
             }
         else:
             return ascii_art
-
+        #Replacing characters with placeholder
         for char, placeholder in placeholders.items():
             ascii_art = ascii_art.replace(char, placeholder)
-
+        #Coloring the replaced characters
         for placeholder, colored in colored_strings.items():
             ascii_art = ascii_art.replace(placeholder, colored)
 
@@ -142,7 +140,7 @@ class Display:
             sys.stdout.flush()
             time.sleep(delay)
             i += 1
-
+    #Clearing the lines when users type the wrong information when creating a new account
     def clear_last_two_lines(self, num_lines):
         for _ in range(num_lines):
             sys.stdout.write('\033[F')

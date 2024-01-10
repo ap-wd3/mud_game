@@ -29,11 +29,6 @@ class Map:
             (5, 1): 'Sunbeam Glade'
         }
 
-    def colored_input(self, prompt, color="green"):
-        self.console.print(prompt, style=color, end="")
-        user_input = input()
-        return user_input
-
     def get_coordinates_from_room_name(self, room_name):
         reverse_map = {name: coords for coords, name in self.room_map.items()}
         default_coords = (0, 0)
@@ -102,18 +97,17 @@ class Map:
 
         else:
             return "invalid input"
-
+    #print_map is based on the tutorials at https://stackoverflow.com/questions/11703727/python-drawing-ascii-map
     def print_map(self):
         for y in range(self.height):
             # Adding an initial offset for the first and third rows
             if y in [0, 2]:
                 sys.stdout.write("    ")
-
             for x in range(self.width):
-                # Print rooms in each row
+                # Printing rooms in each row
                 if y != 1 and x < 4:  # First and third rows have 4 rooms
                     if self.x == x and self.y == y:
-                        rprint("[""[yellow1]u[/]""]", end="")  # Player's position
+                        rprint("[""[yellow1]u[/]""]", end="")  # User's current position
                     else:
                         sys.stdout.write("[ ]")  # Other rooms
                     # Horizontal paths for these rows
@@ -129,7 +123,7 @@ class Map:
                     sys.stdout.write("-" if x < 5 else " ")
             sys.stdout.write("\n")  # New line after each row of rooms
 
-            # Print vertical paths only between the first and second rows, and the second and third rows
+            # Printing vertical paths only between the first and second rows, and the second and third rows
             if y == 0 or y == 1:
                 # Offset for alignment under the second row
                 sys.stdout.write("     ")

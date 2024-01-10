@@ -12,7 +12,7 @@ class Monster:
         self.hint = hint
         self.bonus = bonus
         self.words = words
-
+    #Replacing the word based on the character information
     def replace_word(self, username, character_name):
         hair_color = self.get_hair_color(username, character_name)
         eye_color = self.get_eye_color(username, character_name)
@@ -62,7 +62,7 @@ monsters = {
                            20,
                            'Self-Acceptance',
                            ['Pizza', 'Jumping Rope'],
-                           'To defeat the Diet Monster, you need both pizza and jumping rope. With pizza you can form a healthy relationship with food and with rope you can exercise to keep yourself fit.',
+                           "To defeat the Diet Monster, you need both 'Pizza' and 'Jumping Rope'. With 'Pizza' you can form a healthy relationship with food and with 'Jumping Rope' you can exercise to keep yourself fit.",
                            20,
                            "Hey, {hair_color} head, why bother trying to eat healthy? You never stick to it anyway. You don't have the willpower like others do."),
     'Insecure Monster':Monster('Insecure Monster',
@@ -71,7 +71,7 @@ monsters = {
                                20,
                                'Courage',
                                ['Book'],
-                               'To defeat the Insecure Monster, you need a book. With the book you can equip yourself with knowledge and feel secured.',
+                               "To defeat the Insecure Monster, you need a 'Book'. With the 'Book' you can equip yourself with knowledge and feel secured.",
                                10,
                                "{character_name}, are you really good enough for this? Think about all the times you've failed before. Maybe you're just not cut out for success like others are."
                                ),
@@ -81,7 +81,7 @@ monsters = {
                                     20,
                                     'Serenity',
                                     ['Mirror'],
-                                    'To defeat the Insecure Monster, you need a mirror. With the mirror you can have a right percetion on yourself.',
+                                    "To defeat the Insecure Monster, you need a 'Mirror'. With the 'Mirror' you can have a right percetion on yourself.",
                                     10,
                                     "Look at you {character_name}, what if you make the wrong decision? You know how every little choice can go badly. It's probably safer not to decide at all."
                                     ),
@@ -91,7 +91,7 @@ monsters = {
                                20,
                                'Equality',
                                ['Smart Planner', 'Clock'],
-                               'To defeat the Balance Monster, you need a Smart Planner and a Clock. With the Smart Planner and Clock, you can master the work-life balance.',
+                               "To defeat the Balance Monster, you need a 'Smart Planne' and a 'Clock'. With the 'Smart Planner' and 'Clock', you can master the work-life balance.",
                                20,
                                "I am sorry to say this, {character_name}, but you'll never get this balance right. If you focused on work, your personal life suffers, and if you relax a bit, your career falls behind. It's impossible to manage both successfully."),
     'Glass Ceiling Monster': Monster('Glass Ceiling Monster',
@@ -100,7 +100,7 @@ monsters = {
                                      20,
                                      'Empowerment',
                                      ['Key'],
-                                     'To defeat the Glass Ceiling Monster, you need a Key of Ascent. With the Key of Ascent, you can climb to the top of your career ladder.',
+                                     "To defeat the Glass Ceiling Monster, you need a 'Key'. With the 'Key', you can climb to the top of your career ladder.",
                                      20,
                                      "Hi {eye_color} eye, why strive for more when you're just going to hit the ceiling? You've seen others try and fail. It's just not meant for someone like you."),
     'Harassment Monster': Monster('Harassment Monster',
@@ -109,7 +109,7 @@ monsters = {
                                   20,
                                   'Strength',
                                   ['Pizza', 'Key', 'Mirror', 'Book', 'Clock'],
-                                  'To defeat the Harassment Monster, you need a lot of items which will make you stronger to say no to the harassment and fight against the monster.',
+                                  "To defeat the Harassment Monster, you need a lot of items which will make you stronger to say no to the harassment and fight against the monster.",
                                   50,
                                   "Hey, {hair_color} head, it's just the way things are, why make a fuss? Speaking up will only make it worse for you. Better to stay quiet and not rock the boat."
                                   )

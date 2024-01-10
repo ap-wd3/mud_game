@@ -49,7 +49,6 @@ class GamePlay:
                           f"[green]'selfie'[/] or [green]'s'[/]---------------------------------------View your character info\n" \
                           f"[green]'help'[/] or [green]'h'[/]-----------------------------------------See command information\n" \
                           f"[green]'quit'[/] or [green]'q'[/]-----------------------------------------Save and Exit the game[/]\n"
-        self.book_path = '../resource/book.txt'
         self.history_message = ""
         self.short_hair_file_path = '../resource/short_hair.txt'
         self.long_hair_file_path = '../resource/long_hair.txt'
@@ -86,6 +85,8 @@ class GamePlay:
             maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
     def handle_login(self, username=None, password=None):
+        # Checking if the username and password are None,
+        # if they are, then create new username and password
         if username is None and password is None:
             self.display.clear_screen()
             self.display.draw()
@@ -121,8 +122,9 @@ class GamePlay:
         print("- Type 'back' or 'b' to go back to main menu")
         self.display.draw()
 
-        # ask for username
+        # Asking for user info
         while True:
+            # Asking for username
             username = input("\033[93mChoose your username: \033[0m")
             if username.lower() == "back" or username.lower() == "b":
                 self.menu1 = True
@@ -130,9 +132,9 @@ class GamePlay:
                 return
             if not self.user_manager.username_verify(username):
                 valid_password = False
-                # ask for password
+                # Asking for password
                 while not valid_password:
-                    # password = getpass.getpass("\033[93mChoose your password: \033[0m")
+                    #https://pypi.org/project/maskpass/ for how to use maskpass
                     password = maskpass.askpass(prompt="\033[93mChoose your password(At least 6 characters): \033[0m", mask="*")
                     if password.lower() == "back" or password.lower() == "b":
                         self.menu1 = True
@@ -141,9 +143,9 @@ class GamePlay:
                     if len(password) < 6:
                         print("[deep_pink2]Your password must be at least [green]6[/] characters long. Please try again.[/]")
                         maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
-                        self.clear_last_two_lines(3)
+                        self.display.clear_last_two_lines(3)
                         continue
-                    # Confirm Password
+                    # Confirming Password
                     confirm_password = maskpass.askpass(prompt="\033[93mConfirm your password: \033[0m", mask="*")
                     if confirm_password.lower() == "back" or confirm_password.lower() == "b":
                         self.menu1 = True
@@ -153,11 +155,11 @@ class GamePlay:
                         print("[deep_pink2]Your password and confirmation do not match. Please try again.[/]")
                         maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
                         
-                        self.clear_last_two_lines(4)
+                        self.display.clear_last_two_lines(4)
                         continue
-                    valid_password = True  # Password is valid, proceed to email
+                    valid_password = True  # If password is valid, go to email
 
-                # ask for email address
+                # Asking for email address
                 while True:
                     email = input("\033[93mEnter your email address: \033[0m")
                     self.display.draw()
@@ -165,13 +167,13 @@ class GamePlay:
                         self.menu1 = True
                         self.menu2 = False
                         return
-
+                    # Checking the email format
                     if '@' in email and '.' in email.split('@')[-1]:
                         break
                     else:
                         print("[deep_pink2](⋟﹏⋞)Oops, invalid email format. please enter a valid email address.[/]")
                         maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
-                        self.clear_last_two_lines(4)
+                        self.display.clear_last_two_lines(4)
                 break
 
         self.user_manager.reload_data()
@@ -181,7 +183,7 @@ class GamePlay:
             self.handle_login(username=username, password=password)
 
         else:
-            # Display an error message if registration failed
+            # Showing an error message if registration failed
             print(f"[deep_pink2]{registration_result}[/]")
             maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
             pass
@@ -242,12 +244,14 @@ class GamePlay:
             print("[orchid1 italic bold]💡Hints:[/]")
             print("- Type 'back' or 'b' to go back to the menu")
             self.display.draw()
+            #Creating a new character when users start a new game
             name = self.display.colored_input("Enter your character's name: ", color="gold1").strip()
             if name.lower() == "back" or name.lower() == "b":
                 self.menu2 = True
                 return
             self.character_name = name
             user_data = self.user_manager.users.get(self.username, {'characters': []})
+            # Checking if the name of character already exists
             if any(char['name'] == name for char in user_data['characters']):
                 print("[deep_pink2]Error: Character name already exists. Please choose a different name.[/]")
                 maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
@@ -308,7 +312,7 @@ class GamePlay:
         print(f'[italic]{result}[/]')
         print()
         maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
-        # start game from default data
+        # Restarting the game
         self.confidence = 100
         self.current_room = 'Maple Sanctuary'
         self.rooms = {
@@ -343,35 +347,40 @@ class GamePlay:
 
     def handle_load_game(self):
         loaded_data = self.save_load.load_game(self.username)
-        loaded_bonus = self.user_manager.get_bonus(self.username, self.character_name)
-        if loaded_data:
-            if loaded_data == 'back' or loaded_data == 'b':
+        if loaded_data is not None:
+            if loaded_data == 'back':
                 self.play = False
                 self.menu2 = True
-            elif loaded_bonus == 130:
-                print("This character achieved the highest level of bonus points.")
-                print("By loading the character, it will begin the new game.")
-                answer = input("Do you want to restart the game? [Y/N] ").lower()
-                if answer == "y":
-                    self.handle_reset_game()
-                    self.play = True
-                    self.menu2 = False
-                elif answer == "n":
-                    return
-                else:
-                    print("[deep_pink2]Invalid Input[/]")
-                    maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
             else:
                 character, current_room, inventory, rooms, confidence = loaded_data
                 self.character_name = character['name']
-                self.current_room = current_room
-                self.inventory = inventory
-                self.confidence = confidence
-                self.rooms = rooms
-                self.map.x, self.map.y = self.map.get_coordinates_from_room_name(self.current_room)
-                self.play = True
-                self.menu2 = False
-
+                loaded_bonus = self.user_manager.get_bonus(self.username, self.character_name)
+                if loaded_bonus == 130:
+                    self.display.draw()
+                    print("This character achieved the highest level of bonus points.")
+                    print("By loading the character, it will begin the new game.")
+                    answer = self.display.colored_input("[deep_pink2]Do you want to restart the game?[/] [Y/N]\n"
+                                                        "[gold1]Answer:[/] ").lower()
+                    if answer == "y":
+                        self.handle_reset_game()
+                        self.play = True
+                        self.menu2 = False
+                    elif answer == "n":
+                        return
+                    else:
+                        print("[deep_pink2]Invalid Input[/]")
+                        maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
+                else:
+                    self.character_name = character['name']
+                    self.current_room = current_room
+                    self.inventory = inventory
+                    self.confidence = confidence
+                    self.rooms = rooms
+                    self.map.x, self.map.y = self.map.get_coordinates_from_room_name(self.current_room)
+                    print(f"[dark_slate_gray2]Game loaded successfully for character '{character['name']}'.[/]")
+                    maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
+                    self.play = True
+                    self.menu2 = False
         else:
             self.play = False
             self.menu2 = True
@@ -389,11 +398,11 @@ class GamePlay:
         self.map = Map(3, 6, 0, 1, paths)
         self.bonus = 0
 
-        # Save game state
+        # Saving game state
         self.save_load.save_game(self.username, self.character_name, self.current_room, self.inventory,
                                    self.confidence, self.rooms)
 
-        # Reset and save bonus and score
+        # Resetting and saving bonus and score
         self.user_manager.reset_bonus(self.username, self.character_name)
         self.leaderboard.reset_leaderboard_score(self.character_name)
 
@@ -418,6 +427,7 @@ class GamePlay:
             print("- Type 'Y' or 'y' to delete your account")
             print("- Type 'N' or 'n' to go back")
             self.display.draw()
+            # Making sure the user really wants to delete the account
             print("[deep_pink2]Your account will be deleted. Are you sure you want to continue?[/] ('Y/N')")
             answer = self.display.colored_input("[gold1]Your answer:[/] ", ).lower()
             if answer == "y":
@@ -467,6 +477,8 @@ class GamePlay:
             self.current_room = self.map.room_map.get((self.map.x, self.map.y), "Unknown room")
             self.room_info = self.rooms.get(self.current_room, {})
             self.display.clear_screen()
+            # Showing the details of the map, the room info, the move and current location fot the user
+            # Showing the details of user info
             print("[orchid1 italic bold]Map of the wood:[/]")
             self.map.print_map()
             if self.history_message != "":
@@ -477,7 +489,7 @@ class GamePlay:
             print(f"Inventory : {self.inventory}")
             print(f"Your current confidence: {self.confidence}")
             self.display.draw()
-
+            # When there are still monsters in the rooms, users can play the game
             if self.any_monsters_left():
                 if "Monster" in self.room_info:
                     encountered_monster = self.room_info['Monster']
@@ -600,6 +612,7 @@ class GamePlay:
 
         action = user_input[0]
         argument = " ".join(user_input[1:]).title() if len(user_input) > 1 else ""
+        # Mapping the direction
         direction_map = {
             'e': 'east',
             'w': 'west',
@@ -624,9 +637,9 @@ class GamePlay:
             item = argument
             current_room_items = self.rooms[self.current_room].get("Item", "")
             if item:
-                # Check if the item exists in the current room
+                # Checking if the item exists in the current room
                 if item == current_room_items:
-                    # Add item to inventory if not already there
+                    # Adding item to inventory if not already there
                     if item not in self.inventory:
                         if item.lower() == 'confidence booster':
                             if self.confidence < 100:
@@ -755,7 +768,7 @@ class GamePlay:
             maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
             return
 
-        # Check if player has required items
+        # Checking if the user has required items
         has_required_items = all(item in self.inventory for item in monster.items_required)
         if has_required_items:
             damage = 100 // len(monster.items_required)

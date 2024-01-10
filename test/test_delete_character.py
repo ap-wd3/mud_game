@@ -20,7 +20,7 @@ class TestDeleteC(TestDeleteAccount):
     @patch('user_management.maskpass.askpass', create=True)
     def test_delete_character_character_found(self, mock_askpass):
         mock_askpass.side_effect = ['']
-        username = "Mint"
+        username = "newuser"
         character_name = "test"
         self.user_manager.delete_character(username)
         self.assertNotIn(character_name, self.user_manager.users[username]['characters'])
@@ -28,7 +28,7 @@ class TestDeleteC(TestDeleteAccount):
     @patch('user_management.maskpass.askpass', create=True)
     def test_delete_character_character_not_found(self, mock_askpass):
         mock_askpass.side_effect = ['']
-        username = "Mint"
+        username = "newuser"
         character_name = "Test_Not_Found"
         self.user_manager.delete_character(username)
         self.assertNotIn(character_name, self.user_manager.users[username]['characters'])
