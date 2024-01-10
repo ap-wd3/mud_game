@@ -1,7 +1,1 @@
-{
-    "test_user": {
-        "password": "newpassword",
-        "email": "test@example.com",
-        "characters": []
-    }
-}
+{}

@@ -1,4 +1,7 @@
 import sys
+from rich.console import Console
+from rich import print as rprint
+import maskpass
 
 
 class Map:
@@ -8,6 +11,7 @@ class Map:
         self.x = player_x
         self.y = player_y
         self.paths = paths
+        self.console = Console()
         self.room_map = {
             (0, 0): 'Whispering Pines',
             (0, 1): 'Maple Sanctuary',
@@ -29,10 +33,11 @@ class Map:
         reverse_map = {name: coords for coords, name in self.room_map.items()}
         default_coords = (0, 0)
         return reverse_map.get(room_name, default_coords)
+
     def move(self, direction):
         new_x, new_y = self.x, self.y
 
-        if direction == "north":
+        if direction == "n" or direction == "north":
             new_y -= 1
             if new_y >= 0:
                 # Check if moving from the second row to the first row
@@ -45,13 +50,13 @@ class Map:
                 if new_x >= 0 and ((new_x, new_y), (self.x, self.y)) in self.paths:
                     self.x, self.y = new_x, new_y
                 else:
-                    print("Cannot go north")
-                    input("Press enter to continue...")
+                    self.console.print("Cannot go north", style="deep_pink2")
+                    maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
             else:
-                print("Out of bound, cannot go north")
-                input("Press enter to continue...")
+                self.console.print("Out of bound, cannot go north", style='deep_pink2')
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
-        elif direction == "south":
+        elif direction == "s" or direction == "south":
             new_y += 1
             if new_y < self.height:
                 # Check if moving from the first row to the second row
@@ -65,69 +70,66 @@ class Map:
                 if new_x < self.width and ((self.x, self.y), (new_x, new_y)) in self.paths:
                     self.x, self.y = new_x, new_y
                 else:
-                    print("Cannot go south")
-                    input("Press enter to continue...")
+                    self.console.print("Cannot go south", style="deep_pink2")
+                    maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
             else:
-                print("Out of bound, cannot go south")
-                input("Press enter to continue...")
+                print(self.x, self.y)
+                self.console.print("Out of bound, cannot go south", style="deep_pink2")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
-
-        elif direction == "east":
+        elif direction == "e" or direction == "east":
             new_x += 1
             # Check for a horizontal path to the right
             if new_x < self.width and ((self.x, self.y), (new_x, self.y)) in self.paths:
                 self.x = new_x
             else:
-                print("Out of bound, cannot go east")
-                input("Press enter to continue...")
+                self.console.print("Out of bound, cannot go east", style="deep_pink2")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
-
-        elif direction == "west":
+        elif direction == "w" or direction == "west":
             new_x -= 1
             # Check for a horizontal path to the left
             if new_x >= 0 and ((new_x, self.y), (self.x, self.y)) in self.paths:
                 self.x = new_x
             else:
-                print("Out of bound, cannot go west")
-                input("Press enter to continue...")
+                self.console.print("Out of bound, cannot go west", style="deep_pink2")
+                maskpass.askpass(prompt="\033[92mPress 'Enter' to try again...\033[0m", mask=" ")
 
         else:
             return "invalid input"
-
+    #print_map is based on the tutorials at https://stackoverflow.com/questions/11703727/python-drawing-ascii-map
     def print_map(self):
         for y in range(self.height):
             # Adding an initial offset for the first and third rows
             if y in [0, 2]:
                 sys.stdout.write("    ")
-
             for x in range(self.width):
-                # Print rooms in each row
+                # Printing rooms in each row
                 if y != 1 and x < 4:  # First and third rows have 4 rooms
                     if self.x == x and self.y == y:
-                        sys.stdout.write("[u]")  # Player's position
+                        rprint("[""[yellow1]u[/]""]", end="")  # User's current position
                     else:
                         sys.stdout.write("[ ]")  # Other rooms
                     # Horizontal paths for these rows
                     sys.stdout.write("-" if x < 3 else " ")
 
                 elif y == 1 and x < 6:  # Second row has 6 rooms
+
                     if self.x == x and self.y == y:
-                        sys.stdout.write("[u]")  # Player's position
+                        rprint("[""[yellow1]u[/]""]", end="")
                     else:
                         sys.stdout.write("[ ]")  # Other rooms
                     # Horizontal paths for this row
                     sys.stdout.write("-" if x < 5 else " ")
-
             sys.stdout.write("\n")  # New line after each row of rooms
 
-            # Print vertical paths only between the first and second rows, and the second and third rows
+            # Printing vertical paths only between the first and second rows, and the second and third rows
             if y == 0 or y == 1:
                 # Offset for alignment under the second row
                 sys.stdout.write("     ")
                 for x in range(1, 5):  # Four vertical paths
                     sys.stdout.write("|   ")
                 sys.stdout.write("\n")
-
 
 
 paths = [
@@ -151,7 +153,7 @@ paths = [
 ]
 
 rooms = {
-    'Maple Sanctuary': {'East': 'Moonlit Timberland'},
+    'Maple Sanctuary': {'East': 'Moonlit Timberland', 'Item': 'Confidence Booster'},
     'Moonlit Timberland': {'West': 'Maple Sanctuary', 'North': 'Maple Sanctuary', 'South': 'Dewdrop Dell',
                            'East': 'Emerald Canopy',  'Item': 'Smart Planner'},
     'Whispering Pines': {'South': 'Moonlit Timberland', 'East': 'Pine Haven', 'Monster': 'Diet Monster'},

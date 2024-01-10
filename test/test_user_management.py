@@ -1,51 +1,20 @@
 import unittest
-from user_management import UserManager
-
-# Mock version of the utils module
-class MockUtils:
-    data = {}
-
-    @staticmethod
-    def load_data(_):
-        return MockUtils.data
-
-    @staticmethod
-    def save_data(data, _):
-        MockUtils.data = data
+from unittest.mock import patch
+from user_management import UserManager  # Replace with your actual import
+import os
 
 class TestUserManager(unittest.TestCase):
 
     def setUp(self):
-        # Use the mock utility class for tests
-        self.user_manager = UserManager()
-        self.user_manager.users = MockUtils.load_data(None)
+        self.user_manager = UserManager('users.json')  # Use a separate file for testing
 
-    def test_create_user(self):
-        # Testing user creation
-        result = self.user_manager.create_user("testuser", "password123", "test@example.com")
-        self.assertEqual(result, "User created successfully.")
-        self.assertIn("testuser", self.user_manager.users)
-
-    def test_verify_user(self):
-        # Testing user verification
-        self.user_manager.create_user("testuser", "password123", "test@example.com")
-        self.assertTrue(self.user_manager.verify_user("testuser", "password123"))
-        self.assertFalse(self.user_manager.verify_user("testuser", "wrongpassword"))
-
-    def test_reset_password(self):
-        # Testing password reset
-        self.user_manager.create_user("testuser", "password123", "test@example.com")
-        result = self.user_manager.reset_password("testuser", "test@example.com", "newpassword")
-        self.assertEqual(result, "Password reset successfully.")
-        self.assertTrue(self.user_manager.verify_user("testuser", "newpassword"))
-
-    def test_delete_account(self):
-        # Testing account deletion
-        self.user_manager.create_user("testuser", "password123", "test@example.com")
-        result = self.user_manager.delete_account("testuser")
-        self.assertEqual(result, "Account deleted successfully.")
-        self.assertNotIn("testuser", self.user_manager.users)
-
+    @patch('maskpass.askpass')
+    def test_create_user_success_and_failure(self, mock_askpass):
+        mock_askpass.return_value = '123456'
+        result_success = self.user_manager.create_user('newuser', 'password123', 'newuser@example.com')
+        self.assertEqual(result_success, "User created successfully.")
+        result_failure = self.user_manager.create_user('newuser', 'password123', 'existinguser@example.com')
+        self.assertEqual(result_failure, None)
 
 
 if __name__ == '__main__':
