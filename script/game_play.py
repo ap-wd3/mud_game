@@ -238,6 +238,7 @@ class GamePlay:
 
     def handle_new_game(self):
         self.display.clear_screen()
+        self.history_message = ''
         while True:
             self.display.clear_screen()
             self.display.draw()
@@ -339,6 +340,9 @@ class GamePlay:
         }
         self.inventory = []
         self.map.x, self.map.y = self.map.get_coordinates_from_room_name(self.current_room)
+        self.bonus = 0
+        self.message = ''
+        self.leaderboard.save_score(self.character_name, self.username, self.bonus)
         self.save_load.save_game(self.username, self.character_name, self.current_room, self.inventory,
                                  self.confidence, self.rooms)
         self.game_introduction()
@@ -476,15 +480,15 @@ class GamePlay:
             self.leaderboard.save_score(self.character_name, self.username, self.bonus)
             self.current_room = self.map.room_map.get((self.map.x, self.map.y), "Unknown room")
             self.room_info = self.rooms.get(self.current_room, {})
-            self.display.clear_screen()
             # Showing the details of the map, the room info, the move and current location fot the user
-            # Showing the details of user info
+            self.display.clear_screen()
             print("[orchid1 italic bold]Map of the wood:[/]")
             self.map.print_map()
             if self.history_message != "":
                 print(self.history_message)
             print(f"You are in the '{self.current_room}'")
             self.display.draw()
+            # Showing the details of user info
             print("[orchid1 italic bold]Your Details:[/]")
             print(f"Inventory : {self.inventory}")
             print(f"Your current confidence: {self.confidence}")
@@ -544,6 +548,7 @@ class GamePlay:
                 self.display.draw()
                 user_input = self.display.colored_input("Enter your command: ", color="gold1").lower().split(' ')
                 self.process_command(user_input)
+            # if no monster is left in the game
             else:
                 self.play = False
                 if not self.quit_game:

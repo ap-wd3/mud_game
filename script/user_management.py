@@ -100,6 +100,7 @@ class UserManager:
         maskpass.askpass(prompt="\033[92mPress 'Enter' to continue...\033[0m", mask=" ")
 
     def delete_character(self, username):
+        self.reload_data()
         user_data = self.users.get(username, None)
         if user_data is None:
             print("[deep_pink2](＞﹏＜)Oops, user not found.[/]")
@@ -140,7 +141,8 @@ class UserManager:
                 del user_data['characters'][choice - 1]
                 self.leaderboard = utils.load_data(self.leaderboard_file)
                 self.leaderboard = [entry for entry in self.leaderboard
-                                    if not (entry.get("Player") == username and entry.get("Character name") == character_name)]
+                                    if not (
+                                entry.get("Player") == username and entry.get("Character name") == character_name)]
                 utils.save_data(self.leaderboard, self.leaderboard_file)
                 # Saving the updated user data
                 self.save_users()
