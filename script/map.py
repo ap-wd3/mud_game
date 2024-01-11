@@ -125,7 +125,7 @@ class Map:
 
             # Printing vertical paths only between the first and second rows, and the second and third rows
             if y == 0 or y == 1:
-                # Offset for alignment under the second row
+                # The second row
                 sys.stdout.write("     ")
                 for x in range(1, 5):  # Four vertical paths
                     sys.stdout.write("|   ")
