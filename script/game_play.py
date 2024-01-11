@@ -238,6 +238,7 @@ class GamePlay:
 
     def handle_new_game(self):
         self.display.clear_screen()
+        self.history_message = ''
         while True:
             self.display.clear_screen()
             self.display.draw()
@@ -340,6 +341,7 @@ class GamePlay:
         self.inventory = []
         self.map.x, self.map.y = self.map.get_coordinates_from_room_name(self.current_room)
         self.bonus = 0
+        self.message = ''
         self.leaderboard.save_score(self.character_name, self.username, self.bonus)
         self.save_load.save_game(self.username, self.character_name, self.current_room, self.inventory,
                                  self.confidence, self.rooms)
