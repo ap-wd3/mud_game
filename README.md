@@ -64,34 +64,41 @@ That's it! You're ready to embark on your adventure. 🚀
 
 
 ### Move Between Areas
+<img width="788" alt="Screenshot 2024-07-11 at 13 37 33" src="https://github.com/ap-wd3/mud_game/assets/106058371/00a40f69-1aba-494c-8bf8-f5f814e53425">
 
-![Move Between Areas](path-to-move-between-areas-gif.gif)
+
 
 ### Pick Up an Item
 
-![Pick Up Item](path-to-pick-up-item-gif.gif)
+<img width="791" alt="Screenshot 2024-07-11 at 13 37 51" src="https://github.com/ap-wd3/mud_game/assets/106058371/0ac04ec0-30b1-4404-9cd1-0d4e9c82719f">
+
 
 ### Find Out Monster Information
+<img width="800" alt="Screenshot 2024-07-11 at 13 38 24" src="https://github.com/ap-wd3/mud_game/assets/106058371/8aabeadf-126c-4395-861a-0b2ab3ed6bc9">
 
-![Find Out Monster Info](path-to-find-out-monster-info-gif.gif)
+
 
 ### Attack a Monster
 
-![Attack Monster](path-to-attack-monster-gif.gif)
+<img width="782" alt="Screenshot 2024-07-11 at 13 38 44" src="https://github.com/ap-wd3/mud_game/assets/106058371/3601a681-7410-4595-953f-961d0574956c">
+
 
 ### Exit the Game
+<img width="790" alt="Screenshot 2024-07-11 at 13 38 55" src="https://github.com/ap-wd3/mud_game/assets/106058371/fc7b9339-bd30-429d-b890-373aed55cd00">
 
-![Exit Game](path-to-exit-game-gif.gif)
 
 ### Load Game
 
-![Load Game](path-to-load-game-gif.gif)
+<img width="793" alt="Screenshot 2024-07-11 at 13 39 14" src="https://github.com/ap-wd3/mud_game/assets/106058371/61df914c-9c38-4826-884a-b3fea50f5b0b">
+
 
 ### Reset the Password
+<img width="794" alt="Screenshot 2024-07-11 at 13 39 44" src="https://github.com/ap-wd3/mud_game/assets/106058371/52f2832b-2b12-4c91-8317-40d2748dd06c">
 
-![Reset Password](path-to-reset-password-gif.gif)
+
 
 ### Delete Character
+<img width="787" alt="Screenshot 2024-07-11 at 13 39 54" src="https://github.com/ap-wd3/mud_game/assets/106058371/3e8a4cfa-847b-4018-af01-ef6da0763ce8">
 
 
 
