@@ -55,11 +55,13 @@ That's it! You're ready to embark on your adventure. 🚀
 
 ### Create a New Account
 
-![Create Account](path-to-create-account-gif.gif)
+<img width="788" alt="Screenshot 2024-07-11 at 13 36 34" src="https://github.com/ap-wd3/mud_game/assets/106058371/cf365a31-b694-41b0-bde6-04a7f1c7da30">
+
 
 ### Start a New Game
+![Screenshot 2024-07-11 at 13 36 54](https://github.com/ap-wd3/mud_game/assets/106058371/935655ab-d3d1-425a-bc74-e328ec598257)
 
-![Start New Game](path-to-start-new-game-gif.gif)
+
 
 ### Move Between Areas
 
@@ -91,13 +93,13 @@ That's it! You're ready to embark on your adventure. 🚀
 
 ### Delete Character
 
-![Delete Character](path-to-delete-character-gif.gif)
+
 
 ### Delete Account
 
 ![Delete Account](path-to-delete-account-gif.gif)
-### Ending
-![Ending]<img width="1147" alt="Screenshot 2024-07-11 at 13 35 39" src="https://github.com/ap-wd3/mud_game/assets/106058371/cbdb537f-be3f-4740-b877-02fd48ccf0dd">
+### Ending 
+<img width="1147" alt="Screenshot 2024-07-11 at 13 35 39" src="https://github.com/ap-wd3/mud_game/assets/106058371/cbdb537f-be3f-4740-b877-02fd48ccf0dd">
 
 
 ## Contribute 🤝
