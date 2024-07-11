@@ -97,7 +97,8 @@ That's it! You're ready to embark on your adventure. 🚀
 
 ![Delete Account](path-to-delete-account-gif.gif)
 ### Ending
-![Ending](path-to-delete-account-gif.gif)
+![Ending]<img width="1147" alt="Screenshot 2024-07-11 at 13 35 39" src="https://github.com/ap-wd3/mud_game/assets/106058371/cbdb537f-be3f-4740-b877-02fd48ccf0dd">
+
 
 ## Contribute 🤝
 
